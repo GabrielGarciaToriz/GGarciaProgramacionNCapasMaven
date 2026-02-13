@@ -1,4 +1,4 @@
-import { limpiarEstilos, marcarExito , mostrarError} from "../Helpers/HelpersUI.js";
+import { limpiarEstilos, marcarExito, mostrarError } from "../Helpers/HelpersUI.js";
 //EXPRESION REGULAR PARA SOLO USAR LETRAS
 const regexLetras = /^[a-zA-Z\s]+$/
 

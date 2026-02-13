@@ -3,7 +3,7 @@ import { limpiarEstilos, marcarExito, mostrarError } from "../Helpers/HelpersUI.
 const regexCorreo = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
 
-export function ValidarCorreo(input, event) {
+export function validarCorreo(input, event) {
     var correo = $(input).val().trim().toLowerCase() + event.key;
     if (regexCorreo.test(correo)) {
         marcarExito(input)
@@ -13,11 +13,11 @@ export function ValidarCorreo(input, event) {
 
 }
 
-export function ValidarCorreoBlur(input) {
+export function validarCorreoBlur(input) {
     var correo = $(input).val().trim().toLowerCase();
-    $(input).val(correo);
     if (correo === "") {
-        limpiarEstilos(input)
+        limpiarEstilos(input);
+        return;
     }
     if (regexCorreo.test(correo)) {
         marcarExito(input)
