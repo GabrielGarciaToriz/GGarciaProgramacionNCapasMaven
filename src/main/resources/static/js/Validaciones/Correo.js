@@ -1,38 +1,45 @@
+//EXPRESION REFULAR PARA VALIDAR EL CORREO
+const regexCorreo = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
-export function validarCorreo(input, event) {
-    // Expresion regular para validar el correo 
-    var regex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const mostrarError = (input, mensaje) => {
+    const errorSpan = $(`#error${input.id}`);
+    errorSpan.text(mensaje).css("color", "red");
+    $(input).addClass("border border-danger").removeClass("border border-success")
+}
+const limpiarEstilos = (input) => {
+    const errorSpan = $(`#error${input.id}`);
+    errorSpan.text("");
+    $(input).removeClass("border border-danger border-success");
+};
+const marcarExito = (input) => {
+    const errorSpan = $(`#error${input.id}`);
+    errorSpan.text("Correcto").css("color", "green");
+    $(input).removeClass("border border-danger").addClass("border border-success");
+};
 
+
+export function ValidarCorreo(input, event) {
     var correo = $(input).val().trim().toLowerCase() + event.key;
-    if (regex.test(correo)) {
-        $("#error" + input.id + "").text("");
-        $(input).removeClass("border border-danger");
-        $(input).addClass("border border-success");
+    if (regexCorreo.test(correo)) {
+        marcarExito(input)
     } else {
-        $("#error" + input.id).text("Formato no valido");
-        $(input).removeClass("border border-success");
-        $(input).addClass("border border-danger");
+        mostrarError(input)
     }
 
 }
 
-export function validarCorreoBlur(input) {
+export function ValidarCorreoBlur(input) {
     var correo = $(input).val().trim().toLowerCase();
     $(input).val(correo);
-    var regex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     if (correo === "") {
         $("#error" + input.id).text("");
         $(input).removeClass("border-danger border-success");
         return;
     }
-    if (regex.test(correo)) {
-        $("#error" + input.id + "").text("");
-        $(input).removeClass("border border-danger");
-        $(input).addClass("border border-success");
+    if (regexCorreo.test(correo)) {
+        marcarExito(input)
     } else {
-        $("#error" + input.id).text("Formato no valido");
-        $(input).removeClass("border border-success");
-        $(input).addClass("border border-danger");
+        mostrarError(input)
     }
 
 }

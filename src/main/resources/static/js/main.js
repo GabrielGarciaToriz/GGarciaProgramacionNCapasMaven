@@ -2,21 +2,31 @@ import { SoloLetras, SoloLetrasBlur } from "./Validaciones/SoloLetras.js";
 import { PaisEstado } from "./Selects/PaisEstado.js";
 import { EstadoMunicipio } from "./Selects/EstadoMunicipio.js";
 import { MunicipioColonia } from "./Selects/MunicipioColonia.js";
+import { ValidarCorreo, ValidarCorreoBlur } from "./Validaciones/Correo.js";
 
-$(document).ready(function () {
+const inicializarSelectores = () => {
     PaisEstado();
     EstadoMunicipio();
     MunicipioColonia();
-    $(".validar-letras").on("keypress", function (event) {
-        SoloLetras(this, event);
+}
+
+const reglasValidacion = [
+    { selector: ".validar-letras", evento: "keypress", accion: SoloLetras },
+    { selector: ".validar-letras-blur", evento: "blur", accion: SoloLetrasBlur },
+    { selector: ".validar-correo", evento: "keypress", accion: ValidarCorreo },
+    { selector: ".validar-correo-blur", evento: "blur", accion: ValidarCorreoBlur }
+
+]
+
+const aplicarValidaciones = () => {
+    reglasValidacion.forEach(({ selector, evento, accion }) => {
+        $(selector).on(evento, function (event) {
+            accion(this, event);
+        });
     });
-    $(".validar-letras-blur").on("blur", function () {
-        SoloLetrasBlur(this);
-    });
-    $(".validar-correo").on("keypress", function (event) {
-        validarCorreo(this, event);
-    });
-    $(".validar-correo-blur").on("blur", function () {
-        validarCorreoBlur(this);
-    });
+}
+
+$(document).ready(function () {
+    inicializarSelectores();
+    aplicarValidaciones();
 });
