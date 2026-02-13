@@ -4,7 +4,8 @@ import { EstadoMunicipio } from "./Selects/EstadoMunicipio.js";
 import { MunicipioColonia } from "./Selects/MunicipioColonia.js";
 import { validarCorreo, validarCorreoBlur } from "./Validaciones/Correo.js";
 import { validarPassword, validarPasswordBlur } from "./Validaciones/Password.js";
-import { validarCurp } from "./Validaciones/Curp.js";
+import { validarCurp, validarCurpBlur } from "./Validaciones/Curp.js";
+import { validarCelular, validarCelularBlur } from "./Validaciones/Celular.js";
 
 const inicializarSelectores = () => {
     PaisEstado();
@@ -19,7 +20,10 @@ const reglasValidacion = [
     { selector: ".validar-correo-blur", evento: "blur", accion: validarCorreoBlur },
     { selector: ".validar-password", evento: "keypress", accion: validarPassword },
     { selector: ".validar-password-blur", evento: "blur", accion: validarPasswordBlur },
-    { selector: ".validar-curp", evento: "keypress", accion: validarCurp }
+    { selector: ".validar-curp", evento: "keypress", accion: validarCurp },
+    { selector: ".validar-curp-blur", evento: "blur", accion: validarCurpBlur },
+    { selector: ".validar-celular", evento: "keypress", accion: validarCelular },
+    { selector: ".validar-celular-blur", evento: "blur", accion: validarCelularBlur }
 ]
 
 const aplicarValidaciones = () => {
