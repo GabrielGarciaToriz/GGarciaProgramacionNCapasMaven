@@ -1,8 +1,8 @@
 export function SoloLetras(input, event) {
-
     var valorCompleto = $(input).val().trim() + event.key;
-
+    //EXPRESON REGULAR PARA SOLO ACEPTAR CARACTERES Y ESPACIOS
     var regex = /^[a-zA-Z\s]+$/;
+
     if (regex.test(valorCompleto)) {
         $("#error" + input.id + "").text("");
         $(input).removeClass("border border-danger");
@@ -18,12 +18,13 @@ export function SoloLetras(input, event) {
 export function SoloLetrasBlur(input) {
     var regex = /^[a-zA-Z\s]+$/;
     var valor = $(input).val().trim();
-
+    //SI EL INPUT ESTA VACIO QUITA LA CLASES
     if (valor === "") {
         $("#error" + input.id).text("");
         $(input).removeClass("border-danger border-success");
         return;
     }
+    //SI NO CUMPLE LA REGEX DESPUES DE SALIR DEL INPUT EL BORDE SE VUELVE ROJO, CASO CONTRARIO SE VUELVE VERDE
     if (regex.test(valor)) {
         $("#error" + input.id + "").text("");
         $(input).removeClass("border border-danger");
@@ -32,13 +33,5 @@ export function SoloLetrasBlur(input) {
         $("#error" + input.id).text("Formato no valido");
         $(input).removeClass("border border-success");
         $(input).addClass("border border-danger");
-    }
-}
-export function validarCorreo(input){
-    var correo =  $(input).val().trim().toLoweCase();
-    $(input).val(correo);
-    var regex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if(correo){
-        
     }
 }
