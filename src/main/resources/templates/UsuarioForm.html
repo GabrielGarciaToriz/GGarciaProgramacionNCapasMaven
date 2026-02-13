@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script type="module" th:src="@{/js/main.js}" ></script>
+
+  <title>Formulario</title>
+</head>
+
+<body class="bg-light">
+  <div class="container d-flex justify-content-center">
+    <div class="form-container">
+      <form action="POST" method="post" autocomplete="off">
+        <h3 class="text-center mb-4">Resgistrar usuario</h3>
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <label for="UserName" class="form-label">Usuario</label>
+            <input type="text" class="form-control validar-letras" id="UserName" placeholder="Usuario" required />
+            <span id="errorUserName"></span>
+          </div>
+          <div class="col-md-4">
+            <label for="Rol" class="form-label">Rol</label>
+            <select name="Rol" id="Rol" class="form-select">
+              <option value="0">Sleecione una opción</option>
+              <option th:each="roles : ${roles}" th:value="${roles.IdRol}" th:text="${roles.Nombre}"></option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="FechaNacimiento" class="form-label">Fecha de nacimiento.</label>
+            <input type="date" class="form-control" id="FechaNacimiento" required />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <label for="Nombre" class="form-label">Nombre(s)</label>
+            <input type="text" class="form-control validar-letras validar-letras-blur" id="Nombre" placeholder="Ej. Gabriel" required />
+            <span id="errorNombre"></span>
+          </div>
+          <div class="col-md-3">
+            <label for="ApellidoPaterno" class="form-label">Apellido Paterno</label>
+            <input type="text" class="form-control validar-letras validar-letras-blur" id="ApellidoPaterno" placeholder="Ej. García" required />
+          </div>
+          <div class="col-md-3">
+            <label for="ApellidoMaterno" class="form-label">Apellido Materno</label>
+            <input type="text" class="form-control validar-letras validar-letras-blur" id="ApellidoMaterno" placeholder="Ej. Toríz" required />
+          </div>
+          <div class="col-md-3">
+            <span>Sexo</span>
+            <div class="form-check">
+              <input type="radio" class="form-check-input" id="rbHombre" name="Sexo" />
+              <label for="rbHombre" class="form-check-label">Hombre</label>
+            </div>
+            <div class="form-check">
+              <input type="radio" class="form-check-input" id="rbMujer" name="Sexo" />
+              <label for="rbMujer" class="form-check-label">Mujer</label>
+            </div>
+            <div class="form-check"></div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <label for="Curp" class="form-label">Clave CURP</label>
+            <input type="text" class="form-control" id="Curp" placeholder="GATGXXXXXXASDRRBA0" required />
+          </div>
+          <div class="col-md-4">
+            <label for="Celular" class="form-label">Celular</label>
+            <input type="text" class="form-control" id="Celular" placeholder="+52 55-XX-XX-XX-XX" required />
+          </div>
+          <div class="col-md-4">
+            <label for="TelefonoFijo" class="form-label">Telefono Fijo</label>
+            <input type="text" class="form-control" id="Celular" placeholder="55-XX-XX-XX-XX" required />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="Email" class="form-label">Correo</label>
+            <input type="email" class="form-control" id="Email" placeholder="example@dominio.com" />
+          </div>
+          <div class="col-md-6">
+            <label for="Password" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="Password" placeholder="Contraseña" />
+          </div>
+        </div>
+        <hr />
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <label for="Calle" class="form-label">Calle</label>
+            <input type="text" class="form-control validar-letras validar-letras-blur" id="Calle" placeholder="Ej. Rio Blanco" />
+            <span id="errorCalle"></span>
+          </div>
+          <div class="col-md-4">
+            <label for="NumeroExterior" class="form-label">Numero exterior</label>
+            <input type="text" class="form-control" id="NumeroExterior" placeholder="Ej. Rio Blanco" />
+            <span id="errorNumeroExterior"></span>
+          </div>
+          <div class="col-md-4">
+            <label for="NumeroInterior" class="form-label">Numero interior</label>
+            <input type="text" class="form-control" id="NumeroInterior" placeholder="Ej. Rio Blanco" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-3">
+            <label for="CodigoPostal" class="form-label">Codigo postal</label>
+            <input type="text" form="Codigo Postal" placeholder="57710" class="form-control" required data-cp="th:value="${}"" />
+          </div>
+          <div class="col-md-3">
+            <label for="selectPais" class="form-label">Pais</label>
+            <select name="selectPais" id="selectPais" class="form-select" aria-label="Seleccione un pais">
+              <option value="0" selected>Seleccione un pais</option>
+              <option th:each="pais : ${paises}" th:value="${pais.IdPais}" th:text="${pais.Nombre}"></option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="selectEstado" class="form-label">Estado</label>
+            <select name="Colonia" id="selectEstado" class="form-select">
+              
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label for="selectMunicipio" class="form-label">Municipio</label>
+            <select name="selectMunicipio" id="selectMunicipio" class="form-select">
+            </select>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-8">
+            <label for="selectColonia" class="form-label">Colonia</label>
+            <select name="selectColonia" id="selectColonia" class="form-select">
+            </select>
+          </div>
+          <div class="col-md-4">
+            <button type="button" class="btn btn-danger btn-large">
+              Cancelar
+            </button>
+              <button type="submit" class="btn btn-success btn-large">
+              Guardar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

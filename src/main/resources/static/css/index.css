@@ -1,0 +1,15 @@
+.col-acciones{
+    width: 1%;
+    white-space: nowrap;
+    vertical-align: top;
+    padding-top: 1rem !important;
+}
+.cell-content{
+    min-width: 50px;
+}
+.data-label{
+    font-size: .075rem;
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+}
