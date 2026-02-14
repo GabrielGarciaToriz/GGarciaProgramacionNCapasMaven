@@ -23,7 +23,8 @@
         <div class="row mb-3">
           <div class="col-md-4">
             <label for="UserName" class="form-label">Usuario</label>
-            <input type="text" class="form-control validar-letras" id="UserName" placeholder="Usuario" required />
+            <input type="text" class="form-control validar-letras validar-letras-blur" id="UserName"
+              placeholder="Usuario" required />
             <span id="errorUserName"></span>
           </div>
           <div class="col-md-4">
@@ -35,7 +36,7 @@
           </div>
           <div class="col-md-4">
             <label for="FechaNacimiento" class="form-label">Fecha de nacimiento.</label>
-            <input type="date" class="form-control" id="FechaNacimiento" required />
+            <input type="date" class="form-control solo-calendario abrir-calendario" id="FechaNacimiento" required />
           </div>
         </div>
         <div class="row mb-3">
@@ -73,12 +74,14 @@
         <div class="row mb-3">
           <div class="col-md-4">
             <label for="Curp" class="form-label">Clave CURP</label>
-            <input type="text" class="form-control validar-curp" id="Curp" placeholder="GATGXXXXXXASDRRBA0" maxlength="18" required />
+            <input type="text" class="form-control validar-curp validar-curp-blur" id="Curp"
+              placeholder="GATGXXXXXXASDRRBA0" maxlength="18" required />
             <span id="errorCurp"></span>
           </div>
           <div class="col-md-4">
             <label for="Celular" class="form-label">Celular</label>
-            <input type="text" class="form-control validar-celular validar-celular-blur" id="Celular" placeholder="+52 55-XX-XX-XX-XX" required />
+            <input type="text" class="form-control validar-celular validar-celular-blur" id="Celular"
+              placeholder="+52 55-XX-XX-XX-XX" required />
             <span id="errorCelular"></span>
           </div>
           <div class="col-md-4">
@@ -96,7 +99,8 @@
           </div>
           <div class="col-md-6">
             <label for="Password" class="form-label">Contraseña</label>
-            <input type="password" class="form-control validar-password validar-password-blur" id="Password" placeholder="Contraseña" />
+            <input type="password" class="form-control validar-password validar-password-blur" id="Password"
+              placeholder="Contraseña" />
             <span id="errorPassword"></span>
           </div>
         </div>

@@ -6,6 +6,7 @@ import { validarCorreo, validarCorreoBlur } from "./Validaciones/Correo.js";
 import { validarPassword, validarPasswordBlur } from "./Validaciones/Password.js";
 import { validarCurp, validarCurpBlur } from "./Validaciones/Curp.js";
 import { validarCelular, validarCelularBlur } from "./Validaciones/Celular.js";
+import { abrirCalendario, soloCalendario } from "./Validaciones/Fecha.js";
 
 const inicializarSelectores = () => {
     PaisEstado();
@@ -23,7 +24,9 @@ const reglasValidacion = [
     { selector: ".validar-curp", evento: "keypress", accion: validarCurp },
     { selector: ".validar-curp-blur", evento: "blur", accion: validarCurpBlur },
     { selector: ".validar-celular", evento: "keypress", accion: validarCelular },
-    { selector: ".validar-celular-blur", evento: "blur", accion: validarCelularBlur }
+    { selector: ".validar-celular-blur", evento: "blur", accion: validarCelularBlur },
+    { selector: ".solo-calendario", evento: "keydown", accion: soloCalendario },
+    { selector: ".abrir-calendario", evento: "click", accion: abrirCalendario }
 ]
 
 const aplicarValidaciones = () => {

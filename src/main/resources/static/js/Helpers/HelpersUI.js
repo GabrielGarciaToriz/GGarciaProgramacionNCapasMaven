@@ -9,8 +9,12 @@ export const limpiarEstilos = (input) => {
     errorSpan.text("");
     $(input).removeClass("border border-danger border-success");
 };
-export const marcarExito = (input) => {
+export const marcarExito = (input, mensaje) => {
     const errorSpan = $(`#error${input.id}`);
-    errorSpan.text("Correcto").css("color", "green");
+    errorSpan.text("");
+    errorSpan.text(mensaje).css("color", "green")
     $(input).removeClass("border border-danger").addClass("border border-success");
 };
+export const teclasPermitidas = [
+    "Tab", "Enter","ArrowLeft","ArrowRight"
+]

@@ -8,7 +8,7 @@ export function validarCorreo(input, event) {
     if (regexCorreo.test(correo)) {
         marcarExito(input)
     } else {
-        mostrarError(input)
+        mostrarError(input,"No es un correo valido")
     }
 
 }
@@ -20,9 +20,9 @@ export function validarCorreoBlur(input) {
         return;
     }
     if (regexCorreo.test(correo)) {
-        marcarExito(input)
+        marcarExito(input, "El correo es correcto")
     } else {
-        mostrarError(input)
+        mostrarError(input, "No es un correo valido")
     }
 
 }
