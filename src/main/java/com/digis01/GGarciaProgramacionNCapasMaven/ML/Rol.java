@@ -1,8 +1,11 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.ML;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class Rol {
 
     private int IdRol;
+    @NotBlank(message = "Este campo es obligatorio")
     private String Nombre;
 
     public Rol() {

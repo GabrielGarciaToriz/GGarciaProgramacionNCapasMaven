@@ -1,9 +1,14 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.ML;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+
 public class Municipio {
 
     private int IdMunicipio;
+    @NotBlank(message = "Este campo es obligatorio")
     private String Nombre;
+    @Valid
     public Estado Estado;
 
     public void setIdMunicipio(int IdMunicipio) {
@@ -29,5 +34,5 @@ public class Municipio {
     public void setEstado(Estado Estado) {
         this.Estado = Estado;
     }
-    
+
 }

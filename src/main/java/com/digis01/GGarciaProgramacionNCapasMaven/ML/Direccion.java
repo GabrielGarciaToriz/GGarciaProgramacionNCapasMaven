@@ -4,6 +4,10 @@
  */
 package com.digis01.GGarciaProgramacionNCapasMaven.ML;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 /**
  *
  * @author ALIEN59
@@ -11,7 +15,14 @@ package com.digis01.GGarciaProgramacionNCapasMaven.ML;
 public class Direccion {
 
     private int IdDireccion;
-    private String NumeroInterior, NumeroExterior, Calle;
+    @NotBlank(message = "Este campo es obligatorio")
+    private String NumeroInterior;
+    @NotBlank(message = "Este campo es obligatorio")
+    private String NumeroExterior;
+    @NotBlank(message = "Este campo es obligatorio")
+    private String Calle;
+    @NotNull(message = "Este campo es obligatorio")
+    @Valid
     public Colonia Colonia;
 
     public void setCalle(String Calle) {
@@ -53,5 +64,5 @@ public class Direccion {
     public void setColonia(Colonia Colonia) {
         this.Colonia = Colonia;
     }
-    
+
 }
