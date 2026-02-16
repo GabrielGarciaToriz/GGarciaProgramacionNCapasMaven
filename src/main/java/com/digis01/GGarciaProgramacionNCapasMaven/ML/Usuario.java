@@ -1,14 +1,41 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.ML;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import java.util.Date;
 import java.util.List;
 
 public class Usuario {
 
     private int IdUsuario;
-    private String Nombre, ApellidoPaterno, ApellidoMaterno, Celular, Curp, UserName, Email, Password, Sexo, Telefono;
+    @NotBlank(message = "Este campo es obligatorio")
+    private String Nombre;
+    @NotBlank(message = "Este campo es obligatorio")
+    private String ApellidoPaterno;
+    @NotBlank(message = "Este campo es obligatorio")
+    private String ApellidoMaterno;
+    @NotBlank(message = "Este campo es obligatorio")
+    private String Celular;
+    @NotBlank(message = "Este campo es obligatorio")
+    private String Curp;
+    @NotBlank(message = "Este campo es obligatorio")
+    private String UserName;
+    @NotBlank(message = "Este campo es obligatorio")
+    private String Email;
+    @NotBlank(message = "Este campo es obligatorio")
+    private String Password;
+    @NotBlank(message = "Este campo es obligatorio")
+    private String Sexo;
+    @NotBlank(message = "Este campo es obligatorio")
+    private String Telefono;
+    @NotNull(message = "Este campo es obligatorio")
+    @Past(message = "Este campo debe de estar en el pasado")
     private Date FechaNacimiento;
+    @Valid
     public Rol Rol;
+    @Valid
     public List<Direccion> Direcciones;
 
     public Usuario() {
@@ -30,9 +57,6 @@ public class Usuario {
         this.Rol = Rol;
         this.Direcciones = Direcciones;
     }
-
-  
-
 
     /*SETTERS*/
     public void setIdUsuario(int IdUsuario) {
