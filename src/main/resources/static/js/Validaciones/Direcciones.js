@@ -1,7 +1,7 @@
 import { limpiarEstilos, marcarExito, mostrarError } from "../Helpers/HelpersUI.js";
 const regexDirecciones = /^[a-zA-Z0-9]+$/;
-const msgError = "Correcto";
-const msgCorrect = "Incorrecto"
+const msgError = "Incorrecto ";
+const msgCorrect = "Correcto";
 export function validarDirecciones(input, event) {
     var direccion = $(input).val() + event.key;
     if (regexDirecciones.test(direccion)) {
