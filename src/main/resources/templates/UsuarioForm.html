@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8" />
@@ -11,22 +11,22 @@
     crossorigin="anonymous"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script type="module" th:src="@{/js/main.js}"></script>
-
   <title>Formulario</title>
 </head>
 
 <body class="bg-light">
   <div class="container d-flex justify-content-center">
     <div class="form-container">
-      <form th:action="@{/usuario/form}" method="post" autocomplete="off" th:object="${usuario}">
+      <form method="post" th:action="@{/usuario/form}" th:object="${usuario}" enctype="multipart/form-data"
+        autocomplete="off">
         <h3 class="text-center mb-4">Resgistrar usuario</h3>
         <div class="row mb-3">
           <div class="col-md-4">
             <label for="UserName" class="form-label">Usuario</label>
             <input type="text" class="form-control validar-letras validar-letras-blur" id="UserName"
-              placeholder="Usuario" th:field="*{UserName}" required />
+              placeholder="Usuario" required />
             <span id="errorUserName"></span>
-            <span th:if="${#fields.hasErrors('UserName')}" th:errors="*{UserName}"></span>
+
           </div>
           <div class="col-md-4">
             <label for="Rol" class="form-label">Rol</label>
@@ -97,7 +97,7 @@
           <div class="col-md-6">
             <label for="Email" class="form-label">Correo</label>
             <input type="email" class="form-control validar-correo validar-correo-blur" id="Email"
-              placeholder="example@dominio.com" th:field="*{Correo}" required />
+              placeholder="example@dominio.com" th:field="*{Email}" required />
             <span id="errorEmail"></span>
           </div>
           <div class="col-md-6">
@@ -108,11 +108,13 @@
           </div>
         </div>
         <hr />
+
+
         <div class="row mb-3">
           <div class="col-md-4">
             <label for="Calle" class="form-label">Calle</label>
             <input type="text" class="form-control validar-direccion validar-direccion-blur" id="Calle"
-              placeholder="Ej. Rio Blanco" th:field="*{Calle}" />
+              placeholder="Ej. Rio Blanco" th:field="*{Direcciones[0].Calle}" />
             <span id="errorCalle"></span>
           </div>
           <div class="col-md-4">
@@ -130,8 +132,7 @@
         <div class="row mb-3">
           <div class="col-md-3">
             <label for="CodigoPostal" class="form-label">Codigo postal</label>
-            <input type="text" form="Codigo Postal" placeholder="57710" class="form-control" required
-              data-cp="th:value=" ${}"" />
+            <input type="text" form="Codigo Postal" placeholder="57710" class="form-control" required />
           </div>
           <div class="col-md-3">
             <label for="selectPais" class="form-label">Pais</label>
@@ -158,14 +159,14 @@
             <select name="selectColonia" id="selectColonia" class="form-select">
             </select>
           </div>
-          <div class="col-md-4">
-            <button type="button" class="btn btn-danger btn-large">
-              Cancelar
-            </button>
-            <button type="submit" class="btn btn-success btn-large">
-              Guardar
-            </button>
-          </div>
+        </div>
+        <div class="col-md-4">
+          <button type="button" class="btn btn-danger btn-large">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-success btn-large">
+            Guardar
+          </button>
         </div>
       </form>
     </div>

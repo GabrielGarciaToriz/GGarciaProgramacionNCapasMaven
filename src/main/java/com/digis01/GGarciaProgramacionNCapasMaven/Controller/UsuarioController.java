@@ -6,9 +6,12 @@ import com.digis01.GGarciaProgramacionNCapasMaven.DAO.MunicipioDAOImplementation
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.PaisDAOImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.RolDAOImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.UsuarioDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.ML.Direccion;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Usuario;
 import jakarta.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,21 +49,29 @@ public class UsuarioController {
 
     @GetMapping("form")
     public String FormularioUsuario(Model model) {
-        Result resultPais = paisDAOImplementation.GetAll();
-        Result resultRol = rolDAOImplementation.GetAll();
-        model.addAttribute("paises", resultPais.objects);
-        model.addAttribute("roles", resultRol.objects);
+        
+//        List<Direccion> direccion = new Usuario().Direcciones;
+        Usuario usuario = new Usuario();
+        usuario.Direcciones = new ArrayList<Direccion>();
+        
+
+        model.addAttribute("usuario", usuario);
+//        model.addAttribute("direcciones", new Usuario().Direcciones);
+        model.addAttribute("paises", paisDAOImplementation.GetAll().objects);
+        model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
         return "UsuarioForm";
     }
 
     @PostMapping("form")
-    public String FormularioUsaurio(@Valid @ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult, Model model) {
+    public String FormularioUsuario(@Valid @ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("usuario", usuario);
+            model.addAttribute("direccion", usuario.Direcciones);
             model.addAttribute("paises", paisDAOImplementation.GetAll().objects);
             model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
             return "UsuarioForm";
         }
-        return "redirect:/usuario";
+        return "redirect:/Usuario";
     }
 
     @GetMapping("getEstadoByPais/{IdPais}")
