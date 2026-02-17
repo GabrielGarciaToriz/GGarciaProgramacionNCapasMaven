@@ -11,7 +11,6 @@ import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Usuario;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
-import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,14 +48,10 @@ public class UsuarioController {
 
     @GetMapping("form")
     public String FormularioUsuario(Model model) {
-        
-//        List<Direccion> direccion = new Usuario().Direcciones;
+
         Usuario usuario = new Usuario();
         usuario.Direcciones = new ArrayList<Direccion>();
-        
-
         model.addAttribute("usuario", usuario);
-//        model.addAttribute("direcciones", new Usuario().Direcciones);
         model.addAttribute("paises", paisDAOImplementation.GetAll().objects);
         model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
         return "UsuarioForm";
@@ -92,6 +87,13 @@ public class UsuarioController {
     @ResponseBody
     public Result getColoniabyMunicipio(@PathVariable("IdMunicipio") int IdMunicipio) {
         Result result = coloniaDAOImplmentation.GetAll(IdMunicipio);
+        return result;
+    }
+    
+    @GetMapping("getDireccionByCodigoPostal/{CodigoPostal}")
+    @ResponseBody
+    public Result getDireccionByCodigoPostal(@PathVariable("CodigoPostal") String CodigoPostal){
+        Result result = coloniaDAOImplmentation.GetByCodigoPostal(CodigoPostal);
         return result;
     }
 

@@ -120,19 +120,19 @@
           <div class="col-md-4">
             <label for="NumeroExterior" class="form-label">Numero exterior</label>
             <input type="text" class="form-control validar-direccion validar-direccion-blur" id="NumeroExterior"
-              placeholder="Ej. Rio Blanco" />
+              placeholder="Ej. Rio Blanco" th:field="*{Direcciones[0].NumeroExterior}" />
             <span id="errorNumeroExterior"></span>
           </div>
           <div class="col-md-4">
             <label for="NumeroInterior" class="form-label">Numero interior</label>
             <input type="text" class="form-control validar-direccion validar-direccion-blur" id="NumeroInterior"
-              placeholder="Ej. Rio Blanco" />
+              placeholder="Ej. Rio Blanco" th:field="*{Direcciones[0].NumeroInterior}" />
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-3">
             <label for="CodigoPostal" class="form-label">Codigo postal</label>
-            <input type="text" form="Codigo Postal" placeholder="57710" class="form-control" required />
+            <input type="text" form="Codigo Postal" placeholder="57710" class="form-control" id="CodigoPostal" required />
           </div>
           <div class="col-md-3">
             <label for="selectPais" class="form-label">Pais</label>

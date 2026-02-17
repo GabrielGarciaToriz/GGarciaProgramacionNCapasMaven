@@ -9,11 +9,13 @@ import { validarCelular, validarCelularBlur } from "./Validaciones/Celular.js";
 import { validarTelefono, validarTelefonoBlur } from "./Validaciones/Telefono.js";
 import { abrirCalendario, soloCalendario } from "./Validaciones/Fecha.js";
 import { validarDirecciones, validarDireccionesBlur } from "./Validaciones/Direcciones.js";
+import { DireccionByCodigoPostal } from "./Selects/DireccionByCp.js";
 
 const inicializarSelectores = () => {
     PaisEstado();
     EstadoMunicipio();
     MunicipioColonia();
+    DireccionByCodigoPostal();
 }
 
 const reglasValidacion = [

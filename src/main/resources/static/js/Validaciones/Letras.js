@@ -20,8 +20,8 @@ export function SoloLetrasBlur(input) {
         return;
     }
     if (regexLetras.test(valor)) {
-        marcarExito(input)
+        marcarExito(input, "Correcto")
     } else {
-        mostrarError(input)
+        mostrarError(input, "Solo letras")
     }
 }

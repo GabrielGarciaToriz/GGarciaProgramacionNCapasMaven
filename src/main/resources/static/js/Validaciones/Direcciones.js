@@ -1,5 +1,5 @@
 import { limpiarEstilos, marcarExito, mostrarError } from "../Helpers/HelpersUI.js";
-const regexDirecciones = /^[a-zA-Z0-9]+$/;
+const regexDirecciones = /^[a-zA-Z0-9\s]+$/;
 const msgError = "Incorrecto ";
 const msgCorrect = "Correcto";
 export function validarDirecciones(input, event) {

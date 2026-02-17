@@ -1,7 +1,9 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.DAO;
 
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Colonia;
+import com.digis01.GGarciaProgramacionNCapasMaven.ML.Estado;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Municipio;
+import com.digis01.GGarciaProgramacionNCapasMaven.ML.Pais;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -40,9 +42,48 @@ public class ColoniaDAOImplmentation implements IColonia {
                 return result.correct;
             });
         } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
         }
 
         return result;
     }
 
+    @Override
+    public Result GetByCodigoPostal(String codigoPostal) {
+        Result result = new Result();
+        result.objects = new ArrayList<>();
+        try {
+            JdbcTemplate.execute("{CALL direccionbycodigopostalsp(?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
+                callableStatement.registerOutParameter(1, java.sql.Types.REF_CURSOR);
+                callableStatement.setString(2, codigoPostal);
+                callableStatement.execute();
+
+                ResultSet resultSet = (ResultSet) callableStatement.getObject(1);
+                while (resultSet.next()) {
+                    Pais pais = new Pais();
+                    Estado estado = new Estado();
+                    Municipio municipio = new Municipio();
+                    Colonia colonia = new Colonia();
+
+                    pais.setIdPais(resultSet.getInt("IdPais"));
+                    estado.setIdEstado(resultSet.getInt("IdEstado"));
+                    municipio.setIdMunicipio(resultSet.getInt("IdMunicipio"));
+                    colonia.setMunicipio(municipio);
+                    colonia.Municipio.setEstado(estado);
+                    colonia.Municipio.Estado.setPais(pais);
+                    colonia.setCodigoPostal(codigoPostal);
+                    result.objects.add(colonia);
+                }
+
+                return result.correct;
+            });
+        } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
+        }
+        return result;
+    }
 }
