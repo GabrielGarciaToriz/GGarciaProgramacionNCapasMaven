@@ -18,14 +18,15 @@
 <body class="bg-light">
   <div class="container d-flex justify-content-center">
     <div class="form-container">
-      <form action="POST" method="post" autocomplete="off">
+      <form th:action="@{/usuario/form}" method="post" autocomplete="off" th:object="${usuario}">
         <h3 class="text-center mb-4">Resgistrar usuario</h3>
         <div class="row mb-3">
           <div class="col-md-4">
             <label for="UserName" class="form-label">Usuario</label>
             <input type="text" class="form-control validar-letras validar-letras-blur" id="UserName"
-              placeholder="Usuario" required />
+              placeholder="Usuario" th:field="*{UserName}" required />
             <span id="errorUserName"></span>
+            <span th:if="${#fields.hasErrors('UserName')}" th:errors="*{UserName}"></span>
           </div>
           <div class="col-md-4">
             <label for="Rol" class="form-label">Rol</label>
@@ -36,26 +37,27 @@
           </div>
           <div class="col-md-4">
             <label for="FechaNacimiento" class="form-label">Fecha de nacimiento.</label>
-            <input type="date" class="form-control solo-calendario abrir-calendario" id="FechaNacimiento" required />
+            <input type="date" class="form-control solo-calendario abrir-calendario" id="FechaNacimiento"
+              th:field="*{FechaNacimiento}" required />
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-md-3">
             <label for="Nombre" class="form-label">Nombre(s)</label>
             <input type="text" class="form-control validar-letras validar-letras-blur" id="Nombre"
-              placeholder="Ej. Gabriel" required />
+              placeholder="Ej. Gabriel" th:field="*{Nombre}" required />
             <span id="errorNombre"></span>
           </div>
           <div class="col-md-3">
             <label for="ApellidoPaterno" class="form-label">Apellido Paterno</label>
             <input type="text" class="form-control validar-letras validar-letras-blur" id="ApellidoPaterno"
-              placeholder="Ej. García" required />
+              placeholder="Ej. García" th:field="*{ApellidoPaterno}" required />
             <span id="errorApellidoPaterno"></span>
           </div>
           <div class="col-md-3">
             <label for="ApellidoMaterno" class="form-label">Apellido Materno</label>
             <input type="text" class="form-control validar-letras validar-letras-blur" id="ApellidoMaterno"
-              placeholder="Ej. Toríz" required />
+              placeholder="Ej. Toríz" th:field="*{ApellidoMaterno}" required />
             <span id="errorApellidoMaterno"></span>
           </div>
           <div class="col-md-3">
@@ -75,19 +77,19 @@
           <div class="col-md-4">
             <label for="Curp" class="form-label">Clave CURP</label>
             <input type="text" class="form-control validar-curp validar-curp-blur" id="Curp"
-              placeholder="GATGXXXXXXASDRRBA0" maxlength="18" required />
+              placeholder="GATGXXXXXXASDRRBA0" maxlength="18" th:field="*{Curp}" required />
             <span id="errorCurp"></span>
           </div>
           <div class="col-md-4">
             <label for="Celular" class="form-label">Celular</label>
             <input type="text" class="form-control validar-celular validar-celular-blur" id="Celular"
-              placeholder="+52 55-XX-XX-XX-XX" required />
+              placeholder="+52 55-XX-XX-XX-XX" th:field="*{Celular}" required />
             <span id="errorCelular"></span>
           </div>
           <div class="col-md-4">
             <label for="TelefonoFijo" class="form-label">Telefono Fijo</label>
             <input type="text" class="form-control validar-telefono validar-telefono-blur" id="Telefono"
-              placeholder="55-XX-XX-XX-XX" required />
+              placeholder="55-XX-XX-XX-XX" th:field="*{Telefono}" required />
             <span id="errorTelefono"></span>
           </div>
         </div>
@@ -95,13 +97,13 @@
           <div class="col-md-6">
             <label for="Email" class="form-label">Correo</label>
             <input type="email" class="form-control validar-correo validar-correo-blur" id="Email"
-              placeholder="example@dominio.com" />
+              placeholder="example@dominio.com" th:field="*{Correo}" required />
             <span id="errorEmail"></span>
           </div>
           <div class="col-md-6">
             <label for="Password" class="form-label">Contraseña</label>
             <input type="password" class="form-control validar-password validar-password-blur" id="Password"
-              placeholder="Contraseña" />
+              placeholder="Contraseña" th:field="*{Password}" />
             <span id="errorPassword"></span>
           </div>
         </div>
@@ -110,7 +112,7 @@
           <div class="col-md-4">
             <label for="Calle" class="form-label">Calle</label>
             <input type="text" class="form-control validar-direccion validar-direccion-blur" id="Calle"
-              placeholder="Ej. Rio Blanco" />
+              placeholder="Ej. Rio Blanco" th:field="*{Calle}" />
             <span id="errorCalle"></span>
           </div>
           <div class="col-md-4">
