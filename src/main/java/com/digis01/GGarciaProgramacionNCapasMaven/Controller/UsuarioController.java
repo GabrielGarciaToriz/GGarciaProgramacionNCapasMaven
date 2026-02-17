@@ -7,12 +7,17 @@ import com.digis01.GGarciaProgramacionNCapasMaven.DAO.PaisDAOImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.RolDAOImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.UsuarioDAOImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
+import com.digis01.GGarciaProgramacionNCapasMaven.ML.Usuario;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -46,6 +51,16 @@ public class UsuarioController {
         model.addAttribute("paises", resultPais.objects);
         model.addAttribute("roles", resultRol.objects);
         return "UsuarioForm";
+    }
+
+    @PostMapping("form")
+    public String FormularioUsaurio(@Valid @ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("paises", paisDAOImplementation.GetAll().objects);
+            model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
+            return "UsuarioForm";
+        }
+        return "redirect:/usuario";
     }
 
     @GetMapping("getEstadoByPais/{IdPais}")
