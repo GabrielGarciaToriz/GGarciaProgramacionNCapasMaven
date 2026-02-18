@@ -10,7 +10,6 @@ import com.digis01.GGarciaProgramacionNCapasMaven.ML.Pais;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Rol;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
