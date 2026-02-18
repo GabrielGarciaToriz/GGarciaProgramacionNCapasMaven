@@ -91,19 +91,20 @@
               </td>
               <!--DIRECCIONES-->
               <td class="text-wrap text-break" style="min-width: 250px;">
-
                 <div th:each="direccion : ${usuario.Direcciones}" class="card mb-2 border-secondart bg-trasparent">
-                  <div class="card-body p-2 small">
-                    <h6 class="card-subtitle mb-1 text-dark fw-bold">
+                  <div  th:if="${direccion.Calle != null}" class="bg-transparent">
+                    <div class="card-body p-2 small">
+                    <h6 class="card-subtitle mb-1 text-dark fw-bold" >
                       <i class="bi bi-geo-alt-fil text-danger"></i>
-                      <span th:text="|${direccion.Calle} #${direccion.NumeroExterior}|"></span>
+                      <span th:text="|${direccion.Calle?: 'No definido'} #${direccion.NumeroExterior}|"></span>
                       <span th:if="${direccion.NumeroInterior !=null && !direccion.NumeroInterior.isEmpty()}"
                         th:text="|Int. ${direccion.NumeroInterior}|"></span>
                     </h6>
-                    <div th:text="|Col. ${direccion.Colonia.Nombre}, ${direccion.Colonia.Municipio.Nombre}|"></div>
-                    <div class="text-muted fst-italic"
+                    <div th:if="${direccion.Colonia.Nombre != null}" th:text="|Col. ${direccion.Colonia.Nombre}, ${direccion.Colonia.Municipio.Nombre}|"></div>
+                    <div class="text-muted fst-italic" th:if="${direccion.Colonia.Nombre != null}"
                       th:text="|${direccion.Colonia.Municipio.Estado.Nombre},${direccion.Colonia.Municipio.Estado.Pais.Nombre}|">
                     </div>
+                  </div>
                   </div>
                 </div>
               </td>
