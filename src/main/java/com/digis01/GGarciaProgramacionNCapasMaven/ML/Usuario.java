@@ -67,6 +67,7 @@ public class Usuario {
         this.Nombre = Nombre;
     }
 
+
     public void setApellidoPaterno(String ApellidoPaterno) {
         this.ApellidoPaterno = ApellidoPaterno;
     }
@@ -119,6 +120,7 @@ public class Usuario {
     public String getNombre() {
         return Nombre;
     }
+
 
     public String getApellidoPaterno() {
         return ApellidoPaterno;
