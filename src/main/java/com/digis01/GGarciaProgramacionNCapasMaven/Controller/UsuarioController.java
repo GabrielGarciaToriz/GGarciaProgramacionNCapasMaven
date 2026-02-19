@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("usuario")
 public class UsuarioController {
-    
+
     @Autowired
     private UsuarioDAOImplementation usuarioDAOImplementation;
     @Autowired
@@ -38,14 +38,14 @@ public class UsuarioController {
     private MunicipioDAOImplementation municipioDAOImplementation;
     @Autowired
     private ColoniaDAOImplmentation coloniaDAOImplmentation;
-    
+
     @GetMapping("")
     public String Usuario(Model model) {
         Result result = usuarioDAOImplementation.GetAll();
         model.addAttribute("usuarios", result.objects);
         return "Usuario";
     }
-    
+
     @GetMapping("form")
     public String FormularioUsuario(Model model) {
         Usuario usuario = new Usuario();
@@ -54,7 +54,7 @@ public class UsuarioController {
         model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
         return "UsuarioForm";
     }
-    
+
     @PostMapping("form")
     public String FormularioUsuario(@Valid @ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -66,40 +66,46 @@ public class UsuarioController {
         }
         return "redirect:/Usuario";
     }
-    
+
     @GetMapping("detail/{IdUsuario}")
     public String DetalleUsuario(@PathVariable("IdUsuario") int IdUsuario, Model model) {
         Result result = usuarioDAOImplementation.GetAllById(IdUsuario);
         model.addAttribute("usuario", result.objects.get(0));
         return "UsuarioDetail";
     }
-    
+
+    @PostMapping("detail/{IdDireccion}")
+    public String EliminarDireccion(@PathVariable("IdDireccion") int IdDIreccion, Model model) {
+        
+        return "UsuarioDetail";
+    }
+
     @GetMapping("getEstadoByPais/{IdPais}")
     @ResponseBody
     public Result getEstadoByPais(@PathVariable("IdPais") int IdPais) {
         Result result = estadoDAOImplementation.GetAll(IdPais);
         return result;
     }
-    
+
     @GetMapping("getMunicipioByEstado/{IdEstado}")
     @ResponseBody
     public Result getMunicipioByEstado(@PathVariable("IdEstado") int IdEstado) {
         Result result = municipioDAOImplementation.GetAll(IdEstado);
         return result;
     }
-    
+
     @GetMapping("getColoniabyMunicipio/{IdMunicipio}")
     @ResponseBody
     public Result getColoniabyMunicipio(@PathVariable("IdMunicipio") int IdMunicipio) {
         Result result = coloniaDAOImplmentation.GetAll(IdMunicipio);
         return result;
     }
-    
+
     @GetMapping("getDireccionByCodigoPostal/{CodigoPostal}")
     @ResponseBody
     public Result getDireccionByCodigoPostal(@PathVariable("CodigoPostal") String CodigoPostal) {
         Result result = coloniaDAOImplmentation.GetByCodigoPostal(CodigoPostal);
         return result;
     }
-    
+
 }

@@ -1,7 +1,9 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.DAO;
 
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
+import java.sql.CallableStatement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -12,8 +14,24 @@ public class DireccionDAOImplementation implements IDireccion {
     private JdbcTemplate JdbcTemplate;
 
     @Override
-    public Result DireccionAdd(int IdUsuario) {
+    public Result DireccionAdd(String Calle, String NumeroExterior, String NumeroInterior, int IdColonia, int IdUsuario) {
         Result result = new Result();
+        try {
+            JdbcTemplate.execute("{CALL DIREECIONADDSP(?,?,?,?,?)}", (CallableStatementCallback< Boolean>) callableStatement -> {
+                callableStatement.setString(1, Calle);
+                callableStatement.setString(2, NumeroExterior);
+                callableStatement.setString(3, NumeroInterior);
+                callableStatement.setInt(4, IdColonia);
+                callableStatement.setInt(5, IdUsuario);
+                callableStatement.execute();
+                return result.correct;
+            });
+
+        } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
+        }
         return result;
     }
 

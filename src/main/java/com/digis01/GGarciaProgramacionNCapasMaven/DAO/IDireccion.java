@@ -8,5 +8,5 @@ import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
 
 public interface IDireccion {
 
-    Result DireccionAdd(int IdUsuario);
+    Result DireccionAdd(String Calle, String NumeroExterior, String numeroInterior, int IdColonia, int IdUsuario);
 }
