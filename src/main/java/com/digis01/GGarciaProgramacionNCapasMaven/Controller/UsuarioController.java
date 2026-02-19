@@ -39,6 +39,10 @@ public class UsuarioController {
     @Autowired
     private ColoniaDAOImplmentation coloniaDAOImplmentation;
 
+    /*
+        Carga los datos de todos los usuarios en una vsita para seleccionar si se deben de editar o eliminar
+        - Falta 
+     */
     @GetMapping("")
     public String Usuario(Model model) {
         Result result = usuarioDAOImplementation.GetAll();
@@ -46,6 +50,7 @@ public class UsuarioController {
         return "Usuario";
     }
 
+    /*Carga en la vista los datos de los roles,paises y el modelo de usuario*/
     @GetMapping("form")
     public String FormularioUsuario(Model model) {
         Usuario usuario = new Usuario();
@@ -55,6 +60,12 @@ public class UsuarioController {
         return "UsuarioForm";
     }
 
+    /*
+        Envia los datos del usuario y su direccion a la base de datos
+        - Falta checar a detalle las validaciones del lado del servidor
+        - Cargar los datos nuevamente en caso de que el cliente tenga algun fallo
+        - Mostrar si el formulario esta llenado correcta o incorrectamente del lado del cliente
+     */
     @PostMapping("form")
     public String FormularioUsuario(@Valid @ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -67,6 +78,7 @@ public class UsuarioController {
         return "redirect:/Usuario";
     }
 
+    /*Envia los datos del usuario a la vista detalle para su edicion o eliminacion*/
     @GetMapping("detail/{IdUsuario}")
     public String DetalleUsuario(@PathVariable("IdUsuario") int IdUsuario, Model model) {
         Result result = usuarioDAOImplementation.GetAllById(IdUsuario);
@@ -74,12 +86,14 @@ public class UsuarioController {
         return "UsuarioDetail";
     }
 
+    /*Elimina una direecion */
     @PostMapping("detail/{IdDireccion}")
     public String EliminarDireccion(@PathVariable("IdDireccion") int IdDIreccion, Model model) {
-        
+
         return "UsuarioDetail";
     }
 
+    /*Cargar los datos del estado */
     @GetMapping("getEstadoByPais/{IdPais}")
     @ResponseBody
     public Result getEstadoByPais(@PathVariable("IdPais") int IdPais) {
@@ -87,6 +101,7 @@ public class UsuarioController {
         return result;
     }
 
+    /*Cargar los datos del municipio*/
     @GetMapping("getMunicipioByEstado/{IdEstado}")
     @ResponseBody
     public Result getMunicipioByEstado(@PathVariable("IdEstado") int IdEstado) {
@@ -94,6 +109,7 @@ public class UsuarioController {
         return result;
     }
 
+    /*Cargar los datos del colonia*/
     @GetMapping("getColoniabyMunicipio/{IdMunicipio}")
     @ResponseBody
     public Result getColoniabyMunicipio(@PathVariable("IdMunicipio") int IdMunicipio) {
@@ -101,6 +117,7 @@ public class UsuarioController {
         return result;
     }
 
+    /*Buscar la colonia usando el codigo postal*/
     @GetMapping("getDireccionByCodigoPostal/{CodigoPostal}")
     @ResponseBody
     public Result getDireccionByCodigoPostal(@PathVariable("CodigoPostal") String CodigoPostal) {
