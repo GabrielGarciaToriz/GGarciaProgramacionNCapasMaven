@@ -25,6 +25,15 @@ public class Direccion {
     @Valid
     public Colonia Colonia;
 
+    public int getIdDireccion() {
+        return IdDireccion;
+    }
+
+    public void setIdDireccion(int IdDireccion) {
+        this.IdDireccion = IdDireccion;
+    }
+    
+
     public void setCalle(String Calle) {
         this.Calle = Calle;
     }

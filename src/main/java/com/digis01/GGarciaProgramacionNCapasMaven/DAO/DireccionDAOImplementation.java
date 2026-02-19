@@ -2,6 +2,7 @@ package com.digis01.GGarciaProgramacionNCapasMaven.DAO;
 
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
 import java.sql.CallableStatement;
+import java.sql.ResultSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,6 +25,11 @@ public class DireccionDAOImplementation implements IDireccion {
                 callableStatement.setInt(4, IdColonia);
                 callableStatement.setInt(5, IdUsuario);
                 callableStatement.execute();
+//                ResultSet resultSet = (ResultSet) callableStatement.getObject(1);
+//                while (resultSet.next()) {
+//
+//                }
+
                 return result.correct;
             });
 

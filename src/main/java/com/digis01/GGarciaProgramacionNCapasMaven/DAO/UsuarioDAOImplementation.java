@@ -115,17 +115,22 @@ public class UsuarioDAOImplementation implements IUsuario {
                 while (resultSet.next()) {
                     if (!result.objects.isEmpty() && IdUsuario == ((Usuario) (result.objects.get(result.objects.size() - 1))).getIdUsuario()) {
                         Direccion direccion = new Direccion();
+                        direccion.setIdDireccion(resultSet.getInt("IdDireccion"));
                         direccion.setCalle(resultSet.getString("Calle"));
                         direccion.setNumeroExterior(resultSet.getString("NumeroExterior"));
                         direccion.setNumeroInterior(resultSet.getString("NumeroInterior"));
                         direccion.Colonia = new Colonia();
+                        direccion.Colonia.setIdColonia(resultSet.getInt("IdColonia"));
                         direccion.Colonia.setNombre(resultSet.getString("Colonia"));
                         direccion.Colonia.setCodigoPostal(resultSet.getString("CP"));
                         direccion.Colonia.Municipio = new Municipio();
+                        direccion.Colonia.Municipio.setIdMunicipio(resultSet.getInt("IdMunicipio"));
                         direccion.Colonia.Municipio.setNombre(resultSet.getString("Municipio"));
                         direccion.Colonia.Municipio.Estado = new Estado();
+                        direccion.Colonia.Municipio.Estado.setIdEstado(resultSet.getInt("IdEstado"));
                         direccion.Colonia.Municipio.Estado.setNombre(resultSet.getString("Estado"));
                         direccion.Colonia.Municipio.Estado.Pais = new Pais();
+                        direccion.Colonia.Municipio.Estado.Pais.setIdPais(resultSet.getInt("IdPais"));
                         direccion.Colonia.Municipio.Estado.Pais.setNombre(resultSet.getString("Pais"));
                         ((Usuario) (result.objects.get(result.objects.size() - 1))).Direcciones.add(direccion);
                     } else {
@@ -146,17 +151,22 @@ public class UsuarioDAOImplementation implements IUsuario {
                         usuario.setTelefono(resultSet.getString("Telefono"));
                         usuario.Rol.setNombre(resultSet.getString("RolAsignado"));
                         Direccion direccion = new Direccion();
+                        direccion.setIdDireccion(resultSet.getInt("IdDireccion"));
                         direccion.setCalle(resultSet.getString("Calle"));
                         direccion.setNumeroExterior(resultSet.getString("NumeroExterior"));
                         direccion.setNumeroInterior(resultSet.getString("NumeroInterior"));
                         direccion.Colonia = new Colonia();
+                        direccion.Colonia.setIdColonia(resultSet.getInt("IdColonia"));
                         direccion.Colonia.setNombre(resultSet.getString("Colonia"));
                         direccion.Colonia.setCodigoPostal(resultSet.getString("CP"));
                         direccion.Colonia.Municipio = new Municipio();
+                        direccion.Colonia.Municipio.setIdMunicipio(resultSet.getInt("IdMunicipio"));
                         direccion.Colonia.Municipio.setNombre(resultSet.getString("Municipio"));
                         direccion.Colonia.Municipio.Estado = new Estado();
+                        direccion.Colonia.Municipio.Estado.setIdEstado(resultSet.getInt("IdEstado"));
                         direccion.Colonia.Municipio.Estado.setNombre(resultSet.getString("Estado"));
                         direccion.Colonia.Municipio.Estado.Pais = new Pais();
+                        direccion.Colonia.Municipio.Estado.Pais.setNombre(resultSet.getString("Pais"));
                         direccion.Colonia.Municipio.Estado.Pais.setNombre(resultSet.getString("Pais"));
                         usuario.Direcciones.add(direccion);
                         result.objects.add(usuario);
