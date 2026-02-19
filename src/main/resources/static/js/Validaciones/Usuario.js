@@ -1,9 +1,9 @@
 import { limpiarEstilos, marcarExito, mostrarError } from "../Helpers/HelpersUI.js";
 //EXPRESION REGULAR PARA SOLO USAR LETRAS
-const regexLetras = /^[a-zA-Z\s]+$/
+const regexLetras = /^[a-zA-Z0-9]+$/
 const msgCorrect = "Validado";
-const msgError = "Solo letras";
-export function SoloLetras(input, event) {
+const msgError = "Usuario no valido";
+export function Usuario(input, event) {
     var valorCompleto = $(input).val() + event.key;
     //EXPRESON REGULAR PARA SOLO ACEPTAR CARACTERES Y ESPACIOS
     if (!regexLetras.test(valorCompleto)) {
@@ -14,7 +14,7 @@ export function SoloLetras(input, event) {
     }
 }
 
-export function SoloLetrasBlur(input) {
+export function UsuarioBlur(input) {
     const valor = $(input).val();
     if (valor === "") {
         limpiarEstilos(input);

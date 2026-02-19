@@ -83,6 +83,7 @@ public class UsuarioController {
     public String DetalleUsuario(@PathVariable("IdUsuario") int IdUsuario, Model model) {
         Result result = usuarioDAOImplementation.GetAllById(IdUsuario);
         model.addAttribute("usuario", result.objects.get(0));
+        model.addAttribute("roles", rolDAOImplementation.GetAll().objects.get(0));
         return "UsuarioDetail";
     }
 
