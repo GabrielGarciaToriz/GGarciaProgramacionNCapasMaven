@@ -2,4 +2,4 @@
 export * from "./PaisEstado.js";
 export * from "./EstadoMunicipio.js";
 export * from "./MunicipioColonia.js";
-export * from "./DireccionByCp.js";
+export * from "./Ubicacion.js";

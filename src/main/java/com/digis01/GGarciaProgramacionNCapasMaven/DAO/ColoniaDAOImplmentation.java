@@ -14,10 +14,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ColoniaDAOImplmentation implements IColonia {
-
+    
     @Autowired
     private JdbcTemplate JdbcTemplate;
-
+    
     @Override
     public Result GetAll(int IdMunicipio) {
         Result result = new Result();
@@ -28,7 +28,7 @@ public class ColoniaDAOImplmentation implements IColonia {
                 callableStatement.setInt(2, IdMunicipio);
                 callableStatement.execute();
                 ResultSet resultSet = (ResultSet) callableStatement.getObject(1);
-
+                
                 while (resultSet.next()) {
                     Colonia colonia = new Colonia();
                     colonia.setIdColonia(resultSet.getInt("IdColonia"));
@@ -46,10 +46,10 @@ public class ColoniaDAOImplmentation implements IColonia {
             result.errorMessage = e.getLocalizedMessage();
             result.ex = e;
         }
-
+        
         return result;
     }
-
+    
     @Override
     public Result GetByCodigoPostal(String codigoPostal) {
         Result result = new Result();
@@ -59,25 +59,27 @@ public class ColoniaDAOImplmentation implements IColonia {
                 callableStatement.registerOutParameter(1, java.sql.Types.REF_CURSOR);
                 callableStatement.setString(2, codigoPostal);
                 callableStatement.execute();
-
+                
                 ResultSet resultSet = (ResultSet) callableStatement.getObject(1);
                 while (resultSet.next()) {
-                    Pais pais = new Pais();
-                    Estado estado = new Estado();
-                    Municipio municipio = new Municipio();
                     Colonia colonia = new Colonia();
-
-                    pais.setIdPais(resultSet.getInt("IdPais"));
-                    estado.setIdEstado(resultSet.getInt("IdEstado"));
-                    municipio.setIdMunicipio(resultSet.getInt("IdMunicipio"));
-                    colonia.setMunicipio(municipio);
-                    colonia.Municipio.setEstado(estado);
-                    colonia.Municipio.Estado.setPais(pais);
+                    colonia.Municipio = new Municipio();
+                    colonia.Municipio.Estado = new Estado();
+                    colonia.Municipio.Estado.Pais = new Pais();
+                    colonia.Municipio.Estado.Pais.setIdPais(resultSet.getInt("IdPais"));
+                    colonia.Municipio.Estado.Pais.setNombre(resultSet.getString("Pais"));
+                    colonia.Municipio.Estado.setIdEstado(resultSet.getInt("IdEstado"));
+                    colonia.Municipio.Estado.setNombre(resultSet.getString("Estado"));
+                    colonia.Municipio.setIdMunicipio(resultSet.getInt("IdMunicipio"));
+                    colonia.Municipio.setNombre(resultSet.getString("Municipio"));
+                    colonia.setIdColonia(resultSet.getInt("IdColonia"));
+                    colonia.setNombre(resultSet.getString("Colonia"));
                     colonia.setCodigoPostal(codigoPostal);
+                    
                     result.objects.add(colonia);
                 }
-
-                return result.correct;
+                
+                return result.correct = true;
             });
         } catch (Exception e) {
             result.correct = false;

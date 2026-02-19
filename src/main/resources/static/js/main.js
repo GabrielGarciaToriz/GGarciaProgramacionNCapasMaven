@@ -6,7 +6,7 @@ import {
 } from "./Validaciones/index.js";
 
 import {
-    PaisEstado, EstadoMunicipio, MunicipioColonia, DireccionByCodigoPostal
+    PaisEstado, EstadoMunicipio, MunicipioColonia, DireccionByCodigoPostal, CascadeoUbicacion
 } from "./Selects/index.js";
 
 const reglasValidacion = [
@@ -43,6 +43,7 @@ const inicializarSelectores = () => {
     EstadoMunicipio();
     MunicipioColonia();
     DireccionByCodigoPostal();
+    CascadeoUbicacion();
 };
 
 const aplicarValidaciones = () => {

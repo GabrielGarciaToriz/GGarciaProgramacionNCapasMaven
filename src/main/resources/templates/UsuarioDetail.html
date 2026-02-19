@@ -147,9 +147,13 @@
                                 <span id="errorEmail" class="text-danger small"></span>
                             </div>
                             <div class="col-md-4">
-                                <label for="Rol" class="form-label">Rol del Sistema</label>
-                                <option value="0">Seleccione una opción</option>
-                                <option th:each="roles : ${roles}" th:value="${roles.IdRol}" th:text="${roles.Nombre}">
+                                <label for="Rol" class="form-label">Rol</label>
+                                <select for="Rol" class="form-select">
+                                    <option value="0">Seleccione una opción</option>
+                                    <option th:each="roles : ${roles}" th:value="${roles.IdRol}"
+                                        th:text="${roles.Nombre}">
+                                </select>
+
                                 </option>
                             </div>
                         </div>

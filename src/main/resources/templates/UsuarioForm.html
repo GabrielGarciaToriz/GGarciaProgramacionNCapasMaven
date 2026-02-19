@@ -162,6 +162,9 @@
                 </select>
               </div>
             </div>
+            <div th:object="${elementosDireccion}">
+              <p th:text="${Colonia}"></p>
+            </div>
 
             <div class="d-flex justify-content-between align-items-center mt-5 pt-4 border-top">
               <a th:href="@{/usuario}" class="btn btn-outline-secondary rounded-pill px-4">
