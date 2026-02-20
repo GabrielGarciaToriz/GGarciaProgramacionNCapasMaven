@@ -100,7 +100,7 @@
                       <i class="bi bi-pencil-square"></i>
                     </a>
                     <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar">
-                      <i class="bi bi-trash"></i>
+                      <a th:href="@{/usuario/detail/delete/{IdUsuario}(IdUsuario=${usuario.IdUsuario})}"><i class="bi bi-trash"></i></a>
                     </button>
                   </div>
                 </td>

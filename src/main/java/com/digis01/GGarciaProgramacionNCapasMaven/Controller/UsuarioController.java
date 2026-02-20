@@ -88,10 +88,10 @@ public class UsuarioController {
     }
 
     /*Elimina una direecion */
-    @PostMapping("detail/{IdDireccion}")
-    public String EliminarDireccion(@PathVariable("IdDireccion") int IdDIreccion, Model model) {
-
-        return "UsuarioDetail";
+    @PostMapping("detail/delete/{IdUsuario}")
+    public String EliminarDireccion(@PathVariable("IdUsuario") int IdUsaurio, Model model) {
+        usuarioDAOImplementation.DeleteDireccionUsuariobyId(IdUsaurio);
+        return "redirect:/Usuario";
     }
 
     /*Cargar los datos del estado */

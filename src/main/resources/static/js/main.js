@@ -8,7 +8,6 @@ import {
 import {
     PaisEstado, EstadoMunicipio, MunicipioColonia, DireccionByCodigoPostal, CascadeoUbicacion
 } from "./Selects/index.js";
-
 const reglasValidacion = [
     // Letras
     { selector: ".validar-letras", evento: "keypress", accion: SoloLetras },

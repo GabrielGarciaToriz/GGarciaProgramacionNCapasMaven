@@ -7,4 +7,6 @@ public interface IUsuario {
     Result GetAll();
 
     Result GetAllById(int IdUsuario);
+    
+    Result DeleteDireccionUsuariobyId(int IdUsuario);
 }
