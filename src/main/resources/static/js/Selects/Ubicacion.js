@@ -33,7 +33,9 @@ export function DireccionByCodigoPostal() {
                         $("#selectColonia").append('<option value="0">Selecciona una colonia</option>');
 
                         $.each(data.objects, function (i, colonia) {
-                            $("#selectColonia").append(`<option value="${colonia.IdColonia}">${colonia.Nombre}</option>`);
+                            $("#selectColonia").append(
+                                `<option value="${colonia.IdColonia}" data-cp="${colonia.CodigoPostal}">${colonia.Nombre}</option>`
+                            );
                         });
 
                     } else {
@@ -91,12 +93,11 @@ export function CascadeoUbicacion() {
 
     $("#selectColonia").change(function () {
         var optionSeleccionado = $(this).find('option:selected');
-
         var codigoPostalAsignado = optionSeleccionado.data('cp');
 
         if (codigoPostalAsignado) {
             $("#CodigoPostal").val(codigoPostalAsignado);
-        } else {
+        } else if($(this).val() === "0" || $(this).val() === 0) {
             $("#CodigoPostal").val("");
         }
     });

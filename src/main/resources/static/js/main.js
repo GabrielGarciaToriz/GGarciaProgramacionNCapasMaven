@@ -82,4 +82,12 @@ $(document).ready(() => {
     AlertasEliminacionDireccionUsuario();
     AlertasEliminacionDireccion();
     verificarAlertasServidor();
+
+    const fechaHoy = new Date();
+    const anioMaximo = fechaHoy.getFullYear() - 18;
+    const mes = String(fechaHoy.getMonth() + 1).padStart(2, '0');
+    const dia = String(fechaHoy.getDate()).padStart(2, '0');
+
+    const fechaMaxima = `${anioMaximo}-${mes}-${dia}`;
+    $("#FechaNacimiento").attr("max",fechaMaxima);
 });

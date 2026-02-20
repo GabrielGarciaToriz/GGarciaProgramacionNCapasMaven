@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import java.util.Date;
 import java.util.List;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class Usuario {
 
@@ -32,6 +33,7 @@ public class Usuario {
     private String Telefono;
     @NotNull(message = "Este campo es obligatorio")
     @Past(message = "Este campo debe de estar en el pasado")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date FechaNacimiento;
     @Valid
     public Rol Rol;
@@ -66,7 +68,6 @@ public class Usuario {
     public void setNombre(String Nombre) {
         this.Nombre = Nombre;
     }
-
 
     public void setApellidoPaterno(String ApellidoPaterno) {
         this.ApellidoPaterno = ApellidoPaterno;
@@ -120,7 +121,6 @@ public class Usuario {
     public String getNombre() {
         return Nombre;
     }
-
 
     public String getApellidoPaterno() {
         return ApellidoPaterno;

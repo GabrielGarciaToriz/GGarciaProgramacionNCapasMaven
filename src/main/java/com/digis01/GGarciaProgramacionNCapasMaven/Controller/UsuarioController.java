@@ -7,10 +7,17 @@ import com.digis01.GGarciaProgramacionNCapasMaven.DAO.PaisDAOImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.RolDAOImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.UsuarioDAOImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Direccion;
+import com.digis01.GGarciaProgramacionNCapasMaven.ML.Colonia;
+import com.digis01.GGarciaProgramacionNCapasMaven.ML.Estado;
+import com.digis01.GGarciaProgramacionNCapasMaven.ML.Municipio;
+import com.digis01.GGarciaProgramacionNCapasMaven.ML.Pais;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
+import com.digis01.GGarciaProgramacionNCapasMaven.ML.Rol;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Usuario;
 import jakarta.validation.Valid;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,6 +62,23 @@ public class UsuarioController {
     @GetMapping("form")
     public String FormularioUsuario(Model model) {
         Usuario usuario = new Usuario();
+        usuario.setRol(new Rol());
+        Direccion direccion = new Direccion();
+        Colonia colonia = new Colonia();
+        Municipio municipio = new Municipio();
+        Estado estado = new Estado();
+        Pais pais = new Pais();
+
+        estado.setPais(pais);
+        municipio.setEstado(estado);
+        colonia.setMunicipio(municipio);
+        direccion.setColonia(colonia);
+
+        usuario.setDirecciones(new ArrayList<>());
+        usuario.getDirecciones().add(direccion);
+
+        LocalDate fechaMax = LocalDate.now().minusYears(-18);
+        model.addAttribute("fechaMaxima", fechaMax.toString());
         model.addAttribute("usuario", usuario);
         model.addAttribute("paises", paisDAOImplementation.GetAll().objects);
         model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
@@ -69,14 +93,37 @@ public class UsuarioController {
      */
     @PostMapping("form")
     public String FormularioUsuario(@Valid @ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult, Model model) {
+        LocalDate fechaMax = LocalDate.now().minusYears(-18);
+        model.addAttribute("fechaMaxima", fechaMax.toString());
+        if (usuario.getFechaNacimiento() != null) {
+            Calendar fechaMayorEdad = Calendar.getInstance();
+            fechaMayorEdad.add(Calendar.YEAR, -18);
+            if (usuario.getFechaNacimiento().after(fechaMayorEdad.getTime())) {
+                bindingResult.rejectValue("FechaNacimiento", "error.usuario", "Debes der mayor de edad para registrarte");
+            }
+        }
+
         if (bindingResult.hasErrors()) {
-            model.addAttribute("usuario", usuario);
-            model.addAttribute("direccion", usuario.Direcciones);
             model.addAttribute("paises", paisDAOImplementation.GetAll().objects);
             model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
+            try {
+                int idPais = usuario.getDirecciones().get(0).getColonia().getMunicipio().getEstado().getPais().getIdPais();
+                if (idPais > 0) {
+                    model.addAttribute("estados", estadoDAOImplementation.GetAll(idPais).objects);
+                }
+                int idEstado = usuario.getDirecciones().get(0).getColonia().getMunicipio().getEstado().getIdEstado();
+                if (idEstado > 0) {
+                    model.addAttribute("municipios", municipioDAOImplementation.GetAll(idEstado));
+                }
+                int idMunicipio = usuario.getDirecciones().get(0).getColonia().getMunicipio().getIdMunicipio();
+                if (idMunicipio > 0) {
+                    model.addAttribute("colonias", coloniaDAOImplmentation.GetAll(idMunicipio));
+                }
+            } catch (Exception e) {
+            }
             return "UsuarioForm";
         }
-        return "redirect:/Usuario";
+        return "redirect:/usuario";
     }
 
     /*Envia los datos del usuario a la vista detalle para su edicion o eliminacion*/
