@@ -101,8 +101,10 @@
                                                         class="btn btn-outline-secondary btn-sm">
                                                         <i class="bi bi-pencil"></i>
                                                     </a>
-                                                    <button type="button" class="btn btn-outline-danger btn-sm"
-                                                        onclick="confirm('¿Eliminar?')">
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-outline-danger btn-eliminar-direccion"
+                                                        title="Eliminar"
+                                                        th:data-url="@{/usuario/detail/delete/direccion/{IdDireccion}(IdDireccion=${direccion.IdDireccion})}">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </div>
@@ -233,7 +235,8 @@
         </div>
     </div>
     </div>
-
+    <input type="hidden" id="mensajeExito" th:if="${mensajeExito != null}" th:value="${mensajeExito}">
+    <input type="hidden" id="mensajeError" th:if="${mensajeError != null}" th:value="${mensajeError}">
 </body>
 
 </html>

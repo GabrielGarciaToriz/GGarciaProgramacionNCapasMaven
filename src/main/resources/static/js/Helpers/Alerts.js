@@ -1,6 +1,27 @@
-export function confirmarEliminacionDireccion(urlEliminacion) {
+export function confirmarEliminacionDireccionUsuario(urlEliminacion) {
     Swal.fire({
         title: '¿Esta seguro de eliminar a este usuario?',
+        text: 'Esta acción no se puede deshacer',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = urlEliminacion;
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+}
+
+export function confirmarEliminacionDireccion(urlEliminacion) {
+    Swal.fire({
+        title: '¿Esta seguro de eliminar esta direccion?',
         text: 'Esta acción no se puede deshacer',
         icon: 'warning',
         showCancelButton: true,

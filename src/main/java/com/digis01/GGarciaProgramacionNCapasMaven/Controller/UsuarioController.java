@@ -95,14 +95,19 @@ public class UsuarioController {
         if (result.correct) {
             redirectAttributes.addFlashAttribute("mensajeExito", "El registro se ha eliminado ");
         } else {
-            redirectAttributes.addFlashAttribute("mendajeError", "Hubo un problema al eliminar: " + result.errorMessage);
+            redirectAttributes.addFlashAttribute("mensajeError", "Hubo un problema al eliminar: " + result.errorMessage);
         }
         return "redirect:/usuario";
     }
 
     @PostMapping("detail/delete/direccion/{IdDireccion}")
     public String EliminarDireccion(@PathVariable("IdDireccion") int IdDireccion, RedirectAttributes redirectAttributes) {
-        
+        Result result = usuarioDAOImplementation.DeleteDireccionById(IdDireccion);
+        if (result.correct) {
+            redirectAttributes.addFlashAttribute("mensajeExito", "La dieccion se ha eliminado ");
+        } else {
+            redirectAttributes.addFlashAttribute("mensajeError", "Huno un problema al eliminar la direccion: " + result.errorMessage);
+        }
         return "redirect:/usuario";
     }
 

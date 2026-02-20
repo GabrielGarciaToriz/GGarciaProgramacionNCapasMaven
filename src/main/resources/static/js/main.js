@@ -9,7 +9,7 @@ import {
     PaisEstado, EstadoMunicipio, MunicipioColonia, DireccionByCodigoPostal, CascadeoUbicacion
 } from "./Selects/index.js";
 
-import { confirmarEliminacionDireccion, verificarAlertasServidor } from "./Helpers/Alerts.js";
+import { confirmarEliminacionDireccionUsuario, confirmarEliminacionDireccion, verificarAlertasServidor } from "./Helpers/Alerts.js";
 
 /* CONSTANTES*/
 const reglasValidacion = [
@@ -57,6 +57,14 @@ const aplicarValidaciones = () => {
     });
 };
 
+const AlertasEliminacionDireccionUsuario = () => {
+    $(".btn-eliminar-direccion-usuario").on("click", function (event) {
+        event.preventDefault();
+        const url = $(this).data("url");
+        console.log("Se va a ejecutar la ruta: ", url)
+        confirmarEliminacionDireccionUsuario(url);
+    })
+}
 const AlertasEliminacionDireccion = () => {
     $(".btn-eliminar-direccion").on("click", function (event) {
         event.preventDefault();
@@ -71,6 +79,7 @@ const AlertasEliminacionDireccion = () => {
 $(document).ready(() => {
     inicializarSelectores();
     aplicarValidaciones();
+    AlertasEliminacionDireccionUsuario();
     AlertasEliminacionDireccion();
     verificarAlertasServidor();
 });

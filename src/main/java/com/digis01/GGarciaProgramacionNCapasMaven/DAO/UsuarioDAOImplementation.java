@@ -190,7 +190,6 @@ public class UsuarioDAOImplementation implements IUsuario {
             JdbcTemplate.execute("{CALL deletedireccionusuariosp(?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
                 callableStatement.setInt(1, IdUsuario);
                 callableStatement.execute();
-
                 return result.correct = true;
             });
         } catch (Exception e) {
@@ -198,6 +197,25 @@ public class UsuarioDAOImplementation implements IUsuario {
             result.errorMessage = e.getLocalizedMessage();
             result.ex = e;
 
+        }
+        return result;
+    }
+
+    @Override
+    public Result DeleteDireccionById(int IdDireccion) {
+        Result result = new Result();
+
+        try {
+            JdbcTemplate.execute("CALL deletedireccionbyidsp(?)", (CallableStatementCallback<Boolean>) callableStatement -> {
+                callableStatement.setInt(1, IdDireccion);
+                callableStatement.execute();
+                return result.correct = true;
+            });
+
+        } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
         }
         return result;
     }
