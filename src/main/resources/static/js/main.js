@@ -8,6 +8,10 @@ import {
 import {
     PaisEstado, EstadoMunicipio, MunicipioColonia, DireccionByCodigoPostal, CascadeoUbicacion
 } from "./Selects/index.js";
+
+import { confirmarEliminacionDireccion, verificarAlertasServidor } from "./Helpers/Alerts.js";
+
+/* CONSTANTES*/
 const reglasValidacion = [
     // Letras
     { selector: ".validar-letras", evento: "keypress", accion: SoloLetras },
@@ -47,15 +51,26 @@ const inicializarSelectores = () => {
 
 const aplicarValidaciones = () => {
     reglasValidacion.forEach(({ selector, evento, accion }) => {
-        // Uso de Arrow Function y event.currentTarget en lugar de 'this'
         $(selector).on(evento, (event) => {
             accion(event.currentTarget, event);
         });
     });
 };
 
-// 4. Inicialización de la aplicación
+const AlertasEliminacionDireccion = () => {
+    $(".btn-eliminar-direccion").on("click", function (event) {
+        event.preventDefault();
+        console.log("Me estas apretando")
+        const url = $(this).data("url");
+        console.log("Se va a ejecutar la ruta: ", url)
+        confirmarEliminacionDireccion(url);
+    })
+}
+
+// Inicialización de la aplicación
 $(document).ready(() => {
     inicializarSelectores();
     aplicarValidaciones();
+    AlertasEliminacionDireccion();
+    verificarAlertasServidor();
 });

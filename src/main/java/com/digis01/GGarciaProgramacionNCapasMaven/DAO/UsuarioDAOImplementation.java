@@ -17,10 +17,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class UsuarioDAOImplementation implements IUsuario {
-    
+
     @Autowired
     private JdbcTemplate JdbcTemplate;
-    
+
     @Override
     public Result GetAll() {
         Result result = new Result();
@@ -30,7 +30,7 @@ public class UsuarioDAOImplementation implements IUsuario {
                 callableStatement.registerOutParameter(1, java.sql.Types.REF_CURSOR);
                 callableStatement.execute();
                 ResultSet resultSet = (ResultSet) callableStatement.getObject(1);
-                
+
                 while (resultSet.next()) {
                     int IdUsuario = resultSet.getInt("IdUsuario");
                     if (!result.objects.isEmpty() && IdUsuario == ((Usuario) (result.objects.get(result.objects.size() - 1))).getIdUsuario()) {
@@ -100,7 +100,7 @@ public class UsuarioDAOImplementation implements IUsuario {
         }
         return result;
     }
-    
+
     @Override
     public Result GetAllById(int IdUsuario) {
         Result result = new Result();
@@ -111,7 +111,7 @@ public class UsuarioDAOImplementation implements IUsuario {
                 callableStatement.setInt(2, IdUsuario);
                 callableStatement.execute();
                 ResultSet resultSet = (ResultSet) callableStatement.getObject(1);
-                
+
                 while (resultSet.next()) {
                     if (!result.objects.isEmpty() && IdUsuario == ((Usuario) (result.objects.get(result.objects.size() - 1))).getIdUsuario()) {
                         Direccion direccion = new Direccion();
@@ -182,24 +182,24 @@ public class UsuarioDAOImplementation implements IUsuario {
         }
         return result;
     }
-    
+
     @Override
     public Result DeleteDireccionUsuariobyId(int IdUsuario) {
         Result result = new Result();
         try {
-            JdbcTemplate.execute("{deleteireccionusuarioSP(?)}",  (CallableStatementCallback<Boolean>) callableStatement -> {
+            JdbcTemplate.execute("{CALL deletedireccionusuariosp(?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
                 callableStatement.setInt(1, IdUsuario);
-                result.correct = callableStatement.execute();
-                if (result.correct){
-                    System.out.println("Funciono");
-                }
-                return result.correct;
+                callableStatement.execute();
+
+                return result.correct = true;
             });
         } catch (Exception e) {
             result.correct = false;
-            
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
+
         }
         return result;
     }
-    
+
 }

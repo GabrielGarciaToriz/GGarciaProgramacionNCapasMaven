@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("usuario")
@@ -87,11 +88,22 @@ public class UsuarioController {
         return "UsuarioDetail";
     }
 
-    /*Elimina una direecion */
+    /*Elimina al usuario y sus direccion */
     @PostMapping("detail/delete/{IdUsuario}")
-    public String EliminarDireccion(@PathVariable("IdUsuario") int IdUsaurio, Model model) {
-        usuarioDAOImplementation.DeleteDireccionUsuariobyId(IdUsaurio);
-        return "redirect:/Usuario";
+    public String EliminarDireccionUsuario(@PathVariable("IdUsuario") int IdUsaurio, RedirectAttributes redirectAttributes) {
+        Result result = usuarioDAOImplementation.DeleteDireccionUsuariobyId(IdUsaurio);
+        if (result.correct) {
+            redirectAttributes.addFlashAttribute("mensajeExito", "El registro se ha eliminado ");
+        } else {
+            redirectAttributes.addFlashAttribute("mendajeError", "Hubo un problema al eliminar: " + result.errorMessage);
+        }
+        return "redirect:/usuario";
+    }
+
+    @PostMapping("detail/delete/direccion/{IdDireccion}")
+    public String EliminarDireccion(@PathVariable("IdDireccion") int IdDireccion, RedirectAttributes redirectAttributes) {
+        
+        return "redirect:/usuario";
     }
 
     /*Cargar los datos del estado */

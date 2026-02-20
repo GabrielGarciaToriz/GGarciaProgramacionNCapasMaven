@@ -3,6 +3,7 @@
 
 <head>
   <th:block th:replace="~{components/head :: recursos}"></th:block>
+  <script type="module" th:src="@{/js/main.js}"></script>
   <title>Directorio de Usuarios</title>
 </head>
 
@@ -99,20 +100,21 @@
                       class="btn btn-sm btn-outline-primary" title="Editar / Ver Detalles">
                       <i class="bi bi-pencil-square"></i>
                     </a>
-                    <button type="button" class="btn btn-sm btn-outline-danger" title="Eliminar">
-                      <a th:href="@{/usuario/detail/delete/{IdUsuario}(IdUsuario=${usuario.IdUsuario})}"><i class="bi bi-trash"></i></a>
+                    <button type="button" class="btn btn-sm btn-outline-danger btn-eliminar-direccion" title="Eliminar"
+                      th:data-url="@{/usuario/detail/delete/{IdUsuario}(IdUsuario=${usuario.IdUsuario})}">
+                      <i class="bi bi-trash"></i>
                     </button>
                   </div>
                 </td>
-
               </tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
-
   </div>
+  <input type="hidden" id="mensajeExito" th:if="${mensajeExito != null}" th:value="${mensajeExito}">
+  <input type="hidden" id="mensajeError" th:if="${mensajeError != null}" th:value="${mensajeError}">
 </body>
 
 </html>
