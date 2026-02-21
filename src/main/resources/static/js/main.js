@@ -75,6 +75,15 @@ const AlertasEliminacionDireccion = () => {
     })
 }
 
+const protegerFormulario = () => {
+    $("#formRegistroUsuario").on("submint", function () {
+        const btn = $("#btnGuardar");
+        btn.prop("disabled", true);
+        btn.html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Guardando..');
+        return true;
+    });
+};
+
 // Inicialización de la aplicación
 $(document).ready(() => {
     inicializarSelectores();
@@ -82,12 +91,12 @@ $(document).ready(() => {
     AlertasEliminacionDireccionUsuario();
     AlertasEliminacionDireccion();
     verificarAlertasServidor();
-
+    protegerFormulario();
     const fechaHoy = new Date();
     const anioMaximo = fechaHoy.getFullYear() - 18;
     const mes = String(fechaHoy.getMonth() + 1).padStart(2, '0');
     const dia = String(fechaHoy.getDate()).padStart(2, '0');
 
     const fechaMaxima = `${anioMaximo}-${mes}-${dia}`;
-    $("#FechaNacimiento").attr("max",fechaMaxima);
+    $("#FechaNacimiento").attr("max", fechaMaxima);
 });

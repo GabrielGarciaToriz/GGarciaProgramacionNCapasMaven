@@ -92,7 +92,7 @@ public class UsuarioController {
         - Mostrar si el formulario esta llenado correcta o incorrectamente del lado del cliente
      */
     @PostMapping("form")
-    public String FormularioUsuario(@Valid @ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult, Model model) {
+    public String FormularioUsuario(@Valid @ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         LocalDate fechaMax = LocalDate.now().minusYears(-18);
         model.addAttribute("fechaMaxima", fechaMax.toString());
         if (usuario.getFechaNacimiento() != null) {
@@ -123,7 +123,17 @@ public class UsuarioController {
             }
             return "UsuarioForm";
         }
-        return "redirect:/usuario";
+        Result result = usuarioDAOImplementation.Add(usuario);
+        if (result.correct) {
+            redirectAttributes.addFlashAttribute("mensajeExito", "Usuario registrado con exito");
+            return "redirect:/usuario";
+        } else {
+            model.addAttribute("mensajeError", "Error en la base de datos: " + result.errorMessage);
+            model.addAttribute("paises", paisDAOImplementation.GetAll().objects);
+            model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
+            return "UsuarioForm";
+        }
+
     }
 
     /*Envia los datos del usuario a la vista detalle para su edicion o eliminacion*/

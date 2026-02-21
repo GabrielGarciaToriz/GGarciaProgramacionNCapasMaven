@@ -220,4 +220,40 @@ public class UsuarioDAOImplementation implements IUsuario {
         return result;
     }
 
+    @Override
+    public Result Add(Usuario usuario) {
+        Result result = new Result();
+        try {
+            JdbcTemplate.execute("{CALL usaurioaddsp(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
+                callableStatement.setString(1, usuario.getNombre());
+                callableStatement.setString(2, usuario.getApellidoPaterno());
+                callableStatement.setString(3, usuario.getApellidoMaterno());
+                callableStatement.setDate(4, new java.sql.Date(usuario.getFechaNacimiento().getTime()));
+                callableStatement.setString(5, usuario.getCelular());
+                callableStatement.setString(6, usuario.getCurp());
+                callableStatement.setString(7, usuario.getUserName());
+                callableStatement.setString(8, usuario.getEmail());
+                callableStatement.setString(9, usuario.getPassword());
+                callableStatement.setString(10, usuario.getSexo());
+                callableStatement.setString(11, usuario.getTelefono());
+                callableStatement.setInt(12, usuario.getRol().getIdRol());
+
+                Direccion direccion = usuario.getDirecciones().get(0);
+
+                callableStatement.setString(13, direccion.getCalle());
+                callableStatement.setString(14, direccion.getNumeroExterior());
+                callableStatement.setString(15, direccion.getNumeroInterior());
+                callableStatement.setInt(16, direccion.getColonia().getIdColonia());
+                
+                callableStatement.execute();
+                
+                return result.correct = true;
+            });
+        } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
+        }
+        return result;
+    }
 }

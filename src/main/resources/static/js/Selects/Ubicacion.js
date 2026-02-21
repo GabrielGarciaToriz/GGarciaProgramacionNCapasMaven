@@ -97,7 +97,7 @@ export function CascadeoUbicacion() {
 
         if (codigoPostalAsignado) {
             $("#CodigoPostal").val(codigoPostalAsignado);
-        } else if($(this).val() === "0" || $(this).val() === 0) {
+        } else if ($(this).val() === "0" || $(this).val() === 0) {
             $("#CodigoPostal").val("");
         }
     });

@@ -1,6 +1,7 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.DAO;
 
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
+import com.digis01.GGarciaProgramacionNCapasMaven.ML.Usuario;
 
 public interface IUsuario {
 
@@ -11,4 +12,6 @@ public interface IUsuario {
     Result DeleteDireccionUsuariobyId(int IdUsuario);
 
     Result DeleteDireccionById(int IdDireccion);
+
+    Result Add(Usuario usuario);
 }

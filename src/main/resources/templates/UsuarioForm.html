@@ -198,6 +198,8 @@
 
     </div>
   </div>
+  <input type="hidden" id="mensajeExito" th:if="${mensajeExito != null}" th:value="${mensajeExito}">
+  <input type="hidden" id="mensajeError" th:if="${mensajeError != null}" th:value="${mensajeError}">
 </body>
 
 </html>
