@@ -1,11 +1,11 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.ML;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Min;
 
 public class Rol {
-
+    
+    @Min(value = 1, message = "Debes de seleccionar un Rol")
     private int IdRol;
-    @NotBlank(message = "Este campo es obligatorio")
     private String Nombre;
 
     public Rol() {

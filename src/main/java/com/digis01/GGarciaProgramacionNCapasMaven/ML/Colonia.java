@@ -1,10 +1,10 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.ML;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Min;
 
 public class Colonia {
-
+    @Min(value = 1, message = "Debes de seleccionar una colonia")
     private int IdColonia;
     private String Nombre;
     private String CodigoPostal;

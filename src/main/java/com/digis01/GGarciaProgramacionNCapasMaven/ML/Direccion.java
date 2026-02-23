@@ -17,7 +17,6 @@ public class Direccion {
     private int IdDireccion;
     @NotBlank(message = "Este campo es obligatorio")
     private String NumeroInterior;
-    @NotBlank(message = "Este campo es obligatorio")
     private String NumeroExterior;
     @NotBlank(message = "Este campo es obligatorio")
     private String Calle;

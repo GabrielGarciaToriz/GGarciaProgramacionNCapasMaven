@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 public class Estado {
 
     private int IdEstado;
-    @NotBlank(message = "Este campo es obligatorio")
     private String Nombre;
     @Valid
     public Pais Pais;

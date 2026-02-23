@@ -224,7 +224,7 @@ public class UsuarioDAOImplementation implements IUsuario {
     public Result Add(Usuario usuario) {
         Result result = new Result();
         try {
-            JdbcTemplate.execute("{CALL usaurioaddsp(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
+            JdbcTemplate.execute("{CALL usuariodireccionaddsp(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
                 callableStatement.setString(1, usuario.getNombre());
                 callableStatement.setString(2, usuario.getApellidoPaterno());
                 callableStatement.setString(3, usuario.getApellidoMaterno());
