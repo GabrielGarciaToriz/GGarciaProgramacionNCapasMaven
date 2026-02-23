@@ -6,9 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 public class Colonia {
 
     private int IdColonia;
-    @NotBlank(message = "Este campo es obligatorio")
     private String Nombre;
-    @NotBlank(message = "Este campo es obligatorio")
     private String CodigoPostal;
     @Valid
     public Municipio Municipio;

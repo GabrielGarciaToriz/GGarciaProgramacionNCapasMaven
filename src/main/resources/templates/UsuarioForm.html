@@ -44,7 +44,9 @@
               <div class="col-md-4">
                 <label for="Password" class="form-label">Contraseña</label>
                 <input type="password" class="form-control validar-password validar-password-blur" id="Password"
-                  placeholder="••••••••" />
+                  placeholder="••••••••" th:field="*{Password}" th:errorclass="is-invalid" />
+
+                <span th:if="${#fields.hasErrors('Password')}" th:errors="*{Password}" class="text-danger small"></span>
                 <span id="errorPassword" class="text-danger small"></span>
               </div>
               <div class="col-md-4">
@@ -99,13 +101,16 @@
               <div class="col-md-4">
                 <label class="form-label d-block">Sexo</label>
                 <div class="form-check form-check-inline mt-2">
-                  <input type="radio" class="form-check-input" id="rbHombre" name="Sexo" value="Hombre" />
+                  <input type="radio" class="form-check-input" id="rbHombre" th:field="*{Sexo}" value="Hombre"
+                    th:errorclass="is-invalid" />
                   <label for="rbHombre" class="form-check-label">Hombre</label>
                 </div>
                 <div class="form-check form-check-inline mt-2">
-                  <input type="radio" class="form-check-input" id="rbMujer" name="Sexo" value="Mujer" />
+                  <input type="radio" class="form-check-input" id="rbMujer" th:field="*{Sexo}" value="Mujer"
+                    th:errorclass="is-invalid" />
                   <label for="rbMujer" class="form-check-label">Mujer</label>
                 </div>
+                <span th:if="${#fields.hasErrors('Sexo')}" th:errors="*{Sexo}" class="text-danger small d-block"></span>
               </div>
 
               <div class="col-md-4">
