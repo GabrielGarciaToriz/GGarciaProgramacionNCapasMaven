@@ -14,4 +14,6 @@ public interface IUsuario {
     Result DeleteDireccionById(int IdDireccion);
 
     Result Add(Usuario usuario);
+    
+    Result UsuarioDireccionBusqueda(Usuario usuario);
 }

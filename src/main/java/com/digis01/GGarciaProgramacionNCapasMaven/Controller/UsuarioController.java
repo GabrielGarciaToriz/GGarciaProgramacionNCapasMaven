@@ -53,13 +53,26 @@ public class UsuarioController {
      */
     @GetMapping("")
     public String Usuario(Model model) {
-        Result result = usuarioDAOImplementation.GetAll();
-        model.addAttribute("usuarios", result.objects);
+        Usuario usuarioBusqueda = new Usuario();
+        usuarioBusqueda.setRol(new Rol());
+        model.addAttribute("usuarioBusqueda", usuarioBusqueda);
+        model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
+        model.addAttribute("usuarios", usuarioDAOImplementation.GetAll().objects);
         return "Usuario";
+    }
+
+    @PostMapping("/buscar")
+    public String BuscarUsuario(@ModelAttribute("usuarioBusqueda") Usuario usuarioBusqueda, Model model) {
+        model.addAttribute("usuarioBusqueda", usuarioBusqueda);
+        model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
+        model.addAttribute("usuarios", usuarioDAOImplementation.UsuarioDireccionBusqueda(usuarioBusqueda).objects);
+        return "Usuario";
+
     }
 
     /*Carga en la vista los datos de los roles,paises y el modelo de usuario*/
     @GetMapping("form")
+
     public String FormularioUsuario(Model model) {
         Usuario usuario = new Usuario();
         usuario.setRol(new Rol());
