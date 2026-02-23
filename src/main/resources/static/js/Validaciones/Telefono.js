@@ -1,18 +1,18 @@
 import { limpiarEstilos, marcarExito, mostrarError } from "../Helpers/HelpersUI.js";
-const regexTelefono = /^[\(]?[\+]?(\d{2}|\d{3})[\)]?[\s]?((\d{6}|\d{8})|(\d{3}[\*\.\-\s]){3}|(\d{2}[\*\.\-\s]){4}|(\d{4}[\*\.\-\s]){2})|\d{8}|\d{10}|\d{12}$/;
-const msgError = "El telefono no tiene el formato correcto";
-const msgCorrect = "El telefono es correcto"
+const regexTelefono = /^(\+\d{1,3}\s?)?(\(?\d{2,3}\)?[\s.-]?)?\d{3,4}[\s.-]?\d{4}$/;
+const msgError = "Formato no válido";
+const msgCorrect = "Correcto"
 export function validarTelefono(input, event) {
-    var telefono = $(input).val() + event.key;
-    if (regexTelefono.test(telefono)) {
-        marcarExito(input, msgCorrect)
-    } else {
-        mostrarError(input, msgError)
+    const tecla = event.key;
+    const regexTeclasPermitidas = /^[0-9\s\+\-\.\(\)]$/;
+    if (tecla.length === 1 && !regexTeclasPermitidas.test(tecla)) {
+        event.preventDefault();
     }
+    limpiarEstilos(input)
 }
 
 export function validarTelefonoBlur(input) {
-    var telefono = $(input).val();
+    const  telefono = $(input).val().trim();
     if (telefono === "") {
         limpiarEstilos(input);
         return;
