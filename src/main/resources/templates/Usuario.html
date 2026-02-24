@@ -16,21 +16,21 @@
           <div class="row g-3 align-items-end">
             <div class="col-md-3">
               <label for="Nombre" class="form-label small text-muted">Nombre</label>
-              <input type="text" class="form-control" id="Nombre">
+              <input type="text" class="form-control" id="Nombre" th:field="*{Nombre}">
             </div>
             <div class="col-md-2">
               <label for="ApellidoPaterno" class="form-label small text-muted">Apellido Paterno</label>
-              <input type="text" class="form-control" id="ApellidoPaterno">
+              <input type="text" class="form-control" id="ApellidoPaterno" th:field="*{ApellidoPaterno}">
             </div>
             <div class="col-md-2">
               <label for="ApellidoMaterno" class="form-label small text-muted">Apellido Materno</label>
-              <input type="text" class="form-control" id="ApellidoMaterno">
+              <input type="text" class="form-control" id="ApellidoMaterno" th:field="*{ApellidoMaterno}">
             </div>
             <div class="col-md-3">
               <label for="Rol" class="form-label small text-muted">Rol</label>
-              <select id="Rol" class="form-select" th:field="*{Rol.IdRol}">
+              <select id="Rol" class="form-select" th:field="*{rol.IdRol}">
                 <option value="0">Todos los roles</option>
-                <option th:each="rol : ${roles}" th:value="${rol.IdRol}" th:text="|${rol.Nombre} ${rol.IdRol}|"></option>
+                <option th:each="rol : ${roles}" th:value="${rol.IdRol}" th:text="${rol.Nombre}"></option>
               </select>
             </div>
             <div class="col-md-2 d-flex gap-2">
