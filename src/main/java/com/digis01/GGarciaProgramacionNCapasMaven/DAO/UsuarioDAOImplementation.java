@@ -298,21 +298,22 @@ public class UsuarioDAOImplementation implements IUsuario {
                         direccion.Colonia.Municipio.Estado.Pais.setNombre(resultSet.getString("Pais"));
                         ((Usuario) (result.objects.get(result.objects.size() - 1))).Direcciones.add(direccion);
                     } else {
-                        usuario.Rol = new Rol();
-                        usuario.Direcciones = new ArrayList();
-                        usuario.setIdUsuario(IdUsuario);
-                        usuario.setNombre(resultSet.getString("NombreUsuario"));
-                        usuario.setApellidoPaterno(resultSet.getString("ApellidoPaterno"));
-                        usuario.setApellidoMaterno(resultSet.getString("ApellidoMaterno"));
-                        usuario.setFechaNacimiento(resultSet.getDate("FechaNacimiento"));
-                        usuario.setCelular(resultSet.getString("Celular"));
-                        usuario.setCurp(resultSet.getString("Curp"));
-                        usuario.setUserName(resultSet.getString("Usuario"));
-                        usuario.setEmail(resultSet.getString("Correo"));
-                        usuario.setPassword(resultSet.getString("Contraseña"));
-                        usuario.setSexo(resultSet.getString("Sexo"));
-                        usuario.setTelefono(resultSet.getString("Telefono"));
-                        usuario.Rol.setNombre(resultSet.getString("RolAsignado"));
+                        Usuario usuarioFila = new Usuario();
+                        usuarioFila.Rol = new Rol();
+                        usuarioFila.Direcciones = new ArrayList();
+                        usuarioFila.setIdUsuario(IdUsuario);
+                        usuarioFila.setNombre(resultSet.getString("NombreUsuario"));
+                        usuarioFila.setApellidoPaterno(resultSet.getString("ApellidoPaterno"));
+                        usuarioFila.setApellidoMaterno(resultSet.getString("ApellidoMaterno"));
+                        usuarioFila.setFechaNacimiento(resultSet.getDate("FechaNacimiento"));
+                        usuarioFila.setCelular(resultSet.getString("Celular"));
+                        usuarioFila.setCurp(resultSet.getString("Curp"));
+                        usuarioFila.setUserName(resultSet.getString("Usuario"));
+                        usuarioFila.setEmail(resultSet.getString("Correo"));
+                        usuarioFila.setPassword(resultSet.getString("Contraseña"));
+                        usuarioFila.setSexo(resultSet.getString("Sexo"));
+                        usuarioFila.setTelefono(resultSet.getString("Telefono"));
+                        usuarioFila.Rol.setNombre(resultSet.getString("RolAsignado"));
                         Direccion direccion = new Direccion();
                         direccion.setIdColonia(resultSet.getInt("IdColonia"));
                         direccion.setCalle(resultSet.getString("Calle"));
@@ -330,8 +331,8 @@ public class UsuarioDAOImplementation implements IUsuario {
                         direccion.Colonia.Municipio.Estado.Pais = new Pais();
                         direccion.Colonia.Municipio.Estado.Pais.setIdPais(resultSet.getInt("IdPais"));
                         direccion.Colonia.Municipio.Estado.Pais.setNombre(resultSet.getString("Pais"));
-                        usuario.Direcciones.add(direccion);
-                        result.objects.add(usuario);
+                        usuarioFila.Direcciones.add(direccion);
+                        result.objects.add(usuarioFila);
                     }
                 }
                 return result.correct = true;

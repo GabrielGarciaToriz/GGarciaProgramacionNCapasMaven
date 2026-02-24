@@ -63,9 +63,10 @@ public class UsuarioController {
 
     @PostMapping("/buscar")
     public String BuscarUsuario(@ModelAttribute("usuarioBusqueda") Usuario usuarioBusqueda, Model model) {
+        Result result = usuarioDAOImplementation.UsuarioDireccionBusqueda(usuarioBusqueda);
         model.addAttribute("usuarioBusqueda", usuarioBusqueda);
         model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
-        model.addAttribute("usuarios", usuarioDAOImplementation.UsuarioDireccionBusqueda(usuarioBusqueda).objects);
+        model.addAttribute("usuarios", result.objects);
         return "Usuario";
 
     }
@@ -179,6 +180,12 @@ public class UsuarioController {
             redirectAttributes.addFlashAttribute("mensajeError", "Huno un problema al eliminar la direccion: " + result.errorMessage);
         }
         return "redirect:/usuario";
+    }
+
+    @PostMapping("/editarUsuario")
+    public String EditarUsuario() {
+//        Result result = usuarioDAOImplementation.
+        return "";
     }
 
     /*Cargar los datos del estado */
