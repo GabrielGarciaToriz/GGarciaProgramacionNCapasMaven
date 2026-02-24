@@ -132,16 +132,26 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <form method="post" th:action="@{/usuario/editar-usuario}" th:object="${usuario}">
-                    <div class="modal-body">
-                        <input type="hidden" th:field="*{IdUsuario}" />
+                <form method="post" th:action="@{/usuario/editarUsuario}" th:object="${usuario}">
 
+                    <input type="hidden" th:field="*{IdUsuario}" />
+                    <input type="hidden" th:field="*{Password}" />
+                    <div class="modal-body">
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label">Usuario</label>
                                 <input type="text" class="form-control" th:field="*{UserName}" required />
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <label for="Rol" class="form-label">Rol del Sistema</label>
+                                <select name="Rol" id="Rol" class="form-select" th:field="*{Rol.IdRol}"
+                                    th:errorclass="is-invalid">
+                                    <option value="0">Seleccione una opción</option>
+                                    <option th:each="rol : ${roles}" th:value="${rol.IdRol}" th:text="|${rol.Nombre} ${rol.IdRol}|">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
                                 <label class="form-label">Correo Electrónico</label>
                                 <input type="email" class="form-control" th:field="*{Email}" required />
                             </div>
@@ -160,20 +170,37 @@
                             </div>
 
                             <div class="col-md-6">
+                                <label class="form-label">CURP</label>
+                                <input type="text" class="form-control text-uppercase" th:field="*{Curp}" maxlength="18"
+                                    required />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Fecha de Nacimiento</label>
+                                <input type="date" class="form-control" th:field="*{FechaNacimiento}" required />
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Sexo</label>
+                                <select class="form-select" th:field="*{Sexo}">
+                                    <option value="M">Hombre</option>
+                                    <option value="F">Mujer</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
                                 <label class="form-label">Celular</label>
                                 <input type="text" class="form-control" th:field="*{Celular}" required />
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label">Teléfono Fijo</label>
                                 <input type="text" class="form-control" th:field="*{Telefono}" />
                             </div>
 
                         </div>
                     </div>
+
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary rounded-pill"
-                            data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-warning rounded-pill shadow-sm">Guardar Cambios</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning shadow-sm">Guardar Cambios</button>
                     </div>
                 </form>
             </div>

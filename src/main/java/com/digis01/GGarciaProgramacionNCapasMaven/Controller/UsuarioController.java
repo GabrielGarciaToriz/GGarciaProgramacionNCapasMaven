@@ -183,9 +183,21 @@ public class UsuarioController {
     }
 
     @PostMapping("/editarUsuario")
-    public String EditarUsuario() {
-//        Result result = usuarioDAOImplementation.
-        return "";
+    public String EditarUsuario(@ModelAttribute("usuario") Usuario usuario, RedirectAttributes redirectAttributes, Model model) {
+        System.out.println("ID Usuario a editar: " + usuario.getIdUsuario());
+        System.out.println("Rol seleccionado: " + (usuario.getRol() != null ? usuario.getRol().getIdRol() : "NULL"));
+        if (usuario.getRol() == null || usuario.getRol().getIdRol() == 0) {
+            redirectAttributes.addFlashAttribute("mensajeError", "Por favor selecciona un rol valido");
+            return "redirect:/usuario";
+        }
+        Result result = usuarioDAOImplementation.ModifyUsuario(usuario);
+        model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
+        if (result.correct) {
+            redirectAttributes.addFlashAttribute("mensajeExito", "Los datos se han actualizado con exito");
+        } else {
+            redirectAttributes.addFlashAttribute("mensajeError", "Los datos no se han podido actualizar" + result.errorMessage);
+        }
+        return "redirect:/usuario";
     }
 
     /*Cargar los datos del estado */

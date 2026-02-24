@@ -19,14 +19,14 @@ import org.springframework.stereotype.Repository;
 public class UsuarioDAOImplementation implements IUsuario {
 
     @Autowired
-    private JdbcTemplate JdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @Override
     public Result GetAll() {
         Result result = new Result();
         result.objects = new ArrayList<>();
         try {
-            JdbcTemplate.execute("{CALL UsuarioDireccionGetAllSP(?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
+            jdbcTemplate.execute("{CALL UsuarioDireccionGetAllSP(?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
                 callableStatement.registerOutParameter(1, java.sql.Types.REF_CURSOR);
                 callableStatement.execute();
                 ResultSet resultSet = (ResultSet) callableStatement.getObject(1);
@@ -106,7 +106,7 @@ public class UsuarioDAOImplementation implements IUsuario {
         Result result = new Result();
         result.objects = new ArrayList<>();
         try {
-            JdbcTemplate.execute("{CALL UsuarioDireccionGetAllByIdSP(?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
+            jdbcTemplate.execute("{CALL UsuarioDireccionGetAllByIdSP(?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
                 callableStatement.registerOutParameter(1, java.sql.Types.REF_CURSOR);
                 callableStatement.setInt(2, IdUsuario);
                 callableStatement.execute();
@@ -187,7 +187,7 @@ public class UsuarioDAOImplementation implements IUsuario {
     public Result DeleteDireccionUsuariobyId(int IdUsuario) {
         Result result = new Result();
         try {
-            JdbcTemplate.execute("{CALL deletedireccionusuariosp(?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
+            jdbcTemplate.execute("{CALL deletedireccionusuariosp(?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
                 callableStatement.setInt(1, IdUsuario);
                 callableStatement.execute();
                 return result.correct = true;
@@ -206,7 +206,7 @@ public class UsuarioDAOImplementation implements IUsuario {
         Result result = new Result();
 
         try {
-            JdbcTemplate.execute("CALL deletedireccionbyidsp(?)", (CallableStatementCallback<Boolean>) callableStatement -> {
+            jdbcTemplate.execute("CALL deletedireccionbyidsp(?)", (CallableStatementCallback<Boolean>) callableStatement -> {
                 callableStatement.setInt(1, IdDireccion);
                 callableStatement.execute();
                 return result.correct = true;
@@ -224,7 +224,7 @@ public class UsuarioDAOImplementation implements IUsuario {
     public Result Add(Usuario usuario) {
         Result result = new Result();
         try {
-            JdbcTemplate.execute("{CALL usuariodireccionaddsp(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
+            jdbcTemplate.execute("{CALL usuariodireccionaddsp(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
                 callableStatement.setString(1, usuario.getNombre());
                 callableStatement.setString(2, usuario.getApellidoPaterno());
                 callableStatement.setString(3, usuario.getApellidoMaterno());
@@ -264,7 +264,7 @@ public class UsuarioDAOImplementation implements IUsuario {
 
         try {
 
-            JdbcTemplate.execute("{CALL usuariodireccionbusquedasp(?,?,?,?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
+            jdbcTemplate.execute("{CALL usuariodireccionbusquedasp(?,?,?,?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
                 String nombre = (usuario.getNombre() != null && !usuario.getNombre().isEmpty()) ? usuario.getNombre() : null;
                 String apellidoPaterno = (usuario.getApellidoPaterno() != null && !usuario.getApellidoPaterno().isEmpty()) ? usuario.getApellidoPaterno() : null;
                 String apellidoMaterno = (usuario.getApellidoMaterno() != null && !usuario.getApellidoMaterno().isEmpty()) ? usuario.getApellidoMaterno() : null;
@@ -335,6 +335,38 @@ public class UsuarioDAOImplementation implements IUsuario {
                         result.objects.add(usuarioFila);
                     }
                 }
+                return result.correct = true;
+            });
+        } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
+        }
+
+        return result;
+    }
+
+    @Override
+    public Result ModifyUsuario(Usuario usuario) {
+        Result result = new Result();
+
+        try {
+            jdbcTemplate.execute("{CALL UsuarioModifySP(?,?,?,?,?,?,?,?,?,?,?,?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
+                callableStatement.setString(1, usuario.getNombre());
+                callableStatement.setString(2, usuario.getApellidoPaterno());
+                callableStatement.setString(3, usuario.getApellidoMaterno());
+                callableStatement.setString(4, usuario.getCelular());
+                callableStatement.setString(5, usuario.getCurp());
+                callableStatement.setString(6, usuario.getUserName());
+                callableStatement.setString(7, usuario.getEmail());
+                callableStatement.setString(8, usuario.getPassword());
+                callableStatement.setString(9, usuario.getSexo());
+                callableStatement.setString(10, usuario.getTelefono());
+                callableStatement.setDate(11, new java.sql.Date(usuario.getFechaNacimiento().getTime()));
+                callableStatement.setInt(12, usuario.getRol().getIdRol());
+                callableStatement.setInt(13, usuario.getIdUsuario());
+                callableStatement.execute();
+
                 return result.correct = true;
             });
         } catch (Exception e) {
