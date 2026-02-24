@@ -5,8 +5,11 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.DAO;
 
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
+import com.digis01.GGarciaProgramacionNCapasMaven.ML.Direccion;
 
 public interface IDireccion {
 
-    Result DireccionAdd(String Calle, String NumeroExterior, String numeroInterior, int IdColonia, int IdUsuario);
+    Result DireccionAdd(Direccion direccion, int IdUsuario);
+
+    Result DireccionModify(Direccion direccion, int IdUsuario);
 }

@@ -79,7 +79,8 @@
                                 <h5 class="mb-0">Mis Direcciones</h5>
 
                                 <div class="d-flex gap-2">
-                                    <button type="button" class="btn btn-sm btn-outline-success rounded-pill">
+                                    <button type="button" class="btn btn-sm btn-outline-success rounded-pill"
+                                        data-bs-toggle="modal" data-bs-target="#ModalAgregarDireccion">
                                         <i class="bi bi-plus-lg"></i> Nueva
                                     </button>
                                 </div>
@@ -147,7 +148,8 @@
                                 <select name="Rol" id="Rol" class="form-select" th:field="*{Rol.IdRol}"
                                     th:errorclass="is-invalid">
                                     <option value="0">Seleccione una opción</option>
-                                    <option th:each="rol : ${roles}" th:value="${rol.IdRol}" th:text="|${rol.Nombre} ${rol.IdRol}|">
+                                    <option th:each="rol : ${roles}" th:value="${rol.IdRol}"
+                                        th:text="|${rol.Nombre} ${rol.IdRol}|">
                                     </option>
                                 </select>
                             </div>
@@ -206,6 +208,93 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="ModalAgregarDireccion" tabindex="-1" aria-labelledby="modalAgregarDireccionLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="modalAgregarDireccionLabel">
+                        <i class="bi bi-geo-alt me-2"></i>Agregar Nueva Dirección
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <form method="post" th:action="@{/usuario/agregarDireccion}" th:object="${nuevaDireccion}">
+
+                    <input type="hidden" name="IdUsuario" th:value="${usuario.IdUsuario}" />
+
+                    <div class="modal-body">
+                        <h5 class="form-section-title"><i class="bi bi-geo-alt me-2"></i>Dirección</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="Calle" class="form-label">Calle</label>
+                                <input type="text" class="form-control validar-direccion validar-direccion-blur"
+                                    id="Calle" placeholder="Ej. Avenida Reforma" th:field="*{Calle}" />
+                                <span id="errorCalle" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="NumeroExterior" class="form-label">Núm. Exterior</label>
+                                <input type="text" class="form-control validar-direccion validar-direccion-blur"
+                                    id="NumeroExterior" placeholder="Ej. 123"
+                                    th:field="*{NumeroExterior}" />
+                                <span id="errorNumeroExterior" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="NumeroInterior" class="form-label">Núm. Interior</label>
+                                <input type="text" class="form-control validar-direccion validar-direccion-blur"
+                                    id="NumeroInterior" placeholder="Opcional"
+                                    th:field="*{NumeroInterior}" />
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="CodigoPostal" class="form-label">Código Postal</label>
+                                <input type="text" placeholder="Ej. 57710" class="form-control" id="CodigoPostal"
+                                    required />
+                            </div>
+                            <div class="col-md-3">
+                                <label for="selectPais" class="form-label">País</label>
+                                <select name="selectPais" id="selectPais" class="form-select"
+                                    th:field="*{Colonia.Municipio.Estado.Pais.IdPais}">
+                                    <option value="0" selected>Seleccione un país</option>
+                                    <option th:each="pais : ${paises}" th:value="${pais.IdPais}"
+                                        th:text="${pais.Nombre}"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="selectEstado" class="form-label">Estado</label>
+                                <select name="selectEstado" id="selectEstado" class="form-select"
+                                    th:field="*{Colonia.Municipio.Estado.IdEstado}">
+                                    <option value="0" selected>Selecciona un estado</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="selectMunicipio" class="form-label">Municipio</label>
+                                <select name="selectMunicipio" id="selectMunicipio" class="form-select"
+                                    th:field="*{Colonia.Municipio.IdMunicipio}">
+                                    <option value="0" selected>Selecciona un municipio</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="selectColonia" class="form-label">Colonia</label>
+                                <select name="selectColonia" id="selectColonia" class="form-select"
+                                    th:field="*{Colonia.IdColonia}">
+                                    <option value="0" selected>Selecciona una colonia</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success shadow-sm">Guardar Dirección</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <input type="hidden" id="mensajeExito" th:if="${mensajeExito != null}" th:value="${mensajeExito}">
     <input type="hidden" id="mensajeError" th:if="${mensajeError != null}" th:value="${mensajeError}">
 </body>

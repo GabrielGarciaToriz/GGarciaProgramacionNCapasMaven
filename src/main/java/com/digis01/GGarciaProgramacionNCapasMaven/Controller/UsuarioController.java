@@ -6,6 +6,7 @@ import com.digis01.GGarciaProgramacionNCapasMaven.DAO.MunicipioDAOImplementation
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.PaisDAOImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.RolDAOImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.UsuarioDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.DireccionDAOImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Direccion;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Colonia;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Estado;
@@ -27,6 +28,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -46,6 +48,8 @@ public class UsuarioController {
     private MunicipioDAOImplementation municipioDAOImplementation;
     @Autowired
     private ColoniaDAOImplmentation coloniaDAOImplmentation;
+    @Autowired
+    private DireccionDAOImplementation direccionDAOImplementation;
 
     /*
         Carga los datos de todos los usuarios en una vsita para seleccionar si se deben de editar o eliminar
@@ -156,6 +160,22 @@ public class UsuarioController {
         Result result = usuarioDAOImplementation.GetAllById(IdUsuario);
         model.addAttribute("usuario", result.objects.get(0));
         model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
+        model.addAttribute("paises", paisDAOImplementation.GetAll().objects);
+
+        Usuario usuario = new Usuario();
+        usuario.setRol(new Rol());
+        Direccion nuevaDireccion = new Direccion();
+        Colonia colonia = new Colonia();
+        Municipio municipio = new Municipio();
+        Estado estado = new Estado();
+        Pais pais = new Pais();
+
+        estado.setPais(pais);
+        municipio.setEstado(estado);
+        colonia.setMunicipio(municipio);
+        nuevaDireccion.setColonia(colonia);
+        model.addAttribute("nuevaDireccion", nuevaDireccion);
+
         return "UsuarioDetail";
     }
 
@@ -184,8 +204,6 @@ public class UsuarioController {
 
     @PostMapping("/editarUsuario")
     public String EditarUsuario(@ModelAttribute("usuario") Usuario usuario, RedirectAttributes redirectAttributes, Model model) {
-        System.out.println("ID Usuario a editar: " + usuario.getIdUsuario());
-        System.out.println("Rol seleccionado: " + (usuario.getRol() != null ? usuario.getRol().getIdRol() : "NULL"));
         if (usuario.getRol() == null || usuario.getRol().getIdRol() == 0) {
             redirectAttributes.addFlashAttribute("mensajeError", "Por favor selecciona un rol valido");
             return "redirect:/usuario";
@@ -198,6 +216,23 @@ public class UsuarioController {
             redirectAttributes.addFlashAttribute("mensajeError", "Los datos no se han podido actualizar" + result.errorMessage);
         }
         return "redirect:/usuario";
+    }
+    /*AGREGAMOS UNA DIRECCION DESPECTO AL ID DEL USUARIO*/
+    @PostMapping("/agregarDireccion")
+    public String AgregarDireccionUsuario(@ModelAttribute("nuevaDireccion") Direccion nuevaDireccion, @RequestParam("IdUsuario") int IdUsuario, RedirectAttributes redirectAttributes) {
+        Result result = direccionDAOImplementation.DireccionAdd(nuevaDireccion, IdUsuario);
+        if (result.correct) {
+            redirectAttributes.addFlashAttribute("mensajeExito", "Direccion agregada con exito");
+        } else {
+            redirectAttributes.addFlashAttribute("mensajeError", "Direccion no agregada " + result.errorMessage);
+        }
+        return "redirect:/usuario/detail/" + IdUsuario;
+    }
+    /*MODIFICAMOS UNA DIRECCION RESPECTO AL ID DEL USUARIO*/
+    @PostMapping("/modificarDireccion")
+    public String ModificarDireccionUusario(){
+        
+        return "";
     }
 
     /*Cargar los datos del estado */

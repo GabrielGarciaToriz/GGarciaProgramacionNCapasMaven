@@ -1,8 +1,7 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.DAO;
 
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
-import java.sql.CallableStatement;
-import java.sql.ResultSet;
+import com.digis01.GGarciaProgramacionNCapasMaven.ML.Direccion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,22 +14,17 @@ public class DireccionDAOImplementation implements IDireccion {
     private JdbcTemplate JdbcTemplate;
 
     @Override
-    public Result DireccionAdd(String Calle, String NumeroExterior, String NumeroInterior, int IdColonia, int IdUsuario) {
+    public Result DireccionAdd(Direccion direccion, int IdUsuario) {
         Result result = new Result();
         try {
             JdbcTemplate.execute("{CALL DIREECIONADDSP(?,?,?,?,?)}", (CallableStatementCallback< Boolean>) callableStatement -> {
-                callableStatement.setString(1, Calle);
-                callableStatement.setString(2, NumeroExterior);
-                callableStatement.setString(3, NumeroInterior);
-                callableStatement.setInt(4, IdColonia);
+                callableStatement.setString(1, direccion.getCalle());
+                callableStatement.setString(2, direccion.getNumeroExterior());
+                callableStatement.setString(3, direccion.getNumeroInterior());
+                callableStatement.setInt(4, direccion.getColonia().getIdColonia());
                 callableStatement.setInt(5, IdUsuario);
                 callableStatement.execute();
-//                ResultSet resultSet = (ResultSet) callableStatement.getObject(1);
-//                while (resultSet.next()) {
-//
-//                }
-
-                return result.correct;
+                return result.correct = true;
             });
 
         } catch (Exception e) {
@@ -41,4 +35,25 @@ public class DireccionDAOImplementation implements IDireccion {
         return result;
     }
 
+    @Override
+    public Result DireccionModify(Direccion direccion, int IdUsuario) {
+        Result result = new Result();
+        try {
+            JdbcTemplate.execute("{CALL modifydireccionsp(?,?,?,?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
+                callableStatement.setString(1, direccion.getCalle());
+                callableStatement.setString(2, direccion.getNumeroExterior());
+                callableStatement.setString(3, direccion.getNumeroInterior());
+                callableStatement.setInt(4, direccion.getColonia().getIdColonia());
+                callableStatement.setInt(5, IdUsuario);
+                callableStatement.execute();
+                return result.correct = true;
+
+            });
+        } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
+        }
+        return result;
+    }
 }
