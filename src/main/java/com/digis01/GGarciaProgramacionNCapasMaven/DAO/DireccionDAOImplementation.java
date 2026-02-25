@@ -2,6 +2,7 @@ package com.digis01.GGarciaProgramacionNCapasMaven.DAO;
 
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Direccion;
+import java.sql.ResultSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,6 +13,35 @@ public class DireccionDAOImplementation implements IDireccion {
 
     @Autowired
     private JdbcTemplate JdbcTemplate;
+
+    @Override
+    public Result DireccionGetAllById(int IdDireccion) {
+        Result result = new Result();
+        try {
+            JdbcTemplate.execute("{CALL direcciongetbyid(?,?)}", (CallableStatementCallback< Boolean>) callableStatement -> {
+                callableStatement.registerOutParameter(1, java.sql.Types.REF_CURSOR);
+                callableStatement.setInt(2, IdDireccion);
+                callableStatement.execute();
+                ResultSet resultSet = (ResultSet) callableStatement.getObject(0);
+                while (resultSet.next()) {
+                    Direccion direccion = new Direccion();
+                    direccion.setIdDireccion(IdDireccion);
+                    direccion.setCalle(resultSet.getString("Calle"));
+                    direccion.setNumeroExterior(resultSet.getString("NumeroExterior"));
+                    direccion.setNumeroInterior(resultSet.getString("NumeroInterior"));
+                    direccion.Colonia.setIdColonia(resultSet.getInt("IdClonia"));
+                    result.objects.add(direccion);
+                }
+                return result.correct = true;
+            });
+        } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
+        }
+
+        return result;
+    }
 
     @Override
     public Result DireccionAdd(Direccion direccion, int IdUsuario) {

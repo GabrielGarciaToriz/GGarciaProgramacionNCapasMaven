@@ -98,10 +98,11 @@
                                             </div>
                                             <div class="col-12 col-md-4 text-md-end text-start">
                                                 <div class="btn-group" role="group">
-                                                    <a th:href="@{/usuario/detail/{IdDireccion}(IdDireccion=${direccion.IdDireccion})}"
-                                                        class="btn btn-outline-secondary btn-sm">
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                        title="Editar"
+                                                        th:onclick="'abrirModalEdicionDireccion(' + ${direccion.IdDireccion} + ')'">
                                                         <i class="bi bi-pencil"></i>
-                                                    </a>
+                                                    </button>
                                                     <button type="button"
                                                         class="btn btn-sm btn-outline-danger btn-eliminar-direccion"
                                                         title="Eliminar"
@@ -237,15 +238,13 @@
                             <div class="col-md-3">
                                 <label for="NumeroExterior" class="form-label">Núm. Exterior</label>
                                 <input type="text" class="form-control validar-direccion validar-direccion-blur"
-                                    id="NumeroExterior" placeholder="Ej. 123"
-                                    th:field="*{NumeroExterior}" />
+                                    id="NumeroExterior" placeholder="Ej. 123" th:field="*{NumeroExterior}" />
                                 <span id="errorNumeroExterior" class="text-danger small"></span>
                             </div>
                             <div class="col-md-3">
                                 <label for="NumeroInterior" class="form-label">Núm. Interior</label>
                                 <input type="text" class="form-control validar-direccion validar-direccion-blur"
-                                    id="NumeroInterior" placeholder="Opcional"
-                                    th:field="*{NumeroInterior}" />
+                                    id="NumeroInterior" placeholder="Opcional" th:field="*{NumeroInterior}" />
                             </div>
 
                             <div class="col-md-3">
@@ -295,6 +294,18 @@
         </div>
     </div>
 
+
+    <div class="modal fade" id="ModalEditarDireccionDinamico" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="contenedorModalEditarDireccion">
+                <div class="modal-body text-center p-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <input type="hidden" id="mensajeExito" th:if="${mensajeExito != null}" th:value="${mensajeExito}">
     <input type="hidden" id="mensajeError" th:if="${mensajeError != null}" th:value="${mensajeError}">
 </body>

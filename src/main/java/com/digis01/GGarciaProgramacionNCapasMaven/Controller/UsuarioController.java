@@ -65,19 +65,8 @@ public class UsuarioController {
         return "Usuario";
     }
 
-    @PostMapping("/buscar")
-    public String BuscarUsuario(@ModelAttribute("usuarioBusqueda") Usuario usuarioBusqueda, Model model) {
-        Result result = usuarioDAOImplementation.UsuarioDireccionBusqueda(usuarioBusqueda);
-        model.addAttribute("usuarioBusqueda", usuarioBusqueda);
-        model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
-        model.addAttribute("usuarios", result.objects);
-        return "Usuario";
-
-    }
-
     /*Carga en la vista los datos de los roles,paises y el modelo de usuario*/
     @GetMapping("form")
-
     public String FormularioUsuario(Model model) {
         Usuario usuario = new Usuario();
         usuario.setRol(new Rol());
@@ -101,6 +90,57 @@ public class UsuarioController {
         model.addAttribute("paises", paisDAOImplementation.GetAll().objects);
         model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
         return "UsuarioForm";
+    }
+
+    /*Envia los datos del usuario a la vista detalle para su edicion o eliminacion*/
+    @GetMapping("detail/{IdUsuario}")
+    public String DetalleUsuario(@PathVariable("IdUsuario") int IdUsuario, Model model) {
+        Result result = usuarioDAOImplementation.GetAllById(IdUsuario);
+        model.addAttribute("usuario", result.objects.get(0));
+        model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
+        model.addAttribute("paises", paisDAOImplementation.GetAll().objects);
+
+        Usuario usuario = new Usuario();
+        usuario.setRol(new Rol());
+        Direccion nuevaDireccion = new Direccion();
+        Colonia colonia = new Colonia();
+        Municipio municipio = new Municipio();
+        Estado estado = new Estado();
+        Pais pais = new Pais();
+
+        estado.setPais(pais);
+        municipio.setEstado(estado);
+        colonia.setMunicipio(municipio);
+        nuevaDireccion.setColonia(colonia);
+        model.addAttribute("nuevaDireccion", nuevaDireccion);
+
+        return "UsuarioDetail";
+    }
+
+    @GetMapping("/direccion/editar/{IdDireccion}")
+    public String EdicionDireccion(@PathVariable("IdDireccion") int IdDireccion, Model model) {
+        Result result = direccionDAOImplementation.DireccionGetAllById(IdDireccion);
+        Direccion direccionEditar = (Direccion) result.objects.get(0);
+        int idPais = direccionEditar.getColonia().getMunicipio().getEstado().getPais().getIdPais();
+        int idEstado = direccionEditar.getColonia().getMunicipio().getEstado().getIdEstado();
+        int idMunicipio = direccionEditar.getColonia().getMunicipio().getIdMunicipio();
+        model.addAttribute("direccioneditar", direccionEditar);
+        model.addAttribute("paises", paisDAOImplementation.GetAll().objects);
+        model.addAttribute("estados", estadoDAOImplementation.GetAll(idPais).objects);
+        model.addAttribute("municipios", municipioDAOImplementation.GetAll(idEstado).objects);
+        model.addAttribute("colonias", coloniaDAOImplmentation.GetAll(idMunicipio).objects);
+
+        return "fragments/ModalEditarDireccion :: contenidoModla";
+    }
+
+    @PostMapping("/buscar")
+    public String BuscarUsuario(@ModelAttribute("usuarioBusqueda") Usuario usuarioBusqueda, Model model) {
+        Result result = usuarioDAOImplementation.UsuarioDireccionBusqueda(usuarioBusqueda);
+        model.addAttribute("usuarioBusqueda", usuarioBusqueda);
+        model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
+        model.addAttribute("usuarios", result.objects);
+        return "Usuario";
+
     }
 
     /*
@@ -154,31 +194,6 @@ public class UsuarioController {
 
     }
 
-    /*Envia los datos del usuario a la vista detalle para su edicion o eliminacion*/
-    @GetMapping("detail/{IdUsuario}")
-    public String DetalleUsuario(@PathVariable("IdUsuario") int IdUsuario, Model model) {
-        Result result = usuarioDAOImplementation.GetAllById(IdUsuario);
-        model.addAttribute("usuario", result.objects.get(0));
-        model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
-        model.addAttribute("paises", paisDAOImplementation.GetAll().objects);
-
-        Usuario usuario = new Usuario();
-        usuario.setRol(new Rol());
-        Direccion nuevaDireccion = new Direccion();
-        Colonia colonia = new Colonia();
-        Municipio municipio = new Municipio();
-        Estado estado = new Estado();
-        Pais pais = new Pais();
-
-        estado.setPais(pais);
-        municipio.setEstado(estado);
-        colonia.setMunicipio(municipio);
-        nuevaDireccion.setColonia(colonia);
-        model.addAttribute("nuevaDireccion", nuevaDireccion);
-
-        return "UsuarioDetail";
-    }
-
     /*Elimina al usuario y sus direccion */
     @PostMapping("detail/delete/{IdUsuario}")
     public String EliminarDireccionUsuario(@PathVariable("IdUsuario") int IdUsaurio, RedirectAttributes redirectAttributes) {
@@ -217,6 +232,7 @@ public class UsuarioController {
         }
         return "redirect:/usuario";
     }
+
     /*AGREGAMOS UNA DIRECCION DESPECTO AL ID DEL USUARIO*/
     @PostMapping("/agregarDireccion")
     public String AgregarDireccionUsuario(@ModelAttribute("nuevaDireccion") Direccion nuevaDireccion, @RequestParam("IdUsuario") int IdUsuario, RedirectAttributes redirectAttributes) {
@@ -228,10 +244,11 @@ public class UsuarioController {
         }
         return "redirect:/usuario/detail/" + IdUsuario;
     }
+
     /*MODIFICAMOS UNA DIRECCION RESPECTO AL ID DEL USUARIO*/
     @PostMapping("/modificarDireccion")
-    public String ModificarDireccionUusario(){
-        
+    public String ModificarDireccionUsuario() {
+
         return "";
     }
 

@@ -9,7 +9,7 @@ import {
     PaisEstado, EstadoMunicipio, MunicipioColonia, DireccionByCodigoPostal, CascadeoUbicacion
 } from "./Selects/index.js";
 
-import { confirmarEliminacionDireccionUsuario, confirmarEliminacionDireccion, verificarAlertasServidor } from "./Helpers/Alerts.js";
+import { confirmarEliminacionDireccionUsuario, confirmarEliminacionDireccion, verificarAlertasServidor, abrirModalEdicionDireccion } from "./Helpers/index.js";
 
 /* CONSTANTES*/
 const reglasValidacion = [
@@ -86,6 +86,7 @@ const protegerFormulario = () => {
 
 // Inicialización de la aplicación
 $(document).ready(() => {
+    abrirModalEdicionDireccion(idDireccion);
     inicializarSelectores();
     aplicarValidaciones();
     AlertasEliminacionDireccionUsuario();
