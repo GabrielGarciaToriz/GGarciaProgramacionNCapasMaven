@@ -68,6 +68,7 @@ public class UsuarioDAOImplementation implements IUsuario {
                         usuario.setPassword(resultSet.getString("Contraseña"));
                         usuario.setSexo(resultSet.getString("Sexo"));
                         usuario.setTelefono(resultSet.getString("Telefono"));
+                        usuario.setEstatus(resultSet.getInt("Estatus"));
                         usuario.Rol.setNombre(resultSet.getString("RolAsignado"));
                         Direccion direccion = new Direccion();
                         direccion.setIdColonia(resultSet.getInt("IdColonia"));
@@ -149,6 +150,7 @@ public class UsuarioDAOImplementation implements IUsuario {
                         usuario.setPassword(resultSet.getString("Contraseña"));
                         usuario.setSexo(resultSet.getString("Sexo"));
                         usuario.setTelefono(resultSet.getString("Telefono"));
+                        usuario.setEstatus(resultSet.getInt("Estatus"));
                         usuario.Rol.setNombre(resultSet.getString("RolAsignado"));
                         Direccion direccion = new Direccion();
                         direccion.setIdDireccion(resultSet.getInt("IdDireccion"));

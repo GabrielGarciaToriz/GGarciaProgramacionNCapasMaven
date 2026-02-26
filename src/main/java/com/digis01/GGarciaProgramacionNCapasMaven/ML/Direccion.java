@@ -16,10 +16,10 @@ public class Direccion {
 
     private int IdDireccion;
     @NotBlank(message = "Este campo es obligatorio")
-    private String NumeroInterior;
-    private String NumeroExterior;
-    @NotBlank(message = "Este campo es obligatorio")
     private String Calle;
+    @NotBlank(message = "Este campo es obligatorio")
+    private String NumeroExterior;
+    private String NumeroInterior;
     @NotNull(message = "Este campo es obligatorio")
     @Valid
     public Colonia Colonia;
@@ -31,7 +31,6 @@ public class Direccion {
     public void setIdDireccion(int IdDireccion) {
         this.IdDireccion = IdDireccion;
     }
-    
 
     public void setCalle(String Calle) {
         this.Calle = Calle;

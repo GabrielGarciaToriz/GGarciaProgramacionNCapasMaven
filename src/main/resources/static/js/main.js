@@ -11,7 +11,8 @@ import {
 
 import { confirmarEliminacionDireccionUsuario, confirmarEliminacionDireccion, verificarAlertasServidor, abrirModalEdicionDireccion } from "./Helpers/index.js";
 
-/* CONSTANTES*/
+import { initCargaMasiva } from "./Files/Archivos.js";
+
 const reglasValidacion = [
     // Letras
     { selector: ".validar-letras", evento: "keypress", accion: SoloLetras },
@@ -36,18 +37,10 @@ const reglasValidacion = [
     // Calendario
     { selector: ".solo-calendario", evento: "keydown", accion: soloCalendario },
     { selector: ".abrir-calendario", evento: "click", accion: abrirCalendario },
-    //Usuario
+    // Usuario
     { selector: ".validar-usuario", evento: "keypress", accion: Usuario },
     { selector: ".validar-usuario-blur", evento: "blur", accion: UsuarioBlur }
 ];
-
-const inicializarSelectores = () => {
-    PaisEstado();
-    EstadoMunicipio();
-    MunicipioColonia();
-    DireccionByCodigoPostal();
-    CascadeoUbicacion();
-};
 
 const aplicarValidaciones = () => {
     reglasValidacion.forEach(({ selector, evento, accion }) => {
@@ -57,47 +50,77 @@ const aplicarValidaciones = () => {
     });
 };
 
-const AlertasEliminacionDireccionUsuario = () => {
+const inicializarSelectores = () => {
+    PaisEstado();
+    EstadoMunicipio();
+    MunicipioColonia();
+    DireccionByCodigoPostal();
+    CascadeoUbicacion();
+};
+
+const initDirectorioUsuarios = () => {
     $(".btn-eliminar-direccion-usuario").on("click", function (event) {
         event.preventDefault();
         const url = $(this).data("url");
-        console.log("Se va a ejecutar la ruta: ", url)
+        console.log("Se va a ejecutar la ruta: ", url);
         confirmarEliminacionDireccionUsuario(url);
-    })
-}
-const AlertasEliminacionDireccion = () => {
+    });
+};
+
+const initFormularioUsuario = () => {
+    inicializarSelectores();
+
     $(".btn-eliminar-direccion").on("click", function (event) {
         event.preventDefault();
-        console.log("Me estas apretando")
+        console.log("Me estas apretando");
         const url = $(this).data("url");
-        console.log("Se va a ejecutar la ruta: ", url)
+        console.log("Se va a ejecutar la ruta: ", url);
         confirmarEliminacionDireccion(url);
-    })
-}
+    });
 
-const protegerFormulario = () => {
-    $("#formRegistroUsuario").on("submint", function () {
+    $("#formRegistroUsuario").on("submit", function () {
         const btn = $("#btnGuardar");
         btn.prop("disabled", true);
         btn.html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Guardando..');
         return true;
     });
-};
 
-// Inicialización de la aplicación
-$(document).ready(() => {
-    abrirModalEdicionDireccion(idDireccion);
-    inicializarSelectores();
-    aplicarValidaciones();
-    AlertasEliminacionDireccionUsuario();
-    AlertasEliminacionDireccion();
-    verificarAlertasServidor();
-    protegerFormulario();
     const fechaHoy = new Date();
     const anioMaximo = fechaHoy.getFullYear() - 18;
     const mes = String(fechaHoy.getMonth() + 1).padStart(2, '0');
     const dia = String(fechaHoy.getDate()).padStart(2, '0');
-
     const fechaMaxima = `${anioMaximo}-${mes}-${dia}`;
     $("#FechaNacimiento").attr("max", fechaMaxima);
+
+    if (typeof idDireccion !== 'undefined' && idDireccion !== null) {
+        abrirModalEdicionDireccion(idDireccion);
+    }
+};
+
+
+$(document).ready(() => {
+
+    verificarAlertasServidor();
+    aplicarValidaciones();
+
+
+    const paginaActual = document.body.getAttribute('data-page');
+
+    switch (paginaActual) {
+        case 'Usuario':
+            initDirectorioUsuarios();
+            break;
+
+        case 'UsuarioForm':
+            initFormularioUsuario();
+            break;
+
+        case 'UsuarioCargaMasiva':
+            initCargaMasiva();
+            break;
+
+        default:
+            console.log("Página cargada sin scripts específicos asignados o falta el atributo data-page.");
+            break;
+    }
 });

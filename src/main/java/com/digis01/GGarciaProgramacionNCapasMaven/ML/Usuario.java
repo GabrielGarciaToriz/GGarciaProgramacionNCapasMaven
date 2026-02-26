@@ -39,6 +39,15 @@ public class Usuario {
     public Rol Rol;
     @Valid
     public List<Direccion> Direcciones;
+    private int Estatus;
+
+    public int getEstatus() {
+        return Estatus;
+    }
+
+    public void setEstatus(int Estatus) {
+        this.Estatus = Estatus;
+    }
 
     public Usuario() {
     }
