@@ -70,7 +70,8 @@
                 <th class="ps-4">Usuario</th>
                 <th>Contacto</th>
                 <th>Direcciones Registradas</th>
-                <th class="text-center">Estatus</th> <th class="text-center pe-4">Acciones</th>
+                <th class="text-center">Estatus</th>
+                <th class="text-center pe-4">Acciones</th>
               </tr>
             </thead>
             <tbody class="border-top-0">
@@ -140,10 +141,9 @@
                 <td class="text-center align-middle">
                   <div class="form-check form-switch d-flex justify-content-center">
                     <input class="form-check-input" type="checkbox" role="switch"
-                           th:id="'switchEstatus_' + ${usuario.IdUsuario}"
-                           th:checked="${usuario.Estatus}"
-                           th:data-usuario-id="${usuario.IdUsuario}"
-                          >
+                      th:id="'switchEstatus_' + ${usuario.IdUsuario}"
+                      th:checked="${usuario.Estatus != null and (#strings.toString(usuario.Estatus) == '1' or #strings.toString(usuario.Estatus) == 'true')}"
+                      th:data-usuario-id="${usuario.IdUsuario}" th:data-url="@{/usuario/cambiarEstatus}">
                   </div>
                 </td>
 

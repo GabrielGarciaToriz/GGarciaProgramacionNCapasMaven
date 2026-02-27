@@ -75,6 +75,7 @@ public class UsuarioController {
     @Autowired
     private DireccionDAOImplementation direccionDAOImplementation;
 
+
     /*
         Carga los datos de todos los usuarios en una vsita para seleccionar si se deben de editar o eliminar
         - Falta 
@@ -518,6 +519,14 @@ public class UsuarioController {
     @ResponseBody
     public Result getDireccionByCodigoPostal(@PathVariable("CodigoPostal") String CodigoPostal) {
         Result result = coloniaDAOImplmentation.GetByCodigoPostal(CodigoPostal);
+        return result;
+    }
+
+    @PostMapping("/cambiarEstatus")
+    @ResponseBody
+    public Result CambiarEstatusUsuario(@RequestParam("IdUsuario") int IdUsuario, @RequestParam("Estatus") int Estatus) {
+        Result result = new Result();
+        result = usuarioDAOImplementation.CambiarEstatus(IdUsuario, Estatus);
         return result;
     }
 

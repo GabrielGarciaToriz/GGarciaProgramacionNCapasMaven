@@ -379,4 +379,23 @@ public class UsuarioDAOImplementation implements IUsuario {
 
         return result;
     }
+
+    @Override
+    public Result CambiarEstatus(int IdUsuario, int Estatus) {
+        Result result = new Result();
+        try {
+            jdbcTemplate.execute("{Call cambiarestatussp(?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
+                callableStatement.setInt(1, Estatus);
+                callableStatement.setInt(2, IdUsuario);
+                callableStatement.execute();
+
+                return result.correct = true;
+            });
+        } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
+        }
+        return result;
+    }
 }

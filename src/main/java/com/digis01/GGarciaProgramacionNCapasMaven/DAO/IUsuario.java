@@ -18,4 +18,6 @@ public interface IUsuario {
     Result UsuarioDireccionBusqueda(Usuario usuario);
 
     Result ModifyUsuario(Usuario usuario);
+
+    Result CambiarEstatus(int IdUsuario, int Estatus);
 }
