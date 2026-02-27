@@ -14,7 +14,7 @@ export function validarCorreo(input, event) {
 }
 
 export function validarCorreoBlur(input) {
-    var correo = $(input).val().trim().toLowerCase();
+    const correo = $(input).val().trim().toLowerCase();
     if (correo === "") {
         limpiarEstilos(input);
         return;

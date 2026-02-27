@@ -3,6 +3,8 @@ package com.digis01.GGarciaProgramacionNCapasMaven.DAO;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Usuario;
 
+import java.util.List;
+
 public interface IUsuario {
 
     Result GetAll();
@@ -20,4 +22,6 @@ public interface IUsuario {
     Result ModifyUsuario(Usuario usuario);
 
     Result CambiarEstatus(int IdUsuario, int Estatus);
+
+    Result AddAll(List<Usuario> usuarios);
 }

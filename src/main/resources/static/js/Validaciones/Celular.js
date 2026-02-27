@@ -1,18 +1,19 @@
 import { limpiarEstilos, marcarExito, mostrarError } from "../Helpers/HelpersUI.js";
-const regexCelular = /^(\+\d{1,3}\s?)?(\(?\d{2,3}\)?[\s.-]?)?\d{3,4}[\s.-]?\d{4}$/;
-const msgError = "Formato no valido (Ej. 5668592402)";
+
+const regexCelular = /^[\(]?[\+]?(\d{2}|\d{3})[\)]?[\s]?((\d{6}|\d{8})|(\d{3}[\*\.\-\s]){3}|(\d{2}[\*\.\-\s]){4}|(\d{4}[\*\.\-\s]){2})|\d{8}|\d{10}|\d{12}$/;
+const msgError = "El numero no tiene el formato correcto";
 const msgCorrect = "El numero es correcto"
 export function validarCelular(input, event) {
-    const tecla = event.key;
-    const regexTeclasPermitidas = /^[0-9\s\+\-\.\(\)]$/;
-    if (tecla === 1 && !regexTeclasPermitidas.text(tecla)) {
-        event.preventDefault();
+    const celular = $(input).val() + event.key;
+    if (regexCelular.test(celular)) {
+        marcarExito(input, msgCorrect)
+    } else {
+        mostrarError(input, msgError)
     }
-    limpiarEstilos(input);
 }
 
 export function validarCelularBlur(input) {
-    const celular = $(input).val().trim();
+    const celular = $(input).val();
     if (celular === "") {
         limpiarEstilos(input);
         return;
