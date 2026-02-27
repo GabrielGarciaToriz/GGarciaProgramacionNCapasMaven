@@ -385,9 +385,9 @@ public class UsuarioDAOImplementation implements IUsuario {
         Result result = new Result();
         try {
             jdbcTemplate.execute("{Call cambiarestatussp(?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
-                callableStatement.setInt(1, Estatus);
-                callableStatement.setInt(2, IdUsuario);
-                callableStatement.execute();
+                callableStatement.setInt(1, IdUsuario);
+                callableStatement.setInt(2, Estatus);
+                callableStatement.executeUpdate();
 
                 return result.correct = true;
             });

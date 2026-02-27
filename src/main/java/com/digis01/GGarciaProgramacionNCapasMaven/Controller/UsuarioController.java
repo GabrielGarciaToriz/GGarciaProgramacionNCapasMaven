@@ -525,8 +525,7 @@ public class UsuarioController {
     @PostMapping("/cambiarEstatus")
     @ResponseBody
     public Result CambiarEstatusUsuario(@RequestParam("IdUsuario") int IdUsuario, @RequestParam("Estatus") int Estatus) {
-        Result result = new Result();
-        result = usuarioDAOImplementation.CambiarEstatus(IdUsuario, Estatus);
+        Result result =  usuarioDAOImplementation.CambiarEstatus(IdUsuario, Estatus);
         return result;
     }
 
