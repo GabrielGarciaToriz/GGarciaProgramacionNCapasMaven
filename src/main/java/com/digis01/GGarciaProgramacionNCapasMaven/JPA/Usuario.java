@@ -1,8 +1,6 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.JPA;
 
 import jakarta.persistence.*;
-import com.digis01.GGarciaProgramacionNCapasMaven.JPA.Rol;
-import com.digis01.GGarciaProgramacionNCapasMaven.JPA.Direccion;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,26 +9,38 @@ import lombok.Setter;
 
 import java.util.List;
 
-
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Usuario {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int IdUsuario;
+    @Column(name = "nombre")
     private String Nombre;
+    @Column(name = "apellidopaterno")
     private String ApellidoPaterno;
+    @Column(name = "apellidomaterno")
     private String ApellidoMaterno;
+    @Column(name = "celular")
     private String Celular;
+    @Column(name = "curp")
     private String Curp;
+    @Column(name = "username")
     private String UserName;
+    @Column(name = "email")
     private String Email;
+    @Column(name = "password")
     private String Password;
+    @Column(name = "sexo")
     private String Sexo;
+    @Column(name = "telefono")
     private String Telefono;
-    private String FechaNacimineot;
+    @Column(name = "fechanacimiento")
+    private String FechaNacimiento;
     @Valid
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idrol")
@@ -40,6 +50,3 @@ public class Usuario {
     public List<Direccion> Direcciones;
     private int Estatus;
 }
-
-
-
