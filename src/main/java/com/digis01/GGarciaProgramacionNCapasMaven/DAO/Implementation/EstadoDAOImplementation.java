@@ -1,5 +1,6 @@
-package com.digis01.GGarciaProgramacionNCapasMaven.DAO;
+package com.digis01.GGarciaProgramacionNCapasMaven.DAO.Implementation;
 
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IEstado;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Estado;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Pais;
@@ -47,6 +48,11 @@ public class EstadoDAOImplementation implements IEstado {
             result.ex = e;
         }
         return result;
+    }
+
+    @Override
+    public Result GetAll() {
+        return null;
     }
 
 }

@@ -1,5 +1,6 @@
-package com.digis01.GGarciaProgramacionNCapasMaven.DAO;
+package com.digis01.GGarciaProgramacionNCapasMaven.DAO.Implementation;
 
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IUsuario;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Colonia;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Usuario;

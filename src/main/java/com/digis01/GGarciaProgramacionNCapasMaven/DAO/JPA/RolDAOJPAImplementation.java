@@ -1,18 +1,18 @@
-package com.digis01.GGarciaProgramacionNCapasMaven.DAO;
+package com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA;
 
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IRol;
+import com.digis01.GGarciaProgramacionNCapasMaven.JPA.Rol;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
-import com.digis01.GGarciaProgramacionNCapasMaven.JPA.Pais;
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class PaisDAOJPAImplementation implements IPais {
+import java.util.ArrayList;
+import java.util.List;
 
+@Repository("RolDAOJPA")
+public class RolDAOJPAImplementation implements IRol {
     @Autowired
     private EntityManager entityManager;
 
@@ -20,9 +20,9 @@ public class PaisDAOJPAImplementation implements IPais {
     public Result GetAll() {
         Result result = new Result();
         try {
-            TypedQuery<Pais> query = entityManager.createQuery("FROM Pais", Pais.class);
-            List<Pais> paises = query.getResultList();
-            result.objects = new ArrayList<>(paises);
+            TypedQuery<Rol> query = entityManager.createQuery("FROM Rol", Rol.class);
+            List<Rol> resultList = query.getResultList();
+            result.objects = new ArrayList<>(resultList);
             result.correct = true;
         } catch (Exception e) {
             result.correct = false;
@@ -31,5 +31,4 @@ public class PaisDAOJPAImplementation implements IPais {
         }
         return result;
     }
-
 }

@@ -12,4 +12,6 @@ import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
  */
 public interface IEstado {
     Result GetAll(int IdPais);
+
+    Result GetAll();
 }

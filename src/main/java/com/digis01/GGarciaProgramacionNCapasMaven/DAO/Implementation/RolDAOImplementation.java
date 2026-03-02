@@ -1,5 +1,6 @@
-package com.digis01.GGarciaProgramacionNCapasMaven.DAO;
+package com.digis01.GGarciaProgramacionNCapasMaven.DAO.Implementation;
 
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IRol;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Rol;
 import java.sql.ResultSet;

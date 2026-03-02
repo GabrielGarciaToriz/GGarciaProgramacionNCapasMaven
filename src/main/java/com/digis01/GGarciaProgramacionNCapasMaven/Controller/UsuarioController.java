@@ -1,12 +1,15 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.Controller;
 
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.ColoniaDAOImplmentation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.EstadoDAOImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.MunicipioDAOImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.PaisDAOImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.RolDAOImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.UsuarioDAOImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.DireccionDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IEstado;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IRol;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Implementation.ColoniaDAOImplmentation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Implementation.EstadoDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Implementation.MunicipioDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Implementation.PaisDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Implementation.RolDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Implementation.UsuarioDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Implementation.DireccionDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA.EstadoDAOJPAImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Direccion;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Colonia;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.ErroresArchivo;
@@ -47,7 +50,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
 import java.text.SimpleDateFormat;
-import java.text.ParseException;
+
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -74,7 +77,8 @@ public class UsuarioController {
     private ColoniaDAOImplmentation coloniaDAOImplmentation;
     @Autowired
     private DireccionDAOImplementation direccionDAOImplementation;
-
+    @Autowired
+    private IRol RolDAOJPA;
 
     /*
         Carga los datos de todos los usuarios en una vsita para seleccionar si se deben de editar o eliminar
@@ -85,7 +89,7 @@ public class UsuarioController {
         Usuario usuarioBusqueda = new Usuario();
         usuarioBusqueda.setRol(new Rol());
         model.addAttribute("usuarioBusqueda", usuarioBusqueda);
-        model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
+        model.addAttribute("roles", RolDAOJPA.GetAll().objects);
         model.addAttribute("usuarios", usuarioDAOImplementation.GetAll().objects);
         return "Usuario";
     }
