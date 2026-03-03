@@ -10,7 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository("PaisDAOJPA")
 public class PaisDAOJPAImplementation implements IPais {
 
     @Autowired

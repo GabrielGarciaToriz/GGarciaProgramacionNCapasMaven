@@ -46,7 +46,7 @@ public class Usuario {
     @JoinColumn(name = "idrol")
     public Rol Rol;
     @Valid
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "usuario", orphanRemoval = true)
     public List<Direccion> Direcciones;
     private int Estatus;
 }
