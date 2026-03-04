@@ -35,13 +35,13 @@ public class UsuarioDAOJPAImplementation implements IUsuarioJPA {
         result.objects = new ArrayList<>();
         try {
             String jpql = """
-                         SELECT DISTINC u FROM UsuarioJPA u
+                         SELECT DISTINCT u FROM UsuarioJPA u
                          LEFT JOIN FETCH u.rol
-                         LEFT JOIN FETCJ u.direcciones d
+                         LEFT JOIN FETCH u.direcciones d
                          LEFT JOIN FETCH d.colonia c
                          LEFT JOIN FETCH c.municipio m
                          LEFT JOIN FETCH m.estado e
-                         LEFT JOIN FETHC e.pais
+                         LEFT JOIN FETCH e.pais
                          """;
             TypedQuery<UsuarioJPA> query = EntityManager.createQuery(jpql, UsuarioJPA.class);
             List<UsuarioJPA> usuariosJPA = query.getResultList();
@@ -64,13 +64,13 @@ public class UsuarioDAOJPAImplementation implements IUsuarioJPA {
         result.objects = new ArrayList<>();
         try {
             String jpql = """
-                         SELECT DISTINC u FROM UsuarioJPA u
+                         SELECT DISTINCT u FROM UsuarioJPA u
                          LEFT JOIN FETCH u.rol
-                         LEFT JOIN FETCJ u.direcciones d
+                         LEFT JOIN FETCH u.direcciones d
                          LEFT JOIN FETCH d.colonia c
                          LEFT JOIN FETCH c.municipio m
                          LEFT JOIN FETCH m.estado e
-                         LEFT JOIN FETHC e.pais
+                         LEFT JOIN FETCH e.pais
                          WHERE u.idUsuario = :idUsuario 
                          """;
             TypedQuery<UsuarioJPA> query = EntityManager.createQuery(jpql, UsuarioJPA.class);

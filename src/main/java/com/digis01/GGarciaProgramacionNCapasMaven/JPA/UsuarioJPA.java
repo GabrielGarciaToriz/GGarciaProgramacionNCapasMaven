@@ -10,6 +10,7 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
+@Table(name = "Usuario")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,6 +19,7 @@ public class UsuarioJPA {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="idusuario")
     private int idUsuario;
     @Column(name = "nombre")
     private String nombre;
