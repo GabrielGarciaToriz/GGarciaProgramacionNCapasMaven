@@ -1,15 +1,18 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.Controller;
 
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IEstado;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IRol;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Implementation.ColoniaDAOImplmentation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Implementation.EstadoDAOImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Implementation.MunicipioDAOImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Implementation.PaisDAOImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Implementation.RolDAOImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Implementation.UsuarioDAOImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Implementation.DireccionDAOImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA.EstadoDAOJPAImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.IRol;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.IUsuario;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.Implementation.ColoniaDAOImplmentation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.Implementation.EstadoDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.Implementation.MunicipioDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.Implementation.PaisDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.Implementation.RolDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.Implementation.UsuarioDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.Implementation.DireccionDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.InterfaceJPA.IRolJPA;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.InterfaceJPA.IUsuarioJPA;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.InterfaceJPA.JPA.RolDAOJPAImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.InterfaceJPA.JPA.UsuarioDAOJPAImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Direccion;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Colonia;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.ErroresArchivo;
@@ -54,6 +57,7 @@ import java.text.SimpleDateFormat;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
@@ -66,9 +70,13 @@ public class UsuarioController {
     @Autowired
     private UsuarioDAOImplementation usuarioDAOImplementation;
     @Autowired
+    private UsuarioDAOJPAImplementation UsuarioDAOJPAImplementation;
+    @Autowired
     private PaisDAOImplementation paisDAOImplementation;
     @Autowired
     private RolDAOImplementation rolDAOImplementation;
+    @Autowired
+    private RolDAOJPAImplementation RolDAOJPAImplementation;
     @Autowired
     private EstadoDAOImplementation estadoDAOImplementation;
     @Autowired
@@ -77,8 +85,6 @@ public class UsuarioController {
     private ColoniaDAOImplmentation coloniaDAOImplmentation;
     @Autowired
     private DireccionDAOImplementation direccionDAOImplementation;
-    @Autowired
-    private IRol RolDAOJPA;
 
     /*
         Carga los datos de todos los usuarios en una vsita para seleccionar si se deben de editar o eliminar
@@ -89,8 +95,8 @@ public class UsuarioController {
         Usuario usuarioBusqueda = new Usuario();
         usuarioBusqueda.setRol(new Rol());
         model.addAttribute("usuarioBusqueda", usuarioBusqueda);
-        model.addAttribute("roles", RolDAOJPA.GetAll().objects);
-        model.addAttribute("usuarios", usuarioDAOImplementation.GetAll().objects);
+        model.addAttribute("roles", RolDAOJPAImplementation.GetAll().objects);
+        model.addAttribute("usuarios", UsuarioDAOJPAImplementation.GetAll().objects);
         return "Usuario";
     }
 
@@ -529,7 +535,7 @@ public class UsuarioController {
     @PostMapping("/cambiarEstatus")
     @ResponseBody
     public Result CambiarEstatusUsuario(@RequestParam("IdUsuario") int IdUsuario, @RequestParam("Estatus") int Estatus) {
-        Result result =  usuarioDAOImplementation.CambiarEstatus(IdUsuario, Estatus);
+        Result result = UsuarioDAOJPAImplementation.CambiarEstatus(IdUsuario, Estatus);
         return result;
     }
 

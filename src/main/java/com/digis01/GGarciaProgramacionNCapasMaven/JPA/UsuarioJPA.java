@@ -1,0 +1,51 @@
+package com.digis01.GGarciaProgramacionNCapasMaven.JPA;
+
+import jakarta.persistence.*;
+import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
+
+@Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class UsuarioJPA {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idUsuario;
+    @Column(name = "nombre")
+    private String nombre;
+    @Column(name = "apellidopaterno")
+    private String apellidoPaterno;
+    @Column(name = "apellidomaterno")
+    private String ApellidoMaterno;
+    @Column(name = "celular")
+    private String celular;
+    @Column(name = "curp")
+    private String curp;
+    @Column(name = "username")
+    private String userName;
+    @Column(name = "email")
+    private String email;
+    @Column(name = "password")
+    private String password;
+    @Column(name = "sexo")
+    private String sexo;
+    @Column(name = "telefono")
+    private String tellefono;
+    @Column(name = "fechanacimiento")
+    private Date fechaNacimiento;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idrol")
+    public RolJPA rol;
+    @OneToMany(mappedBy = "usuario", orphanRemoval = true, cascade = CascadeType.ALL)
+    public List<DireccionJPA> direcciones;
+    @Column(name = "estatus")
+    private int Estatus;
+}
