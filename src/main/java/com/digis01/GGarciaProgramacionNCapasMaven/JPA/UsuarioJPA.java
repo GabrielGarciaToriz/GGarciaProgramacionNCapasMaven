@@ -38,7 +38,7 @@ public class UsuarioJPA {
     @Column(name = "sexo")
     private String sexo;
     @Column(name = "telefono")
-    private String tellefono;
+    private String telefono;
     @Column(name = "fechanacimiento")
     private Date fechaNacimiento;
     @OneToOne(cascade = CascadeType.ALL)
