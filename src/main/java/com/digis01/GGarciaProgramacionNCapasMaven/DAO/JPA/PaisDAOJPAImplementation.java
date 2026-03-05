@@ -1,6 +1,6 @@
-package com.digis01.GGarciaProgramacionNCapasMaven.DAO.InterfaceJPA.JPA;
+package com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA;
 
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.IPais;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IPais;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
 import com.digis01.GGarciaProgramacionNCapasMaven.JPA.PaisJPA;
 import jakarta.persistence.EntityManager;

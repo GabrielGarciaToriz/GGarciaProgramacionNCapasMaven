@@ -1,6 +1,6 @@
-package com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.Implementation;
+package com.digis01.GGarciaProgramacionNCapasMaven.DAO.JDBC;
 
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.IColonia;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IColonia;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Colonia;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Estado;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Municipio;

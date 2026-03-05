@@ -1,6 +1,6 @@
-package com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.Implementation;
+package com.digis01.GGarciaProgramacionNCapasMaven.DAO.JDBC;
 
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.IDireccion;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IDireccion;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Direccion;
 import java.sql.ResultSet;

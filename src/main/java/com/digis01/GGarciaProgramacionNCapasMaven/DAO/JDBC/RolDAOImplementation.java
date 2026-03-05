@@ -1,12 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.Implementation;
+package com.digis01.GGarciaProgramacionNCapasMaven.DAO.JDBC;
 
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.IPais;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IRol;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
-import com.digis01.GGarciaProgramacionNCapasMaven.ML.Pais;
+import com.digis01.GGarciaProgramacionNCapasMaven.ML.Rol;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class PaisDAOImplementation implements IPais {
+public class RolDAOImplementation implements IRol {
 
     @Autowired
     private JdbcTemplate JdbcTemplate;
@@ -25,25 +21,28 @@ public class PaisDAOImplementation implements IPais {
         Result result = new Result();
         result.objects = new ArrayList<>();
         try {
-            JdbcTemplate.execute("{CALL PaisGetAllSP(?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
+            JdbcTemplate.execute("{CALL RolGetAllSP(?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
                 callableStatement.registerOutParameter(1, java.sql.Types.REF_CURSOR);
                 callableStatement.execute();
                 ResultSet resultSet = (ResultSet) callableStatement.getObject(1);
 
                 while (resultSet.next()) {
-                    Pais pais = new Pais();
-                    pais.setIdPais(resultSet.getInt("IdPais"));
-                    pais.setNombre(resultSet.getString("Pais"));
-                    result.objects.add(pais);
+                    Rol rol = new Rol();
+                    rol.setIdRol(resultSet.getInt("IdRol"));
+                    rol.setNombre(resultSet.getString("RolAsignado"));
+                    result.objects.add(rol);
                 }
+
                 return result.correct;
+
             });
 
         } catch (Exception e) {
-            result.errorMessage = e.getLocalizedMessage();
             result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
             result.ex = e;
         }
+
         return result;
     }
 

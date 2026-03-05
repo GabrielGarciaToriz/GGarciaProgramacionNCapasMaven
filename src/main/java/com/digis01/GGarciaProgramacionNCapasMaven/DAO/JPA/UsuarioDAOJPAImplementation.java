@@ -1,6 +1,6 @@
-package com.digis01.GGarciaProgramacionNCapasMaven.DAO.InterfaceJPA.JPA;
+package com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA;
 
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.InterfaceJPA.IUsuarioJPA;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IUsuario;
 import com.digis01.GGarciaProgramacionNCapasMaven.JPA.ColoniaJPA;
 import com.digis01.GGarciaProgramacionNCapasMaven.JPA.DireccionJPA;
 import com.digis01.GGarciaProgramacionNCapasMaven.JPA.RolJPA;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository("UsuarioDAOJPA")
-public class UsuarioDAOJPAImplementation implements IUsuarioJPA {
+public class UsuarioDAOJPAImplementation implements IUsuario {
 
     @Autowired
     private EntityManager EntityManager;
@@ -267,6 +267,7 @@ public class UsuarioDAOJPAImplementation implements IUsuarioJPA {
         usuarioML.setEstatus(usuarioJPA.getEstatus());
         if (usuarioJPA.getRol() != null) {
             usuarioML.getRol().setIdRol(usuarioJPA.getRol().getIdRol());
+            usuarioML.getRol().setNombre(usuarioJPA.getRol().getNombre());
         }
         if (usuarioJPA.getDirecciones() != null) {
             for (DireccionJPA direccionJPA : usuarioJPA.getDirecciones()) {
@@ -285,11 +286,11 @@ public class UsuarioDAOJPAImplementation implements IUsuarioJPA {
                         direccionML.getColonia().setMunicipio(new Municipio());
                         direccionML.getColonia().getMunicipio().setIdMunicipio(direccionJPA.getColonia().getMunicipio().getIdMunicipio());
                         direccionML.getColonia().getMunicipio().setNombre(direccionJPA.getColonia().getMunicipio().getNombre());
-                        if (direccionML.getColonia().getMunicipio().getEstado() != null) {
+                        if (direccionJPA.getColonia().getMunicipio().getEstado() != null) {
                             direccionML.getColonia().getMunicipio().setEstado(new Estado());
                             direccionML.getColonia().getMunicipio().getEstado().setIdEstado(direccionJPA.getColonia().getMunicipio().getEstado().getIdEstado());
                             direccionML.getColonia().getMunicipio().getEstado().setNombre(direccionJPA.getColonia().getMunicipio().getEstado().getNombre());
-                            if (direccionML.getColonia().getMunicipio().getEstado().getPais() != null) {
+                            if (direccionJPA.getColonia().getMunicipio().getEstado().getPais() != null) {
                                 direccionML.getColonia().getMunicipio().getEstado().setPais(new Pais());
                                 direccionML.getColonia().getMunicipio().getEstado().getPais().setIdPais(direccionJPA.getColonia().getMunicipio().getEstado().getPais().getIdPais());
                                 direccionML.getColonia().getMunicipio().getEstado().getPais().setNombre(direccionJPA.getColonia().getMunicipio().getEstado().getPais().getNombre());

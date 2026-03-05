@@ -1,6 +1,6 @@
-package com.digis01.GGarciaProgramacionNCapasMaven.DAO.InterfaceJPA.JPA;
+package com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA;
 
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.InterfaceJPA.IRolJPA;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IRol;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Rol;
 import com.digis01.GGarciaProgramacionNCapasMaven.JPA.RolJPA;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
@@ -13,7 +13,7 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 
 @Repository("RolDAOJPA")
-public class RolDAOJPAImplementation implements IRolJPA {
+public class RolDAOJPAImplementation implements IRol {
 
     @Autowired
     private EntityManager entityManager;

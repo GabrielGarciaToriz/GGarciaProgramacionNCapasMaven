@@ -1,18 +1,19 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.Controller;
 
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.IRol;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.IUsuario;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.Implementation.ColoniaDAOImplmentation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.Implementation.EstadoDAOImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.Implementation.MunicipioDAOImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.Implementation.PaisDAOImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.Implementation.RolDAOImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.Implementation.UsuarioDAOImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.Interface.Implementation.DireccionDAOImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.InterfaceJPA.IRolJPA;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.InterfaceJPA.IUsuarioJPA;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.InterfaceJPA.JPA.RolDAOJPAImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.InterfaceJPA.JPA.UsuarioDAOJPAImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JDBC.ColoniaDAOImplmentation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JDBC.EstadoDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JDBC.MunicipioDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JDBC.PaisDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JDBC.RolDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JDBC.UsuarioDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JDBC.DireccionDAOImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA.ColoniaDAOJPAImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA.DireccionDAOJPAImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA.EstadoDAOJPAImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA.MunicipioDAOJPAImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA.PaisDAOJPAImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA.RolDAOJPAImplementation;
+import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA.UsuarioDAOJPAImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Direccion;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Colonia;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.ErroresArchivo;
@@ -53,11 +54,9 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
 import java.text.SimpleDateFormat;
-
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
@@ -67,24 +66,36 @@ public class UsuarioController {
 
     @Autowired
     private ValidiationService validationService;
+    /*JDBC*/
     @Autowired
     private UsuarioDAOImplementation usuarioDAOImplementation;
-    @Autowired
-    private UsuarioDAOJPAImplementation UsuarioDAOJPAImplementation;
     @Autowired
     private PaisDAOImplementation paisDAOImplementation;
     @Autowired
     private RolDAOImplementation rolDAOImplementation;
-    @Autowired
-    private RolDAOJPAImplementation RolDAOJPAImplementation;
-    @Autowired
-    private EstadoDAOImplementation estadoDAOImplementation;
     @Autowired
     private MunicipioDAOImplementation municipioDAOImplementation;
     @Autowired
     private ColoniaDAOImplmentation coloniaDAOImplmentation;
     @Autowired
     private DireccionDAOImplementation direccionDAOImplementation;
+    @Autowired
+    private EstadoDAOImplementation estadoDAOImplementation;
+    /*JPA*/
+    @Autowired
+    private UsuarioDAOJPAImplementation UsuarioDAOJPAImplementation;
+    @Autowired
+    private PaisDAOJPAImplementation PaisDAOJPAImplementation;
+    @Autowired
+    private EstadoDAOJPAImplementation EstadoDAOJPAImplementation;
+    @Autowired
+    private MunicipioDAOJPAImplementation MunicipioDAOJPAImplementation;
+    @Autowired
+    private ColoniaDAOJPAImplementation ColoniaDAOJPAImplementation;
+    @Autowired
+    private DireccionDAOJPAImplementation DIreccionDAOJPAImplementation;;
+    @Autowired
+    private RolDAOJPAImplementation RolDAOJPAImplementation;
 
     /*
         Carga los datos de todos los usuarios en una vsita para seleccionar si se deben de editar o eliminar
@@ -122,18 +133,18 @@ public class UsuarioController {
         LocalDate fechaMax = LocalDate.now().minusYears(-18);
         model.addAttribute("fechaMaxima", fechaMax.toString());
         model.addAttribute("usuario", usuario);
-        model.addAttribute("paises", paisDAOImplementation.GetAll().objects);
-        model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
+        model.addAttribute("paises", PaisDAOJPAImplementation.GetAll().objects);
+        model.addAttribute("roles", RolDAOJPAImplementation.GetAll().objects);
         return "UsuarioForm";
     }
 
     /*Envia los datos del usuario a la vista detalle para su edicion o eliminacion*/
     @GetMapping("detail/{IdUsuario}")
     public String DetalleUsuario(@PathVariable("IdUsuario") int IdUsuario, Model model) {
-        Result result = usuarioDAOImplementation.GetAllById(IdUsuario);
+        Result result = UsuarioDAOJPAImplementation.GetAllById(IdUsuario);
         model.addAttribute("usuario", result.objects.get(0));
-        model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
-        model.addAttribute("paises", paisDAOImplementation.GetAll().objects);
+        model.addAttribute("roles", RolDAOJPAImplementation.GetAll().objects);
+        model.addAttribute("paises", PaisDAOJPAImplementation.GetAll().objects);
 
         Usuario usuario = new Usuario();
         usuario.setRol(new Rol());
@@ -160,7 +171,7 @@ public class UsuarioController {
         int idEstado = direccionEditar.getColonia().getMunicipio().getEstado().getIdEstado();
         int idMunicipio = direccionEditar.getColonia().getMunicipio().getIdMunicipio();
         model.addAttribute("direccioneditar", direccionEditar);
-        model.addAttribute("paises", paisDAOImplementation.GetAll().objects);
+        model.addAttribute("paises", PaisDAOJPAImplementation.GetAll().objects);
         model.addAttribute("estados", estadoDAOImplementation.GetAll(idPais).objects);
         model.addAttribute("municipios", municipioDAOImplementation.GetAll(idEstado).objects);
         model.addAttribute("colonias", coloniaDAOImplmentation.GetAll(idMunicipio).objects);

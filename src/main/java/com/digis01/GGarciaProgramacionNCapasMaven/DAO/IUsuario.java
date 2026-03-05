@@ -1,10 +1,11 @@
-package com.digis01.GGarciaProgramacionNCapasMaven.DAO.InterfaceJPA;
+package com.digis01.GGarciaProgramacionNCapasMaven.DAO;
 
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
 import com.digis01.GGarciaProgramacionNCapasMaven.ML.Usuario;
+
 import java.util.List;
 
-public interface IUsuarioJPA {
+public interface IUsuario {
 
     Result GetAll();
 
@@ -23,5 +24,4 @@ public interface IUsuarioJPA {
     Result CambiarEstatus(int IdUsuario, int Estatus);
 
     Result AddAll(List<Usuario> usuarios);
-
 }
