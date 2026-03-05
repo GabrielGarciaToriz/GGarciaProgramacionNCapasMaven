@@ -85,6 +85,8 @@ public class UsuarioController {
     @Autowired
     private UsuarioDAOJPAImplementation UsuarioDAOJPAImplementation;
     @Autowired
+    private RolDAOJPAImplementation RolDAOJPAImplementation;
+    @Autowired
     private PaisDAOJPAImplementation PaisDAOJPAImplementation;
     @Autowired
     private EstadoDAOJPAImplementation EstadoDAOJPAImplementation;
@@ -93,10 +95,7 @@ public class UsuarioController {
     @Autowired
     private ColoniaDAOJPAImplementation ColoniaDAOJPAImplementation;
     @Autowired
-    private DireccionDAOJPAImplementation DIreccionDAOJPAImplementation;;
-    @Autowired
-    private RolDAOJPAImplementation RolDAOJPAImplementation;
-
+    private DireccionDAOJPAImplementation DIreccionDAOJPAImplementation;
     /*
         Carga los datos de todos los usuarios en una vsita para seleccionar si se deben de editar o eliminar
         - Falta 
@@ -172,9 +171,9 @@ public class UsuarioController {
         int idMunicipio = direccionEditar.getColonia().getMunicipio().getIdMunicipio();
         model.addAttribute("direccioneditar", direccionEditar);
         model.addAttribute("paises", PaisDAOJPAImplementation.GetAll().objects);
-        model.addAttribute("estados", estadoDAOImplementation.GetAll(idPais).objects);
-        model.addAttribute("municipios", municipioDAOImplementation.GetAll(idEstado).objects);
-        model.addAttribute("colonias", coloniaDAOImplmentation.GetAll(idMunicipio).objects);
+        model.addAttribute("estados", EstadoDAOJPAImplementation.GetAll(idPais).objects);
+        model.addAttribute("municipios", MunicipioDAOJPAImplementation.GetAll(idEstado).objects);
+        model.addAttribute("colonias", ColoniaDAOJPAImplementation.GetAll(idMunicipio).objects);
 
         return "fragments/ModalEditarDireccion :: contenidoModla";
     }
