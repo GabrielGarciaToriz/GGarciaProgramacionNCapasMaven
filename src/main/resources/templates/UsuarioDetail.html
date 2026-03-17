@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
 
 <head>
     <th:block th:replace="~{components/head :: recursos}"></th:block>
@@ -64,7 +64,8 @@
                                     </li>
                                 </ul>
 
-                                <button class="btn btn-primary w-100 rounded-pill" data-bs-toggle="modal"
+                                <button sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')"
+                                    class="btn btn-primary w-100 rounded-pill" data-bs-toggle="modal"
                                     data-bs-target="#ModalEditarPerfil">
                                     <i class="bi bi-pencil-square me-2"></i>Editar Perfil
                                 </button>
@@ -79,7 +80,8 @@
                                 <h5 class="mb-0">Mis Direcciones</h5>
 
                                 <div class="d-flex gap-2">
-                                    <button type="button" class="btn btn-sm btn-outline-success rounded-pill"
+                                    <button sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')"
+                                        type="button" class="btn btn-sm btn-outline-success rounded-pill"
                                         data-bs-toggle="modal" data-bs-target="#ModalAgregarDireccion">
                                         <i class="bi bi-plus-lg"></i> Nueva
                                     </button>
@@ -98,12 +100,14 @@
                                             </div>
                                             <div class="col-12 col-md-4 text-md-end text-start">
                                                 <div class="btn-group" role="group">
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                    <button sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')"
+                                                        type="button" class="btn btn-sm btn-outline-secondary"
                                                         title="Editar"
                                                         th:onclick="'abrirModalEdicionDireccion(' + ${direccion.IdDireccion} + ')'">
                                                         <i class="bi bi-pencil"></i>
                                                     </button>
-                                                    <button type="button"
+                                                    <button sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')"
+                                                        type="button"
                                                         class="btn btn-sm btn-outline-danger btn-eliminar-direccion"
                                                         title="Eliminar"
                                                         th:data-url="@{/usuario/detail/delete/direccion/{IdDireccion}(IdDireccion=${direccion.IdDireccion})}">
@@ -123,7 +127,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="ModalEditarPerfil" tabindex="-1" aria-labelledby="modalEditarUsuarioLabel"
+    <div sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')" class="modal fade" id="ModalEditarPerfil" tabindex="-1" aria-labelledby="modalEditarUsuarioLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -210,7 +214,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="ModalAgregarDireccion" tabindex="-1" aria-labelledby="modalAgregarDireccionLabel"
+    <div sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')" class="modal fade" id="ModalAgregarDireccion" tabindex="-1" aria-labelledby="modalAgregarDireccionLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -295,7 +299,7 @@
     </div>
 
 
-    <div class="modal fade" id="ModalEditarDireccionDinamico" tabindex="-1" aria-hidden="true">
+    <div sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')" class="modal fade" id="ModalEditarDireccionDinamico" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" id="contenedorModalEditarDireccion">
                 <div class="modal-body text-center p-5">

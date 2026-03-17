@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -115,7 +116,7 @@ public class UsuarioController {
 
     /*Carga en la vista los datos de los roles,paises y el modelo de usuario*/
     @GetMapping("form")
-    public String FormularioUsuario(Model model) {
+    public String FormularioUsuario(Model model, Authentication authentication) {
         Usuario usuario = new Usuario();
         usuario.setRol(new Rol());
         Direccion direccion = new Direccion();
@@ -134,6 +135,7 @@ public class UsuarioController {
 
         LocalDate fechaMax = LocalDate.now().minusYears(-18);
         model.addAttribute("fechaMaxima", fechaMax.toString());
+        model.addAttribute("esAdminFormulario", esAdministrador(authentication));
         model.addAttribute("usuario", usuario);
         model.addAttribute("paises", PaisDAOJPAImplementation.GetAll().objects);
         model.addAttribute("roles", RolDAOJPAImplementation.GetAll().objects);
@@ -178,7 +180,7 @@ public class UsuarioController {
         model.addAttribute("municipios", MunicipioDAOJPAImplementation.GetAll(idEstado).objects);
         model.addAttribute("colonias", ColoniaDAOJPAImplementation.GetAll(idMunicipio).objects);
 
-        return "fragments/ModalEditarDireccion :: contenidoModla";
+        return "fragments/ModelEditarDireccion :: contenidoModal";
     }
 
     @GetMapping("/cargar")
@@ -203,9 +205,22 @@ public class UsuarioController {
         - Mostrar si el formulario esta llenado correcta o incorrectamente del lado del cliente
      */
     @PostMapping("form")
-    public String FormularioUsuario(@Valid @ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    public String FormularioUsuario(@Valid @ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult, Model model,
+            RedirectAttributes redirectAttributes, Authentication authentication) {
         LocalDate fechaMax = LocalDate.now().minusYears(-18);
         model.addAttribute("fechaMaxima", fechaMax.toString());
+        model.addAttribute("esAdminFormulario", esAdministrador(authentication));
+
+        if (!esAdministrador(authentication)) {
+            Integer idRolPorDefecto = obtenerRolIdRegistroPorDefecto();
+            if (idRolPorDefecto != null) {
+                if (usuario.getRol() == null) {
+                    usuario.setRol(new Rol());
+                }
+                usuario.getRol().setIdRol(idRolPorDefecto);
+            }
+        }
+
         if (usuario.getFechaNacimiento() != null) {
             Calendar fechaMayorEdad = Calendar.getInstance();
             fechaMayorEdad.add(Calendar.YEAR, -18);
@@ -246,6 +261,38 @@ public class UsuarioController {
             return "UsuarioForm";
         }
 
+    }
+
+    private boolean esAdministrador(Authentication authentication) {
+        if (authentication == null || authentication.getAuthorities() == null) {
+            return false;
+        }
+
+        return authentication.getAuthorities().stream().anyMatch(authority -> {
+            String rol = authority.getAuthority();
+            return "ADMIN".equalsIgnoreCase(rol)
+                    || "ROLE_ADMIN".equalsIgnoreCase(rol)
+                    || "Administrador".equalsIgnoreCase(rol);
+        });
+    }
+
+    private Integer obtenerRolIdRegistroPorDefecto() {
+        Result resultRoles = RolDAOJPAImplementation.GetAll();
+        if (resultRoles == null || resultRoles.objects == null || resultRoles.objects.isEmpty()) {
+            return null;
+        }
+
+        for (Object objectRol : resultRoles.objects) {
+            Rol rol = (Rol) objectRol;
+            if (rol.getNombre() != null) {
+                String nombreRol = rol.getNombre().trim().toUpperCase();
+                if ("USER".equals(nombreRol) || "USUARIO".equals(nombreRol)) {
+                    return rol.getIdRol();
+                }
+            }
+        }
+
+        return ((Rol) resultRoles.objects.get(0)).getIdRol();
     }
 
     /*Elimina al usuario y sus direccion */

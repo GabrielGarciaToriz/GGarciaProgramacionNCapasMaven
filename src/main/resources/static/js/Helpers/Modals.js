@@ -1,6 +1,13 @@
 export function abrirModalEdicionDireccion(idDireccion) {
-   
+
     const modalElement = document.getElementById('ModalEditarDireccionDinamico');
+    const contenedor = document.getElementById('contenedorModalEditarDireccion');
+
+    if (!modalElement || !contenedor) {
+        console.warn('No tienes permisos para editar direcciones o el modal no esta disponible.');
+        return;
+    }
+
     const myModal = new bootstrap.Modal(modalElement);
     myModal.show();
 
@@ -12,11 +19,11 @@ export function abrirModalEdicionDireccion(idDireccion) {
         })
         .then(html => {
 
-            document.getElementById('contenedorModalEditarDireccion').innerHTML = html;
+            contenedor.innerHTML = html;
         })
         .catch(error => {
             console.error('Hubo un problema con la petición Fetch:', error);
-            document.getElementById('contenedorModalEditarDireccion').innerHTML =
+            contenedor.innerHTML =
                 '<div class="modal-body text-danger">Error al cargar los datos.</div>';
         });
 }

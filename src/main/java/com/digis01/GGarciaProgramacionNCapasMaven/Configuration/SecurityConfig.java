@@ -26,6 +26,7 @@ public class SecurityConfig {
                                 "/usuario/getMunicipioByEstado/**",
                                 "/usuario/getColoniabyMunicipio/**",
                                 "/usuario/getDireccionByCodigoPostal/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/usuario/direccion/editar/**").hasAnyAuthority("ADMIN", "ROLE_ADMIN", "Administrador")
                         .requestMatchers(HttpMethod.POST,
                                 "/usuario/editarUsuario",
                                 "/usuario/agregarDireccion",
