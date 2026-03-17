@@ -10,8 +10,9 @@ import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
 import jakarta.persistence.EntityManager;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
+@Repository
 public class DireccionDAOJPAImplementation implements IDireccion {
 
     @Autowired

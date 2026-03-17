@@ -59,6 +59,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Controller
 @RequestMapping("usuario")
@@ -66,6 +67,8 @@ public class UsuarioController {
 
     @Autowired
     private ValidiationService validationService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     /*JDBC*/
     @Autowired
     private UsuarioDAOImplementation usuarioDAOImplementation;
@@ -95,7 +98,7 @@ public class UsuarioController {
     @Autowired
     private ColoniaDAOJPAImplementation ColoniaDAOJPAImplementation;
     @Autowired
-    private DireccionDAOJPAImplementation DIreccionDAOJPAImplementation;
+    private DireccionDAOJPAImplementation direccionDAOJPAImplementation;
     /*
         Carga los datos de todos los usuarios en una vsita para seleccionar si se deben de editar o eliminar
         - Falta 
@@ -231,6 +234,7 @@ public class UsuarioController {
             }
             return "UsuarioForm";
         }
+        usuario.setPassword(encriptarPasswordSiEsNecesario(usuario.getPassword()));
         Result result = usuarioDAOImplementation.Add(usuario);
         if (result.correct) {
             redirectAttributes.addFlashAttribute("mensajeExito", "Usuario registrado con exito");
@@ -547,6 +551,16 @@ public class UsuarioController {
     public Result CambiarEstatusUsuario(@RequestParam("IdUsuario") int IdUsuario, @RequestParam("Estatus") int Estatus) {
         Result result = UsuarioDAOJPAImplementation.CambiarEstatus(IdUsuario, Estatus);
         return result;
+    }
+
+    private String encriptarPasswordSiEsNecesario(String password) {
+        if (password == null || password.isBlank()) {
+            return password;
+        }
+        if (password.startsWith("$2a$") || password.startsWith("$2b$") || password.startsWith("$2y$")) {
+            return password;
+        }
+        return passwordEncoder.encode(password);
     }
 
 }

@@ -58,6 +58,19 @@ const inicializarSelectores = () => {
     CascadeoUbicacion();
 };
 
+const configurarCsrfAjax = () => {
+    const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content');
+
+    if (csrfToken && csrfHeader) {
+        $.ajaxSetup({
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            }
+        });
+    }
+};
+
 const initDirectorioUsuarios = () => {
     $(".btn-eliminar-direccion-usuario").on("click", function (event) {
         event.preventDefault();
@@ -129,6 +142,7 @@ const initFormularioUsuario = () => {
 
 $(document).ready(() => {
 
+    configurarCsrfAjax();
     verificarAlertasServidor();
     aplicarValidaciones();
 

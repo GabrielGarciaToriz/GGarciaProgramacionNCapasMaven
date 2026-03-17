@@ -19,6 +19,7 @@ import jakarta.persistence.StoredProcedureQuery;
 import jakarta.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -245,6 +246,21 @@ public class UsuarioDAOJPAImplementation implements IUsuario {
     @Override
     public Result AddAll(List<Usuario> usuarios) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public Optional<UsuarioJPA> findByUserNameOrEmail(String usernameOrEmail) {
+        try {
+            String jpql = "SELECT u FROM UsuarioJPA u LEFT JOIN FETCH u.rol WHERE LOWER(u.userName) = LOWER(:valor) OR LOWER(u.email) = LOWER(:valor)";
+            TypedQuery<UsuarioJPA> query = EntityManager.createQuery(jpql, UsuarioJPA.class);
+            query.setParameter("valor", usernameOrEmail);
+            List<UsuarioJPA> usuarios = query.setMaxResults(1).getResultList();
+            if (usuarios.isEmpty()) {
+                return Optional.empty();
+            }
+            return Optional.of(usuarios.get(0));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     private Usuario mapearUusarioJPAtoML(UsuarioJPA usuarioJPA) {

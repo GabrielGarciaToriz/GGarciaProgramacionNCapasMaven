@@ -1,3 +1,15 @@
+const agregarTokenCsrf = (form) => {
+    const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content');
+
+    if (csrfToken) {
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_csrf';
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+    }
+};
+
 export function confirmarEliminacionDireccionUsuario(urlEliminacion) {
     Swal.fire({
         title: '¿Esta seguro de eliminar a este usuario?',
@@ -13,6 +25,7 @@ export function confirmarEliminacionDireccionUsuario(urlEliminacion) {
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = urlEliminacion;
+            agregarTokenCsrf(form);
             document.body.appendChild(form);
             form.submit();
         }
@@ -34,6 +47,7 @@ export function confirmarEliminacionDireccion(urlEliminacion) {
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = urlEliminacion;
+            agregarTokenCsrf(form);
             document.body.appendChild(form);
             form.submit();
         }
