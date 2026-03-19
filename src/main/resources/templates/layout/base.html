@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <th:block th:replace="~{components/head :: recursos}"></th:block>
+    <title layout:fragment="pageTitle">Aplicacion</title>
+    <th:block layout:fragment="extraHead"></th:block>
+</head>
+
+<body th:class="${bodyClass} ?: 'bg-light'" th:attr="data-page=${dataPage != null ? dataPage : ''}">
+    <main layout:fragment="content"></main>
+    <th:block layout:fragment="pageScripts"></th:block>
+</body>
+
+</html>
+

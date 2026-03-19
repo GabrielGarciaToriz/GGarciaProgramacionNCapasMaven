@@ -1,17 +1,18 @@
 <!doctype html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/base}"
+  th:with="bodyClass='bg-light py-5', dataPage='UsuarioForm'">
 
 <head>
-  <th:block th:replace="~{components/head :: recursos}"></th:block>
-  <script type="module" th:src="@{/js/main.js}"></script>
-  <title>Registrar Usuario</title>
+  <title layout:fragment="pageTitle">Registrar Usuario</title>
 
   <style>
 
   </style>
 </head>
 
-<body class="bg-light py-5" data-page="UsuarioForm">
+<body>
+  <th:block layout:fragment="content">
   <div class="container d-flex justify-content-center">
     <div class="col-12 col-lg-10">
 
@@ -22,7 +23,7 @@
         </div>
 
         <div class="card-body p-4 p-md-5">
-          <form method="post" th:action="@{/usuario/form}" th:object="${usuario}" enctype="multipart/form-data"
+          <form id="formRegistroUsuario" method="post" th:action="@{/usuario/form}" th:object="${usuario}" enctype="multipart/form-data"
             autocomplete="off">
 
             <h5 class="form-section-title mt-0"><i class="bi bi-shield-lock me-2"></i>Datos de la Cuenta</h5>
@@ -198,7 +199,7 @@
                 <button type="reset" class="btn btn-light rounded-pill px-4 text-danger">
                   <i class="bi bi-eraser me-2"></i>Limpiar
                 </button>
-                <button type="submit" class="btn btn-success rounded-pill px-4 shadow-sm">
+                <button type="submit" id="btnGuardar" class="btn btn-success rounded-pill px-4 shadow-sm">
                   <i class="bi bi-floppy me-2"></i>Guardar Usuario
                 </button>
               </div>
@@ -212,6 +213,10 @@
   </div>
   <input type="hidden" id="mensajeExito" th:if="${mensajeExito != null}" th:value="${mensajeExito}">
   <input type="hidden" id="mensajeError" th:if="${mensajeError != null}" th:value="${mensajeError}">
+
+  </th:block>
+  <th:block layout:fragment="pageScripts">
+    <script type="module" th:src="@{/js/main.js}"></script>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -244,6 +249,7 @@
       });
     });
   </script>
+  </th:block>
 </body>
 
 </html>

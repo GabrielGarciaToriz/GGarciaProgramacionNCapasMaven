@@ -1,13 +1,14 @@
 <!doctype html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/base}"
+  th:with="bodyClass='bg-light py-4', dataPage='Usuario'">
 
 <head>
-  <th:block th:replace="~{components/head :: recursos}"></th:block>
-  <script type="module" th:src="@{/js/main.js}"></script>
-  <title>Directorio de Usuarios</title>
+  <title layout:fragment="pageTitle">Directorio de Usuarios</title>
 </head>
 
-<body class="bg-light py-4" data-page="Usuario">
+<body>
+  <th:block layout:fragment="content">
   <div class="container-fluid px-4">
 
     <div class="d-flex justify-content-end mb-3">
@@ -183,6 +184,11 @@
   </div>
   <input type="hidden" id="mensajeExito" th:if="${mensajeExito != null}" th:value="${mensajeExito}">
   <input type="hidden" id="mensajeError" th:if="${mensajeError != null}" th:value="${mensajeError}">
+
+  </th:block>
+  <th:block layout:fragment="pageScripts">
+    <script type="module" th:src="@{/js/main.js}"></script>
+  </th:block>
 </body>
 
 </html>

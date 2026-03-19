@@ -18,7 +18,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, DaoAuthenticationProvider daoAuthenticationProvider) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**", "/error", "/login", "/access-denied").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**", "/error", "/login", "/perform_login", "/access-denied").permitAll()
                         .requestMatchers(HttpMethod.GET, "/usuario/form").permitAll()
                         .requestMatchers(HttpMethod.POST, "/usuario/form").permitAll()
                         .requestMatchers(HttpMethod.GET,
@@ -40,6 +40,9 @@ public class SecurityConfig {
                 .authenticationProvider(daoAuthenticationProvider)
                 .formLogin(form -> form
                         .loginPage("/login")
+                        .loginProcessingUrl("/perform_login")
+                        .usernameParameter("username")
+                        .passwordParameter("password")
                         .failureUrl("/login?error")
                         .defaultSuccessUrl("/usuario", true)
                         .permitAll())

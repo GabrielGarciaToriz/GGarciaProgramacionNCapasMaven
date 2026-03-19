@@ -1,20 +1,21 @@
 <!doctype html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}" th:with="bodyClass='bg-light min-vh-100 d-flex align-items-center'">
 
 <head>
-    <th:block th:replace="~{components/head :: recursos}"></th:block>
-    <title>Acceso denegado</title>
+    <title layout:fragment="pageTitle">Acceso denegado</title>
 </head>
 
-<body class="bg-light min-vh-100 d-flex align-items-center">
-    <div class="container text-center">
-        <div class="card border-0 shadow-sm rounded-4 p-4 mx-auto" style="max-width: 560px;">
-            <h3 class="text-danger fw-bold mb-3"><i class="bi bi-shield-lock me-2"></i>Acceso denegado</h3>
-            <p class="text-muted mb-4">No tienes permisos para acceder a este recurso.</p>
-            <a th:href="@{/usuario}" class="btn btn-primary">Volver al directorio</a>
+<body>
+    <th:block layout:fragment="content">
+        <div class="container text-center">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mx-auto" style="max-width: 560px;">
+                <h3 class="text-danger fw-bold mb-3"><i class="bi bi-shield-lock me-2"></i>Acceso denegado</h3>
+                <p class="text-muted mb-4">No tienes permisos para acceder a este recurso.</p>
+                <a th:href="@{/usuario}" class="btn btn-primary">Volver al directorio</a>
+            </div>
         </div>
-    </div>
+    </th:block>
 </body>
 
 </html>
-

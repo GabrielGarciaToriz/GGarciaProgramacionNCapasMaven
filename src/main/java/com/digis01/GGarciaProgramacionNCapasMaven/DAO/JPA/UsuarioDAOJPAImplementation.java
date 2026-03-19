@@ -144,6 +144,37 @@ public class UsuarioDAOJPAImplementation implements IUsuario {
     public Result Add(Usuario usuario) {
         Result result = new Result();
         try {
+            if (usuario == null) {
+                result.correct = false;
+                result.errorMessage = "No se recibio informacion del usuario";
+                return result;
+            }
+
+            if (usuario.getRol() == null || usuario.getRol().getIdRol() <= 0) {
+                result.correct = false;
+                result.errorMessage = "El usuario no tiene un rol valido";
+                return result;
+            }
+
+            if (usuario.getFechaNacimiento() == null) {
+                result.correct = false;
+                result.errorMessage = "La fecha de nacimiento es obligatoria";
+                return result;
+            }
+
+            if (usuario.getDirecciones() == null || usuario.getDirecciones().isEmpty()) {
+                result.correct = false;
+                result.errorMessage = "El usuario debe incluir una direccion principal";
+                return result;
+            }
+
+            Direccion direccionML = usuario.getDirecciones().get(0);
+            if (direccionML == null || direccionML.getColonia() == null || direccionML.getColonia().getIdColonia() <= 0) {
+                result.correct = false;
+                result.errorMessage = "La direccion principal requiere una colonia valida";
+                return result;
+            }
+
             UsuarioJPA usuarioJPA = new UsuarioJPA();
             usuarioJPA.setNombre(usuario.getNombre());
             usuarioJPA.setApellidoPaterno(usuario.getApellidoPaterno());
@@ -162,7 +193,6 @@ public class UsuarioDAOJPAImplementation implements IUsuario {
             usuarioJPA.setRol(rolJPA);
             List<DireccionJPA> direccionesJPA = new ArrayList<>();
             if (usuario.getDirecciones() != null && !usuario.getDirecciones().isEmpty()) {
-                Direccion direccionML = usuario.getDirecciones().get(0);
                 DireccionJPA direccionJPA = new DireccionJPA();
 
                 direccionJPA.setCalle(direccionML.getCalle());

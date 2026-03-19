@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="es" layout:decorate="~{layout/base}"
+    th:with="bodyClass='bg-light py-5', dataPage='UsuarioDetail'">
 
 <head>
-    <th:block th:replace="~{components/head :: recursos}"></th:block>
-    <script type="module" th:src="@{/js/main.js}"></script>
-    <title>Perfil de usuario</title>
+    <title layout:fragment="pageTitle">Perfil de usuario</title>
 
 </head>
 
-<body class="bg-light py-5" data-page="UsuarioDetail">
+<body>
+    <th:block layout:fragment="content">
     <div class="container">
         <a th:href="@{/usuario}" class="btn btn-warning mb-4"><i class="bi bi-arrow-return-left"></i> Regresar</a>
 
@@ -365,6 +366,10 @@
     <input type="hidden" id="mensajeExito" th:if="${mensajeExito != null}" th:value="${mensajeExito}">
     <input type="hidden" id="mensajeError" th:if="${mensajeError != null}" th:value="${mensajeError}">
 
+    </th:block>
+    <th:block layout:fragment="pageScripts">
+    <script type="module" th:src="@{/js/main.js}"></script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const imgInput = document.getElementById('nuevaImagen');
@@ -398,6 +403,7 @@
             }
         });
     </script>
+    </th:block>
 </body>
 
 </html>
