@@ -44,7 +44,7 @@
               <div class="col-md-4">
                 <label for="Password" class="form-label">Contraseña</label>
                 <input type="password" class="form-control validar-password validar-password-blur" id="Password"
-                  placeholder="••••••••" th:field="*{Password}" th:errorclass="is-invalid"/>
+                  placeholder="••••••••" th:field="*{Password}" th:errorclass="is-invalid" />
 
                 <span th:if="${#fields.hasErrors('Password')}" th:errors="*{Password}" class="text-danger small"></span>
                 <span id="errorPassword" class="text-danger small"></span>
@@ -59,6 +59,13 @@
             </div>
 
             <h5 class="form-section-title"><i class="bi bi-person-lines-fill me-2"></i>Información Personal</h5>
+            <div class="col-md-12 mt-3">
+              <label for="imagenFile" class="form-label"><i class="bi bi-camera me-2"></i>Imagen de Perfil</label>
+              <input type="file" class="form-control" id="imagenFile" name="imagenFile"
+                accept=".png, .jpg, .jpeg, image/png, image/jpeg" />
+              <div class="form-text">Formatos permitidos: JPG, PNG. (Máximo 5MB)</div>
+              <span id="errorImagen" class="text-danger small fw-bold mt-1 d-block"></span>
+            </div>
             <div class="row g-3 mb-4">
               <div class="col-md-4">
                 <label for="Nombre" class="form-label">Nombre(s)</label>
@@ -205,6 +212,38 @@
   </div>
   <input type="hidden" id="mensajeExito" th:if="${mensajeExito != null}" th:value="${mensajeExito}">
   <input type="hidden" id="mensajeError" th:if="${mensajeError != null}" th:value="${mensajeError}">
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const fileInput = document.getElementById('imagenFile');
+      const errorSpan = document.getElementById('errorImagen');
+      
+      // Expresión regular para validar extensiones
+      const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+      // Tamaño máximo permitido (5MB en bytes)
+      const maxSize = 5 * 1024 * 1024; 
+
+      fileInput.addEventListener('change', function () {
+        const filePath = fileInput.value;
+        const file = fileInput.files[0];
+
+        if (filePath && !allowedExtensions.exec(filePath)) {
+          errorSpan.textContent = 'Formato inválido. Por favor, selecciona un archivo JPG o PNG.';
+          fileInput.value = ''; 
+          return false;
+        } 
+        
+        if (file && file.size > maxSize) {
+          errorSpan.textContent = 'El archivo es demasiado grande. El máximo permitido es 5MB.';
+          fileInput.value = '';
+          return false;
+        }
+
+
+        errorSpan.textContent = '';
+      });
+    });
+  </script>
 </body>
 
 </html>

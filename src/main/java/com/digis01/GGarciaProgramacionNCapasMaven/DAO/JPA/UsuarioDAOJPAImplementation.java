@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -156,6 +157,7 @@ public class UsuarioDAOJPAImplementation implements IUsuario {
             usuarioJPA.setSexo(usuario.getSexo());
             usuarioJPA.setTelefono(usuario.getTelefono());
             usuarioJPA.setEstatus(1);
+            usuarioJPA.setImagen(usuario.getImagen());
             RolJPA rolJPA = EntityManager.getReference(RolJPA.class, usuario.getRol().getIdRol());
             usuarioJPA.setRol(rolJPA);
             List<DireccionJPA> direccionesJPA = new ArrayList<>();
@@ -281,6 +283,7 @@ public class UsuarioDAOJPAImplementation implements IUsuario {
         usuarioML.setSexo(usuarioJPA.getSexo());
         usuarioML.setTelefono(usuarioJPA.getTelefono());
         usuarioML.setEstatus(usuarioJPA.getEstatus());
+        usuarioML.setImagen(usuarioJPA.getImagen());
         if (usuarioJPA.getRol() != null) {
             usuarioML.getRol().setIdRol(usuarioJPA.getRol().getIdRol());
             usuarioML.getRol().setNombre(usuarioJPA.getRol().getNombre());
@@ -318,6 +321,30 @@ public class UsuarioDAOJPAImplementation implements IUsuario {
             }
         }
         return usuarioML;
+    }
+
+    @Override
+    @Transactional
+    public Result ActualizarImagen(int idUsuario, String imagenBase64) {
+        Result result = new Result();
+        try {
+            StoredProcedureQuery query = EntityManager.createStoredProcedureQuery("usuarioactualizarimagensp");
+
+            query.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN);
+            query.registerStoredProcedureParameter(2, String.class, ParameterMode.IN);
+
+            query.setParameter(1, idUsuario);
+            query.setParameter(2, imagenBase64);
+
+            query.execute();
+
+            result.correct = true;
+        } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
+        }
+        return result;
     }
 
 }

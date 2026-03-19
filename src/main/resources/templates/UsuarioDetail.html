@@ -18,8 +18,22 @@
                     <div class="col-12 col-lg-4">
                         <div class="card h-100 border-light bg-light rounded-custom">
                             <div class="card-body text-center">
-                                <div class="profile-img-container shadow-sm mb-3">
-                                    <i class="bi bi-person display-4"></i>
+                                <div class="position-relative d-inline-block mx-auto mb-3">
+                                    <div class="profile-img-container shadow-sm"
+                                        style="width: 120px; height: 120px; overflow: hidden; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #e9ecef;">
+                                        <img th:if="${usuario.Imagen != null and usuario.Imagen != ''}"
+                                            th:src="@{'data:image/jpeg;base64,' + ${usuario.Imagen}}"
+                                            alt="Foto de perfil" style="width: 100%; height: 100%; object-fit: cover;">
+                                        <i th:unless="${usuario.Imagen != null and usuario.Imagen != ''}"
+                                            class="bi bi-person text-secondary display-4 mb-0"></i>
+                                    </div>
+                                    <button type="button"
+                                        class="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle shadow"
+                                        data-bs-toggle="modal" data-bs-target="#ModalEditarImagen"
+                                        style="width: 32px; height: 32px; padding: 0; transform: translate(-5px, -5px);"
+                                        title="Cambiar foto">
+                                        <i class="bi bi-camera"></i>
+                                    </button>
                                 </div>
                                 <h4 class="card-title mb-1">
                                     <span th:text="${usuario.Nombre}"></span>
@@ -310,8 +324,80 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="ModalEditarImagen" tabindex="-1" aria-labelledby="modalEditarImagenLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalEditarImagenLabel">
+                        <i class="bi bi-camera me-2"></i>Actualizar Foto de Perfil
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <form method="post" th:action="@{/usuario/actualizarImagen}" enctype="multipart/form-data">
+                    <input type="hidden" name="IdUsuario" th:value="${usuario.IdUsuario}" />
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nuevaImagen" class="form-label text-muted small">Selecciona la nueva imagen
+                                desde tu dispositivo</label>
+                            <input type="file" class="form-control" id="nuevaImagen" name="imagenFile"
+                                accept=".png, .jpg, .jpeg, image/png, image/jpeg" required />
+                            <div class="form-text">Formatos permitidos: JPG, PNG. (Máximo 5MB)</div>
+                            <span id="errorNuevaImagen" class="text-danger small fw-bold mt-1 d-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary rounded-pill px-3"
+                            data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary rounded-pill shadow-sm px-3"
+                            id="btnGuardarImagen">Guardar Foto</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <input type="hidden" id="mensajeExito" th:if="${mensajeExito != null}" th:value="${mensajeExito}">
     <input type="hidden" id="mensajeError" th:if="${mensajeError != null}" th:value="${mensajeError}">
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const imgInput = document.getElementById('nuevaImagen');
+            const errorSpan = document.getElementById('errorNuevaImagen');
+            const btnGuardar = document.getElementById('btnGuardarImagen');
+
+            if (imgInput) {
+                imgInput.addEventListener('change', function () {
+                    const filePath = imgInput.value;
+                    const file = imgInput.files[0];
+                    const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+                    const maxSize = 5 * 1024 * 1024; // 5MB
+
+                    if (filePath && !allowedExtensions.exec(filePath)) {
+                        errorSpan.textContent = ' Formato inválido. Por favor, selecciona un archivo JPG o PNG.';
+                        imgInput.value = '';
+                        btnGuardar.disabled = true;
+                        return false;
+                    }
+
+                    if (file && file.size > maxSize) {
+                        errorSpan.textContent = ' El archivo es demasiado grande. El máximo permitido es 5MB.';
+                        imgInput.value = '';
+                        btnGuardar.disabled = true;
+                        return false;
+                    }
+
+                    errorSpan.textContent = '';
+                    btnGuardar.disabled = false;
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -19,7 +19,7 @@ public class UsuarioJPA {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="idusuario")
+    @Column(name = "idusuario")
     private int idUsuario;
     @Column(name = "nombre")
     private String nombre;
@@ -50,4 +50,7 @@ public class UsuarioJPA {
     public List<DireccionJPA> direcciones;
     @Column(name = "estatus")
     private int Estatus;
+    @Lob
+    @Column(name = "imagen")
+    private String imagen;
 }

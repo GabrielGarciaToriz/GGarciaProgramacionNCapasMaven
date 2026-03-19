@@ -100,6 +100,7 @@ public class UsuarioController {
     private ColoniaDAOJPAImplementation ColoniaDAOJPAImplementation;
     @Autowired
     private DireccionDAOJPAImplementation direccionDAOJPAImplementation;
+
     /*
         Carga los datos de todos los usuarios en una vsita para seleccionar si se deben de editar o eliminar
         - Falta 
@@ -205,21 +206,25 @@ public class UsuarioController {
         - Mostrar si el formulario esta llenado correcta o incorrectamente del lado del cliente
      */
     @PostMapping("form")
-    public String FormularioUsuario(@Valid @ModelAttribute("usuario") Usuario usuario, BindingResult bindingResult, Model model,
-            RedirectAttributes redirectAttributes, Authentication authentication) {
+    public String FormularioUsuario(
+            @Valid @ModelAttribute("usuario") Usuario usuario,
+            BindingResult bindingResult,
+            @RequestParam(value = "imagenFile", required = true) MultipartFile imagenFile,
+            Model model,
+            RedirectAttributes redirectAttributes) {
         LocalDate fechaMax = LocalDate.now().minusYears(-18);
         model.addAttribute("fechaMaxima", fechaMax.toString());
-        model.addAttribute("esAdminFormulario", esAdministrador(authentication));
-
-        if (!esAdministrador(authentication)) {
-            Integer idRolPorDefecto = obtenerRolIdRegistroPorDefecto();
-            if (idRolPorDefecto != null) {
-                if (usuario.getRol() == null) {
-                    usuario.setRol(new Rol());
-                }
-                usuario.getRol().setIdRol(idRolPorDefecto);
-            }
-        }
+//        model.addAttribute("esAdminFormulario", esAdministrador(authentication));
+//
+//        if (!esAdministrador(authentication)) {
+//            Integer idRolPorDefecto = obtenerRolIdRegistroPorDefecto();
+//            if (idRolPorDefecto != null) {
+//                if (usuario.getRol() == null) {
+//                    usuario.setRol(new Rol());
+//                }
+//                usuario.getRol().setIdRol(idRolPorDefecto);
+//            }
+//        }
 
         if (usuario.getFechaNacimiento() != null) {
             Calendar fechaMayorEdad = Calendar.getInstance();
@@ -250,6 +255,16 @@ public class UsuarioController {
             return "UsuarioForm";
         }
         usuario.setPassword(encriptarPasswordSiEsNecesario(usuario.getPassword()));
+        try {
+            if (imagenFile != null && !imagenFile.isEmpty()) {
+                byte[] bytesImg = imagenFile.getBytes();
+                String imagenBase64 = java.util.Base64.getEncoder().encodeToString(bytesImg);
+                usuario.setImagen(imagenBase64);
+            }
+        } catch (Exception e) {
+            model.addAttribute("mensajeError", "Error al procesar la imagen: " + e.getMessage());
+            return "UsuarioForm";
+        }
         Result result = usuarioDAOImplementation.Add(usuario);
         if (result.correct) {
             redirectAttributes.addFlashAttribute("mensajeExito", "Usuario registrado con exito");
@@ -351,6 +366,35 @@ public class UsuarioController {
     public String ModificarDireccionUsuario() {
 
         return "";
+    }
+
+    @PostMapping("/actualizarImagen")
+    public String ActualizarImagen(
+            @RequestParam("IdUsuario") int idUsuario,
+            @RequestParam("imagenFile") MultipartFile imagenFile,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            if (imagenFile != null && !imagenFile.isEmpty()) {
+                byte[] bytesImg = imagenFile.getBytes();
+
+                String imagenBase64 = java.util.Base64.getEncoder().encodeToString(bytesImg);
+
+                Result result = usuarioDAOImplementation.ActualizarImagen(idUsuario, imagenBase64);
+
+                if (result.correct) {
+                    redirectAttributes.addFlashAttribute("mensajeExito", "La foto de perfil se ha actualizado correctamente.");
+                } else {
+                    redirectAttributes.addFlashAttribute("mensajeError", "Hubo un problema al guardar la imagen: " + result.errorMessage);
+                }
+            } else {
+                redirectAttributes.addFlashAttribute("mensajeError", "Por favor selecciona una imagen válida.");
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensajeError", "Error al procesar el archivo de imagen: " + e.getMessage());
+        }
+
+        return "redirect:/usuario/detail/" + idUsuario;
     }
 
     @PostMapping("/procesarCargaMasiva")

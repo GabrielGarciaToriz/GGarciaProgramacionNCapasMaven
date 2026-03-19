@@ -24,4 +24,6 @@ public interface IUsuario {
     Result CambiarEstatus(int IdUsuario, int Estatus);
 
     Result AddAll(List<Usuario> usuarios);
+
+    Result ActualizarImagen(int idUsuario, String imagenBase64);
 }

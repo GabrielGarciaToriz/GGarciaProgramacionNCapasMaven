@@ -35,6 +35,7 @@ public class Usuario {
     @Past(message = "Este campo debe de estar en el pasado")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date FechaNacimiento;
+    private String imagen;
     @Valid
     public Rol Rol;
     @Valid
@@ -122,6 +123,11 @@ public class Usuario {
         this.Direcciones = Direcciones;
     }
 
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
+    
+
     /*GETTERS*/
     public int getIdUsuario() {
         return IdUsuario;
@@ -182,5 +188,10 @@ public class Usuario {
     public List<Direccion> getDirecciones() {
         return Direcciones;
     }
+
+    public String getImagen() {
+        return imagen;
+    }
+    
 
 }
