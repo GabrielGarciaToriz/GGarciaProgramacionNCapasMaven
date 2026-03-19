@@ -8,7 +8,6 @@ import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JDBC.RolDAOImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JDBC.UsuarioDAOImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JDBC.DireccionDAOImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA.ColoniaDAOJPAImplementation;
-import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA.DireccionDAOJPAImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA.EstadoDAOJPAImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA.MunicipioDAOJPAImplementation;
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA.PaisDAOJPAImplementation;
@@ -98,9 +97,6 @@ public class UsuarioController {
     private MunicipioDAOJPAImplementation MunicipioDAOJPAImplementation;
     @Autowired
     private ColoniaDAOJPAImplementation ColoniaDAOJPAImplementation;
-    @Autowired
-    private DireccionDAOJPAImplementation direccionDAOJPAImplementation;
-
     /*
         Carga los datos de todos los usuarios en una vsita para seleccionar si se deben de editar o eliminar
         - Falta 
@@ -134,7 +130,7 @@ public class UsuarioController {
         usuario.setDirecciones(new ArrayList<>());
         usuario.getDirecciones().add(direccion);
 
-        LocalDate fechaMax = LocalDate.now().minusYears(-18);
+        LocalDate fechaMax = LocalDate.now().minusYears(18);
         model.addAttribute("fechaMaxima", fechaMax.toString());
         model.addAttribute("esAdminFormulario", esAdministrador(authentication));
         model.addAttribute("usuario", usuario);
@@ -151,8 +147,6 @@ public class UsuarioController {
         model.addAttribute("roles", RolDAOJPAImplementation.GetAll().objects);
         model.addAttribute("paises", PaisDAOJPAImplementation.GetAll().objects);
 
-        Usuario usuario = new Usuario();
-        usuario.setRol(new Rol());
         Direccion nuevaDireccion = new Direccion();
         Colonia colonia = new Colonia();
         Municipio municipio = new Municipio();
@@ -175,7 +169,7 @@ public class UsuarioController {
         int idPais = direccionEditar.getColonia().getMunicipio().getEstado().getPais().getIdPais();
         int idEstado = direccionEditar.getColonia().getMunicipio().getEstado().getIdEstado();
         int idMunicipio = direccionEditar.getColonia().getMunicipio().getIdMunicipio();
-        model.addAttribute("direccioneditar", direccionEditar);
+        model.addAttribute("direccionEdit", direccionEditar);
         model.addAttribute("paises", PaisDAOJPAImplementation.GetAll().objects);
         model.addAttribute("estados", EstadoDAOJPAImplementation.GetAll(idPais).objects);
         model.addAttribute("municipios", MunicipioDAOJPAImplementation.GetAll(idEstado).objects);
@@ -209,22 +203,22 @@ public class UsuarioController {
     public String FormularioUsuario(
             @Valid @ModelAttribute("usuario") Usuario usuario,
             BindingResult bindingResult,
-            @RequestParam(value = "imagenFile", required = true) MultipartFile imagenFile,
+            @RequestParam("imagenFile") MultipartFile imagenFile,
+            Authentication authentication,
             Model model,
             RedirectAttributes redirectAttributes) {
         LocalDate fechaMax = LocalDate.now().minusYears(-18);
         model.addAttribute("fechaMaxima", fechaMax.toString());
-//        model.addAttribute("esAdminFormulario", esAdministrador(authentication));
-//
-//        if (!esAdministrador(authentication)) {
-//            Integer idRolPorDefecto = obtenerRolIdRegistroPorDefecto();
-//            if (idRolPorDefecto != null) {
-//                if (usuario.getRol() == null) {
-//                    usuario.setRol(new Rol());
-//                }
-//                usuario.getRol().setIdRol(idRolPorDefecto);
-//            }
-//        }
+        model.addAttribute("esAdminFormulario", esAdministrador(authentication));
+        if (!esAdministrador(authentication)) {
+            Integer idRolPorDefecto = obtenerRolIdRegistroPorDefecto();
+            if (idRolPorDefecto != null) {
+                if (usuario.getRol() == null) {
+                    usuario.setRol(new Rol());
+                }
+                usuario.getRol().setIdRol(idRolPorDefecto);
+            }
+        }
 
         if (usuario.getFechaNacimiento() != null) {
             Calendar fechaMayorEdad = Calendar.getInstance();
@@ -244,13 +238,14 @@ public class UsuarioController {
                 }
                 int idEstado = usuario.getDirecciones().get(0).getColonia().getMunicipio().getEstado().getIdEstado();
                 if (idEstado > 0) {
-                    model.addAttribute("municipios", municipioDAOImplementation.GetAll(idEstado));
+                    model.addAttribute("municipios", municipioDAOImplementation.GetAll(idEstado).objects);
                 }
                 int idMunicipio = usuario.getDirecciones().get(0).getColonia().getMunicipio().getIdMunicipio();
                 if (idMunicipio > 0) {
-                    model.addAttribute("colonias", coloniaDAOImplmentation.GetAll(idMunicipio));
+                    model.addAttribute("colonias", coloniaDAOImplmentation.GetAll(idMunicipio).objects);
                 }
             } catch (Exception e) {
+                System.out.println("No se pudieron cargar los combos dependientes: " + e.getMessage());
             }
             return "UsuarioForm";
         }
@@ -279,7 +274,7 @@ public class UsuarioController {
     }
 
     private boolean esAdministrador(Authentication authentication) {
-        if (authentication == null || authentication.getAuthorities() == null) {
+        if (authentication == null) {
             return false;
         }
 
@@ -364,8 +359,7 @@ public class UsuarioController {
     /*MODIFICAMOS UNA DIRECCION RESPECTO AL ID DEL USUARIO*/
     @PostMapping("/modificarDireccion")
     public String ModificarDireccionUsuario() {
-
-        return "";
+        return "redirect:/usuario";
     }
 
     @PostMapping("/actualizarImagen")
@@ -403,14 +397,24 @@ public class UsuarioController {
             if (archivo != null && !archivo.isEmpty()) {
                 String rutaBae = System.getProperty("user.dir");
                 String rutaCarpeta = "src/main/resources/archivosCM";
-                String fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmSS"));
-                String nombreArchivo = fecha + "_" + archivo.getOriginalFilename();
-                String rutaArchivo = rutaBae + "/" + rutaCarpeta + "/" + nombreArchivo;
-                String extension = archivo.getOriginalFilename().substring(archivo.getOriginalFilename().lastIndexOf(".") + 1).toLowerCase();
+                String originalFilename = archivo.getOriginalFilename();
+                if (originalFilename == null || originalFilename.isBlank() || !originalFilename.contains(".")) {
+                    model.addAttribute("mensajeError", "Nombre de archivo invalido. Debe incluir extension .txt o .xlsx");
+                    return "UsuarioCargaMasiva";
+                }
 
-                List<Usuario> usuarios = new ArrayList<>(); // Inicializamos la lista
+                String fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+                String nombreArchivo = fecha + "_" + originalFilename;
+                String rutaArchivo = rutaBae + "/" + rutaCarpeta + "/" + nombreArchivo;
+                String extension = originalFilename.substring(originalFilename.lastIndexOf('.') + 1).toLowerCase();
+
+                List<Usuario> usuarios;
                 File archivoFisico = new File(rutaArchivo);
-                archivoFisico.getParentFile().mkdirs();
+                File parentDir = archivoFisico.getParentFile();
+                if (parentDir != null && !parentDir.exists() && !parentDir.mkdirs()) {
+                    model.addAttribute("mensajeError", "No fue posible crear la carpeta para el archivo.");
+                    return "UsuarioCargaMasiva";
+                }
 
                 if (extension.equals("txt")) {
                     archivo.transferTo(archivoFisico);
@@ -449,8 +453,7 @@ public class UsuarioController {
         List<Usuario> usuarios = new ArrayList<>();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy");
         try (InputStream inputStream = new FileInputStream(archivo); BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
-            usuarios = new ArrayList<>();
-            String cadena = "";
+            String cadena;
             while ((cadena = bufferedReader.readLine()) != null) {
                 String[] datoUsuario = cadena.split("\\|");
                 if (datoUsuario.length < 2) {
@@ -550,6 +553,7 @@ public class UsuarioController {
                             Date FormatoFecha = FechaNacimineto.parse(celdaFecha.getStringCellValue());
                             usuario.setFechaNacimiento(FormatoFecha);
                         } catch (Exception e) {
+                            System.out.println("Formato no valido para fecha Excel: " + e.getMessage());
                         }
                     }
                 }
@@ -590,9 +594,8 @@ public class UsuarioController {
             BindingResult bindingResult = validationService.validateResult(usuario);
             if (bindingResult.hasErrors()) {
                 for (ObjectError objectError : bindingResult.getAllErrors()) {
-                    if (objectError instanceof FieldError) {
+                    if (objectError instanceof FieldError fieldError) {
                         ErroresArchivo errorCarga = new ErroresArchivo();
-                        FieldError fieldError = (FieldError) objectError;
                         errorCarga.dato = fieldError.getField();
                         errorCarga.descripcion = fieldError.getDefaultMessage();
                         errorCarga.fila = numeroFila;
@@ -609,39 +612,34 @@ public class UsuarioController {
     @GetMapping("getEstadoByPais/{IdPais}")
     @ResponseBody
     public Result getEstadoByPais(@PathVariable("IdPais") int IdPais) {
-        Result result = estadoDAOImplementation.GetAll(IdPais);
-        return result;
+        return estadoDAOImplementation.GetAll(IdPais);
     }
 
     /*Cargar los datos del municipio*/
     @GetMapping("getMunicipioByEstado/{IdEstado}")
     @ResponseBody
     public Result getMunicipioByEstado(@PathVariable("IdEstado") int IdEstado) {
-        Result result = municipioDAOImplementation.GetAll(IdEstado);
-        return result;
+        return municipioDAOImplementation.GetAll(IdEstado);
     }
 
     /*Cargar los datos del colonia*/
     @GetMapping("getColoniabyMunicipio/{IdMunicipio}")
     @ResponseBody
     public Result getColoniabyMunicipio(@PathVariable("IdMunicipio") int IdMunicipio) {
-        Result result = coloniaDAOImplmentation.GetAll(IdMunicipio);
-        return result;
+        return coloniaDAOImplmentation.GetAll(IdMunicipio);
     }
 
     /*Buscar la colonia usando el codigo postal*/
     @GetMapping("getDireccionByCodigoPostal/{CodigoPostal}")
     @ResponseBody
     public Result getDireccionByCodigoPostal(@PathVariable("CodigoPostal") String CodigoPostal) {
-        Result result = coloniaDAOImplmentation.GetByCodigoPostal(CodigoPostal);
-        return result;
+        return coloniaDAOImplmentation.GetByCodigoPostal(CodigoPostal);
     }
 
     @PostMapping("/cambiarEstatus")
     @ResponseBody
     public Result CambiarEstatusUsuario(@RequestParam("IdUsuario") int IdUsuario, @RequestParam("Estatus") int Estatus) {
-        Result result = UsuarioDAOJPAImplementation.CambiarEstatus(IdUsuario, Estatus);
-        return result;
+        return UsuarioDAOJPAImplementation.CambiarEstatus(IdUsuario, Estatus);
     }
 
     private String encriptarPasswordSiEsNecesario(String password) {
