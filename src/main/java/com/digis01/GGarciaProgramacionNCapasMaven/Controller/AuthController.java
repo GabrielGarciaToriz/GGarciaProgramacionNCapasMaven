@@ -19,5 +19,10 @@ public class AuthController {
     public String accessDenied() {
         return "error/403";
     }
+
+    @GetMapping("/not-authorized")
+    public String notAuthorized() {
+        return "error/401";
+    }
 }
 

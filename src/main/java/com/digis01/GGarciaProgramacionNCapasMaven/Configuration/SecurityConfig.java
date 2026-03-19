@@ -6,19 +6,21 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, DaoAuthenticationProvider daoAuthenticationProvider) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**", "/error", "/login", "/perform_login", "/access-denied").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/img/**", "/webjars/**", "/error", "/login", "/perform_login", "/access-denied", "/not-authorized").permitAll()
                         .requestMatchers(HttpMethod.GET, "/usuario/form").permitAll()
                         .requestMatchers(HttpMethod.POST, "/usuario/form").permitAll()
                         .requestMatchers(HttpMethod.GET,
@@ -48,8 +50,13 @@ public class SecurityConfig {
                         .permitAll())
                 .logout(logout -> logout
                         .logoutUrl("/logout")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID", "remember-me")
                         .logoutSuccessUrl("/login?logout")
                         .permitAll())
+                .sessionManagement(session -> session
+                        .invalidSessionUrl("/not-authorized"))
                 .exceptionHandling(exception -> exception
                         .accessDeniedPage("/access-denied"))
                 .rememberMe(Customizer.withDefaults());

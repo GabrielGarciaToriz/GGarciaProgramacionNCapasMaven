@@ -30,11 +30,16 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-        String rolNombre = usuario.getRol() != null ? usuario.getRol().getNombre() : "USER";
+        String rolNombre = (usuario.getRol() != null && usuario.getRol().getNombre() != null
+                && !usuario.getRol().getNombre().isBlank())
+                ? usuario.getRol().getNombre().trim()
+                : "USER";
         authorities.add(new SimpleGrantedAuthority(rolNombre));
 
         String rolNormalizado = "ROLE_" + rolNombre.trim().replace(" ", "_").toUpperCase();
-        authorities.add(new SimpleGrantedAuthority(rolNormalizado));
+        if (!rolNormalizado.equals(rolNombre)) {
+            authorities.add(new SimpleGrantedAuthority(rolNormalizado));
+        }
 
         return User.withUsername(usuario.getUserName())
                 .password(usuario.getPassword())

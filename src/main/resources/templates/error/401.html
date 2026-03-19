@@ -3,19 +3,20 @@
     layout:decorate="~{layout/base}" th:with="bodyClass='bg-light min-vh-100 d-flex align-items-center', showNavbar=false">
 
 <head>
-    <title layout:fragment="pageTitle">Acceso denegado</title>
+    <title layout:fragment="pageTitle">No autorizado</title>
 </head>
 
 <body>
     <th:block layout:fragment="content">
         <div class="container text-center">
             <div class="card border-0 shadow-sm rounded-4 p-4 mx-auto" style="max-width: 560px;">
-                <h3 class="text-danger fw-bold mb-3"><i class="bi bi-shield-lock me-2"></i>Acceso denegado</h3>
-                <p class="text-muted mb-4">No tienes permisos para acceder a este recurso.</p>
-                <a th:href="@{/usuario}" class="btn btn-primary">Volver al directorio</a>
+                <h3 class="text-warning fw-bold mb-3"><i class="bi bi-exclamation-octagon me-2"></i>No autorizado</h3>
+                <p class="text-muted mb-4">Tu sesion no es valida o necesitas iniciar sesion para continuar.</p>
+                <a th:href="@{/login}" class="btn btn-primary">Ir al login</a>
             </div>
         </div>
     </th:block>
 </body>
 
 </html>
+

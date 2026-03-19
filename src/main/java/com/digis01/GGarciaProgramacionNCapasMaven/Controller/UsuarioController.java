@@ -37,6 +37,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -102,6 +103,7 @@ public class UsuarioController {
         - Falta 
      */
     @GetMapping("")
+    @PreAuthorize("isAuthenticated()")
     public String Usuario(Model model) {
         Usuario usuarioBusqueda = new Usuario();
         usuarioBusqueda.setRol(new Rol());
@@ -141,6 +143,7 @@ public class UsuarioController {
 
     /*Envia los datos del usuario a la vista detalle para su edicion o eliminacion*/
     @GetMapping("detail/{IdUsuario}")
+    @PreAuthorize("isAuthenticated()")
     public String DetalleUsuario(@PathVariable("IdUsuario") int IdUsuario, Model model) {
         Result result = UsuarioDAOJPAImplementation.GetAllById(IdUsuario);
         model.addAttribute("usuario", result.objects.get(0));
@@ -163,6 +166,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/direccion/editar/{IdDireccion}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')")
     public String EdicionDireccion(@PathVariable("IdDireccion") int IdDireccion, Model model) {
         Result result = direccionDAOImplementation.DireccionGetAllById(IdDireccion);
         Direccion direccionEditar = (Direccion) result.objects.get(0);
@@ -179,11 +183,13 @@ public class UsuarioController {
     }
 
     @GetMapping("/cargar")
+    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')")
     public String CargaMasiva() {
         return "UsuarioCargaMasiva";
     }
 
     @PostMapping("/buscar")
+    @PreAuthorize("isAuthenticated()")
     public String BuscarUsuario(@ModelAttribute("usuarioBusqueda") Usuario usuarioBusqueda, Model model) {
         Result result = usuarioDAOImplementation.UsuarioDireccionBusqueda(usuarioBusqueda);
         model.addAttribute("usuarioBusqueda", usuarioBusqueda);
@@ -207,7 +213,7 @@ public class UsuarioController {
             Authentication authentication,
             Model model,
             RedirectAttributes redirectAttributes) {
-        LocalDate fechaMax = LocalDate.now().minusYears(-18);
+        LocalDate fechaMax = LocalDate.now().minusYears(18);
         model.addAttribute("fechaMaxima", fechaMax.toString());
         model.addAttribute("esAdminFormulario", esAdministrador(authentication));
         if (!esAdministrador(authentication)) {
@@ -307,6 +313,7 @@ public class UsuarioController {
 
     /*Elimina al usuario y sus direccion */
     @PostMapping("detail/delete/{IdUsuario}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')")
     public String EliminarDireccionUsuario(@PathVariable("IdUsuario") int IdUsaurio, RedirectAttributes redirectAttributes) {
         Result result = usuarioDAOImplementation.DeleteDireccionUsuariobyId(IdUsaurio);
         if (result.correct) {
@@ -318,6 +325,7 @@ public class UsuarioController {
     }
 
     @PostMapping("detail/delete/direccion/{IdDireccion}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')")
     public String EliminarDireccion(@PathVariable("IdDireccion") int IdDireccion, RedirectAttributes redirectAttributes) {
         Result result = usuarioDAOImplementation.DeleteDireccionById(IdDireccion);
         if (result.correct) {
@@ -329,6 +337,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/editarUsuario")
+    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')")
     public String EditarUsuario(@ModelAttribute("usuario") Usuario usuario, RedirectAttributes redirectAttributes, Model model) {
         if (usuario.getRol() == null || usuario.getRol().getIdRol() == 0) {
             redirectAttributes.addFlashAttribute("mensajeError", "Por favor selecciona un rol valido");
@@ -346,6 +355,7 @@ public class UsuarioController {
 
     /*AGREGAMOS UNA DIRECCION DESPECTO AL ID DEL USUARIO*/
     @PostMapping("/agregarDireccion")
+    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')")
     public String AgregarDireccionUsuario(@ModelAttribute("nuevaDireccion") Direccion nuevaDireccion, @RequestParam("IdUsuario") int IdUsuario, RedirectAttributes redirectAttributes) {
         Result result = direccionDAOImplementation.DireccionAdd(nuevaDireccion, IdUsuario);
         if (result.correct) {
@@ -358,11 +368,13 @@ public class UsuarioController {
 
     /*MODIFICAMOS UNA DIRECCION RESPECTO AL ID DEL USUARIO*/
     @PostMapping("/modificarDireccion")
+    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')")
     public String ModificarDireccionUsuario() {
         return "redirect:/usuario";
     }
 
     @PostMapping("/actualizarImagen")
+    @PreAuthorize("isAuthenticated()")
     public String ActualizarImagen(
             @RequestParam("IdUsuario") int idUsuario,
             @RequestParam("imagenFile") MultipartFile imagenFile,
@@ -392,6 +404,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/procesarCargaMasiva")
+    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')")
     public String ProcesarCargaMasiva(@RequestParam("archivo") MultipartFile archivo, Model model, RedirectAttributes redirectAttributes) {
         try {
             if (archivo != null && !archivo.isEmpty()) {
@@ -638,6 +651,7 @@ public class UsuarioController {
 
     @PostMapping("/cambiarEstatus")
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')")
     public Result CambiarEstatusUsuario(@RequestParam("IdUsuario") int IdUsuario, @RequestParam("Estatus") int Estatus) {
         return UsuarioDAOJPAImplementation.CambiarEstatus(IdUsuario, Estatus);
     }

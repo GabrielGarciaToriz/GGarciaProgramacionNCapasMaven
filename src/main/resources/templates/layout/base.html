@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <th:block th:replace="~{components/head :: recursos}"></th:block>
@@ -8,6 +9,9 @@
 </head>
 
 <body th:class="${bodyClass} ?: 'bg-light'" th:attr="data-page=${dataPage != null ? dataPage : ''}">
+    <th:block th:if="${showNavbar == null or showNavbar}">
+        <th:block th:replace="~{fragments/navbar :: mainNav}"></th:block>
+    </th:block>
     <main layout:fragment="content"></main>
     <th:block layout:fragment="pageScripts"></th:block>
 </body>
