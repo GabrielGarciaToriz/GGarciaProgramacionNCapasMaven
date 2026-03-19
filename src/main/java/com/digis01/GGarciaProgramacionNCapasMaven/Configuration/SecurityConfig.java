@@ -47,7 +47,22 @@ public class SecurityConfig {
                         .usernameParameter("username")
                         .passwordParameter("password")
                         .failureUrl("/login?error")
-                        .defaultSuccessUrl("/usuario", true)
+                        .successHandler((request, response, authentication) -> {
+                            boolean esAdminOGerente = authentication.getAuthorities().stream()
+                                    .map(authority -> authority.getAuthority())
+                                    .anyMatch(rol -> "ADMIN".equalsIgnoreCase(rol)
+                                    || "ROLE_ADMIN".equalsIgnoreCase(rol)
+                                    || "Administrador".equalsIgnoreCase(rol)
+                                    || "GERENTE".equalsIgnoreCase(rol)
+                                    || "ROLE_GERENTE".equalsIgnoreCase(rol)
+                                    || "Gerente".equalsIgnoreCase(rol));
+
+                            if (esAdminOGerente) {
+                                response.sendRedirect(request.getContextPath() + "/usuario");
+                            } else {
+                                response.sendRedirect(request.getContextPath() + "/usuario/mi-perfil");
+                            }
+                        })
                         .permitAll())
                 .logout(logout -> logout
                         .logoutUrl("/logout")

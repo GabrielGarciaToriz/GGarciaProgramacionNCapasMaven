@@ -82,7 +82,8 @@
                                     </li>
                                 </ul>
 
-                                <button sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente') or #authentication.name == usuario.UserName"
+                                <button sec:authorize="isAuthenticated()"
+                                    th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'',''ROLE_ADMIN'',''Administrador'',''GERENTE'',''ROLE_GERENTE'',''Gerente'')') or (#authentication != null and usuario != null and #authentication.name == usuario.UserName)}"
                                     class="btn btn-primary w-100 rounded-pill" data-bs-toggle="modal"
                                     data-bs-target="#ModalEditarPerfil">
                                     <i class="bi bi-pencil-square me-2"></i>Editar Perfil
@@ -145,7 +146,9 @@
         </div>
     </div>
 
-    <div sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente') or #authentication.name == usuario.UserName" class="modal fade" id="ModalEditarPerfil" tabindex="-1" aria-labelledby="modalEditarUsuarioLabel"
+    <div sec:authorize="isAuthenticated()"
+        th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'',''ROLE_ADMIN'',''Administrador'',''GERENTE'',''ROLE_GERENTE'',''Gerente'')') or (#authentication != null and usuario != null and #authentication.name == usuario.UserName)}"
+        class="modal fade" id="ModalEditarPerfil" tabindex="-1" aria-labelledby="modalEditarUsuarioLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
