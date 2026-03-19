@@ -104,7 +104,11 @@ public class UsuarioController {
      */
     @GetMapping("")
     @PreAuthorize("isAuthenticated()")
-    public String Usuario(Model model) {
+    public String Usuario(Model model, Authentication authentication) {
+        if (!esAdministrador(authentication) && !esGerente(authentication)) {
+            return "redirect:/usuario/mi-perfil";
+        }
+
         Usuario usuarioBusqueda = new Usuario();
         usuarioBusqueda.setRol(new Rol());
         model.addAttribute("usuarioBusqueda", usuarioBusqueda);
@@ -144,9 +148,18 @@ public class UsuarioController {
     /*Envia los datos del usuario a la vista detalle para su edicion o eliminacion*/
     @GetMapping("detail/{IdUsuario}")
     @PreAuthorize("isAuthenticated()")
-    public String DetalleUsuario(@PathVariable("IdUsuario") int IdUsuario, Model model) {
+    public String DetalleUsuario(@PathVariable("IdUsuario") int IdUsuario, Model model, Authentication authentication) {
         Result result = UsuarioDAOJPAImplementation.GetAllById(IdUsuario);
-        model.addAttribute("usuario", result.objects.get(0));
+        if (!result.correct || result.objects == null || result.objects.isEmpty()) {
+            return "redirect:/access-denied";
+        }
+
+        Usuario usuarioDetalle = (Usuario) result.objects.get(0);
+        if (!esAdministrador(authentication) && !esGerente(authentication) && !esMismoUsuario(authentication, usuarioDetalle)) {
+            return "redirect:/access-denied";
+        }
+
+        model.addAttribute("usuario", usuarioDetalle);
         model.addAttribute("roles", RolDAOJPAImplementation.GetAll().objects);
         model.addAttribute("paises", PaisDAOJPAImplementation.GetAll().objects);
 
@@ -165,8 +178,20 @@ public class UsuarioController {
         return "UsuarioDetail";
     }
 
+    @GetMapping("mi-perfil")
+    @PreAuthorize("isAuthenticated()")
+    public String MiPerfil(Authentication authentication) {
+        if (authentication == null || authentication.getName() == null || authentication.getName().isBlank()) {
+            return "redirect:/access-denied";
+        }
+
+        return UsuarioDAOJPAImplementation.findByUserNameOrEmail(authentication.getName())
+                .map(usuario -> "redirect:/usuario/detail/" + usuario.getIdUsuario())
+                .orElse("redirect:/access-denied");
+    }
+
     @GetMapping("/direccion/editar/{IdDireccion}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')")
     public String EdicionDireccion(@PathVariable("IdDireccion") int IdDireccion, Model model) {
         Result result = direccionDAOImplementation.DireccionGetAllById(IdDireccion);
         Direccion direccionEditar = (Direccion) result.objects.get(0);
@@ -189,7 +214,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/buscar")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')")
     public String BuscarUsuario(@ModelAttribute("usuarioBusqueda") Usuario usuarioBusqueda, Model model) {
         Result result = usuarioDAOImplementation.UsuarioDireccionBusqueda(usuarioBusqueda);
         model.addAttribute("usuarioBusqueda", usuarioBusqueda);
@@ -313,7 +338,7 @@ public class UsuarioController {
 
     /*Elimina al usuario y sus direccion */
     @PostMapping("detail/delete/{IdUsuario}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')")
     public String EliminarDireccionUsuario(@PathVariable("IdUsuario") int IdUsaurio, RedirectAttributes redirectAttributes) {
         Result result = usuarioDAOImplementation.DeleteDireccionUsuariobyId(IdUsaurio);
         if (result.correct) {
@@ -325,7 +350,7 @@ public class UsuarioController {
     }
 
     @PostMapping("detail/delete/direccion/{IdDireccion}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')")
     public String EliminarDireccion(@PathVariable("IdDireccion") int IdDireccion, RedirectAttributes redirectAttributes) {
         Result result = usuarioDAOImplementation.DeleteDireccionById(IdDireccion);
         if (result.correct) {
@@ -337,12 +362,33 @@ public class UsuarioController {
     }
 
     @PostMapping("/editarUsuario")
-    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')")
-    public String EditarUsuario(@ModelAttribute("usuario") Usuario usuario, RedirectAttributes redirectAttributes, Model model) {
+    @PreAuthorize("isAuthenticated()")
+    public String EditarUsuario(@ModelAttribute("usuario") Usuario usuario, RedirectAttributes redirectAttributes, Model model, Authentication authentication) {
+        Result usuarioActualResult = UsuarioDAOJPAImplementation.GetAllById(usuario.getIdUsuario());
+        if (!usuarioActualResult.correct || usuarioActualResult.objects == null || usuarioActualResult.objects.isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensajeError", "No se encontro el usuario a editar.");
+            return "redirect:/access-denied";
+        }
+
+        Usuario usuarioActual = (Usuario) usuarioActualResult.objects.get(0);
+        boolean puedeGestionarTodos = esAdministrador(authentication) || esGerente(authentication);
+        boolean esPropietario = esMismoUsuario(authentication, usuarioActual);
+
+        if (!puedeGestionarTodos && !esPropietario) {
+            return "redirect:/access-denied";
+        }
+
+        // Evita que un cliente se autoasigne privilegios o modifique datos no expuestos.
+        if (!puedeGestionarTodos) {
+            usuario.setRol(usuarioActual.getRol());
+        }
+
         if (usuario.getRol() == null || usuario.getRol().getIdRol() == 0) {
             redirectAttributes.addFlashAttribute("mensajeError", "Por favor selecciona un rol valido");
-            return "redirect:/usuario";
+            return esPropietario ? "redirect:/usuario/mi-perfil" : "redirect:/usuario";
         }
+
+        usuario.setPassword(usuarioActual.getPassword());
         Result result = usuarioDAOImplementation.ModifyUsuario(usuario);
         model.addAttribute("roles", rolDAOImplementation.GetAll().objects);
         if (result.correct) {
@@ -350,12 +396,14 @@ public class UsuarioController {
         } else {
             redirectAttributes.addFlashAttribute("mensajeError", "Los datos no se han podido actualizar" + result.errorMessage);
         }
-        return "redirect:/usuario";
+        return esPropietario && !puedeGestionarTodos
+                ? "redirect:/usuario/detail/" + usuario.getIdUsuario()
+                : "redirect:/usuario";
     }
 
     /*AGREGAMOS UNA DIRECCION DESPECTO AL ID DEL USUARIO*/
     @PostMapping("/agregarDireccion")
-    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')")
     public String AgregarDireccionUsuario(@ModelAttribute("nuevaDireccion") Direccion nuevaDireccion, @RequestParam("IdUsuario") int IdUsuario, RedirectAttributes redirectAttributes) {
         Result result = direccionDAOImplementation.DireccionAdd(nuevaDireccion, IdUsuario);
         if (result.correct) {
@@ -368,7 +416,7 @@ public class UsuarioController {
 
     /*MODIFICAMOS UNA DIRECCION RESPECTO AL ID DEL USUARIO*/
     @PostMapping("/modificarDireccion")
-    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')")
     public String ModificarDireccionUsuario() {
         return "redirect:/usuario";
     }
@@ -378,7 +426,19 @@ public class UsuarioController {
     public String ActualizarImagen(
             @RequestParam("IdUsuario") int idUsuario,
             @RequestParam("imagenFile") MultipartFile imagenFile,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,
+            Authentication authentication) {
+
+        Result usuarioResult = UsuarioDAOJPAImplementation.GetAllById(idUsuario);
+        if (!usuarioResult.correct || usuarioResult.objects == null || usuarioResult.objects.isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensajeError", "No se encontro el usuario.");
+            return "redirect:/access-denied";
+        }
+
+        Usuario usuarioDetalle = (Usuario) usuarioResult.objects.get(0);
+        if (!esAdministrador(authentication) && !esGerente(authentication) && !esMismoUsuario(authentication, usuarioDetalle)) {
+            return "redirect:/access-denied";
+        }
 
         try {
             if (imagenFile != null && !imagenFile.isEmpty()) {
@@ -664,6 +724,27 @@ public class UsuarioController {
             return password;
         }
         return passwordEncoder.encode(password);
+    }
+
+    private boolean esGerente(Authentication authentication) {
+        if (authentication == null) {
+            return false;
+        }
+
+        return authentication.getAuthorities().stream().anyMatch(authority -> {
+            String rol = authority.getAuthority();
+            return "GERENTE".equalsIgnoreCase(rol)
+                    || "ROLE_GERENTE".equalsIgnoreCase(rol);
+        });
+    }
+
+    private boolean esMismoUsuario(Authentication authentication, Usuario usuario) {
+        if (authentication == null || usuario == null || usuario.getUserName() == null) {
+            return false;
+        }
+
+        return authentication.getName() != null
+                && authentication.getName().equalsIgnoreCase(usuario.getUserName());
     }
 
 }

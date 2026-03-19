@@ -1,7 +1,13 @@
 <nav xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
     th:fragment="mainNav" class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container-fluid">
-        <a class="navbar-brand fw-semibold" th:href="@{/usuario}">Sistema Usuarios</a>
+        <a class="navbar-brand fw-semibold"
+            sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')"
+            th:href="@{/usuario}">Sistema Usuarios</a>
+        <a class="navbar-brand fw-semibold"
+            sec:authorize="!hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente') and isAuthenticated()"
+            th:href="@{/usuario/mi-perfil}">Sistema Usuarios</a>
+        <a class="navbar-brand fw-semibold" sec:authorize="isAnonymous()" th:href="@{/login}">Sistema Usuarios</a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
             aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -10,17 +16,17 @@
 
         <div class="collapse navbar-collapse" id="mainNavbar">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0" sec:authorize="isAuthenticated()">
-                <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')">
                     <a class="nav-link" th:href="@{/usuario}">Directorio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/usuario/mi-perfil}">Mi perfil</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')">
                     <a class="nav-link" th:href="@{/usuario/cargar}">Carga masiva</a>
                 </li>
-                <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')">
+                <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')">
                     <a class="nav-link" th:href="@{/usuario/form}">Nuevo usuario</a>
-                </li>
-                <li class="nav-item" sec:authorize="!hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador')">
-                    <a class="nav-link" th:href="@{/usuario/form}">Registro</a>
                 </li>
             </ul>
 

@@ -28,14 +28,15 @@ public class SecurityConfig {
                                 "/usuario/getMunicipioByEstado/**",
                                 "/usuario/getColoniabyMunicipio/**",
                                 "/usuario/getDireccionByCodigoPostal/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/usuario/direccion/editar/**").hasAnyAuthority("ADMIN", "ROLE_ADMIN", "Administrador")
+                        .requestMatchers(HttpMethod.GET, "/usuario/direccion/editar/**").hasAnyAuthority("ADMIN", "ROLE_ADMIN", "Administrador", "GERENTE", "ROLE_GERENTE", "Gerente")
                         .requestMatchers(HttpMethod.POST,
-                                "/usuario/editarUsuario",
                                 "/usuario/agregarDireccion",
                                 "/usuario/modificarDireccion",
-                                "/usuario/detail/delete/**",
+                                "/usuario/detail/delete/**").hasAnyAuthority("ADMIN", "ROLE_ADMIN", "Administrador", "GERENTE", "ROLE_GERENTE", "Gerente")
+                        .requestMatchers(HttpMethod.POST,
                                 "/usuario/cambiarEstatus",
                                 "/usuario/procesarCargaMasiva").hasAnyAuthority("ADMIN", "ROLE_ADMIN", "Administrador")
+                        .requestMatchers(HttpMethod.POST, "/usuario/editarUsuario", "/usuario/actualizarImagen").authenticated()
                         .requestMatchers(HttpMethod.GET, "/usuario/cargar").hasAnyAuthority("ADMIN", "ROLE_ADMIN", "Administrador")
                         .requestMatchers("/usuario/**").authenticated()
                         .anyRequest().authenticated())
