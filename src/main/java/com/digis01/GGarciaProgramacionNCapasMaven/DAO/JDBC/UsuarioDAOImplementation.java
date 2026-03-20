@@ -452,10 +452,10 @@ public class UsuarioDAOImplementation implements IUsuario {
         Result result = new Result();
         try {
             jdbcTemplate.execute("{CALL usuarioactualizarimagensp(?, ?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
-                
+
                 // Parámetro 1: El ID del usuario
                 callableStatement.setInt(1, idUsuario);
-                
+
                 // Parámetro 2: La nueva imagen en Base64 (enviada como CLOB)
                 if (imagenBase64 != null && !imagenBase64.isEmpty()) {
                     callableStatement.setClob(2, new java.io.StringReader(imagenBase64));
@@ -467,6 +467,31 @@ public class UsuarioDAOImplementation implements IUsuario {
 
                 return result.correct = true;
             });
+        } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
+        }
+        return result;
+    }
+
+    @Override
+    public Result GetUsuarioByDireccionId(int IdDireccion) {
+        Result result = new Result();
+        try {
+            result.objects = new ArrayList<>();
+            Integer idUsuario = jdbcTemplate.queryForObject(
+                "SELECT IdUsuario FROM Direccion WHERE IdDireccion = ?",
+                Integer.class,
+                IdDireccion
+            );
+            if (idUsuario != null) {
+                result.objects.add(idUsuario);
+                result.correct = true;
+            } else {
+                result.correct = false;
+                result.errorMessage = "Dirección no encontrada";
+            }
         } catch (Exception e) {
             result.correct = false;
             result.errorMessage = e.getLocalizedMessage();

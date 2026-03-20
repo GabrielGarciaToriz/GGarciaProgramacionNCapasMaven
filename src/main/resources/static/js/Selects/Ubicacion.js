@@ -1,6 +1,16 @@
 export function DireccionByCodigoPostal() {
-    $("#CodigoPostal").change(function () {
-        var codigoPostal = $("#CodigoPostal").val();
+    // Configurar para selectores normales (modal agregar)
+    configurarBusquedaPorCP("#CodigoPostal", "#selectPais", "#selectEstado", "#selectMunicipio", "#selectColonia");
+
+    // Configurar para selectores de edición (modal editar) - si existe el campo
+    if ($("#editCodigoPostal").length > 0) {
+        configurarBusquedaPorCP("#editCodigoPostal", "#editSelectPais", "#editSelectEstado", "#editSelectMunicipio", "#editSelectColonia");
+    }
+}
+
+function configurarBusquedaPorCP(selectorCP, selectorPais, selectorEstado, selectorMunicipio, selectorColonia) {
+    $(selectorCP).change(function () {
+        var codigoPostal = $(selectorCP).val();
 
         if (codigoPostal !== "") {
             $.ajax({
@@ -19,21 +29,21 @@ export function DireccionByCodigoPostal() {
                         var idMunicipio = primeraColonia.Municipio.IdMunicipio;
                         var nombreMunicipio = primeraColonia.Municipio.Nombre;
 
-                        $("#selectPais").val(idPais);
+                        $(selectorPais).val(idPais).trigger('change');
 
-                        $("#selectEstado").empty()
+                        $(selectorEstado).empty()
                             .append(`<option value="${idEstado}">${nombreEstado}</option>`)
-                            .val(idEstado);
+                            .val(idEstado).trigger('change');
 
-                        $("#selectMunicipio").empty()
+                        $(selectorMunicipio).empty()
                             .append(`<option value="${idMunicipio}">${nombreMunicipio}</option>`)
-                            .val(idMunicipio);
+                            .val(idMunicipio).trigger('change');
 
-                        $("#selectColonia").empty();
-                        $("#selectColonia").append('<option value="0">Selecciona una colonia</option>');
+                        $(selectorColonia).empty();
+                        $(selectorColonia).append('<option value="0">Selecciona una colonia</option>');
 
                         $.each(data.objects, function (i, colonia) {
-                            $("#selectColonia").append(
+                            $(selectorColonia).append(
                                 `<option value="${colonia.IdColonia}" data-cp="${colonia.CodigoPostal}">${colonia.Nombre}</option>`
                             );
                         });
@@ -52,53 +62,64 @@ export function DireccionByCodigoPostal() {
             limpiarSelectsUbicacion();
         }
     });
-
-    function limpiarSelectsUbicacion() {
-        $("#selectPais").val("0");
-        $("#selectEstado, #selectMunicipio, #selectColonia")
-            .empty()
-            .append('<option value="0" selected>Selecciona una opción</option>');
-    }
 }
 
 export function CascadeoUbicacion() {
 
-    $("#selectMunicipio").change(function () {
-        var idMunicipio = $(this).val();
+    // Función auxiliar para manejar cascada de municipios a colonias
+    function configurarCascadeoMunicipioColonia(selectorMunicipio, selectorColonia, selectorCodigoPostal) {
+        $(selectorMunicipio).change(function () {
+            var idMunicipio = $(this).val();
 
-        if (idMunicipio != "0") {
-            $.ajax({
-                url: "/usuario/getColoniabyMunicipio/" + idMunicipio,
-                type: "GET",
-                dataType: "json",
-                success: function (data) {
-                    $("#selectColonia").empty();
-                    $("#selectColonia").append('<option value="0" data-cp="">Selecciona una colonia</option>');
+            if (idMunicipio != "0") {
+                $.ajax({
+                    url: "/usuario/getColoniabyMunicipio/" + idMunicipio,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        $(selectorColonia).empty();
+                        $(selectorColonia).append('<option value="0" data-cp="">Selecciona una colonia</option>');
 
-                    $.each(data.objects, function (i, colonia) {
-                        $("#selectColonia").append(
-                            `<option value="${colonia.IdColonia}" data-cp="${colonia.CodigoPostal}">${colonia.Nombre}</option>`
-                        );
-                    });
-                },
-                error: function () {
-                    alert("Error al cargar las colonias.");
+                        $.each(data.objects, function (i, colonia) {
+                            $(selectorColonia).append(
+                                `<option value="${colonia.IdColonia}" data-cp="${colonia.CodigoPostal}">${colonia.Nombre}</option>`
+                            );
+                        });
+                    },
+                    error: function () {
+                        alert("Error al cargar las colonias.");
+                    }
+                });
+            } else {
+                $(selectorColonia).empty().append('<option value="0">Selecciona una colonia</option>');
+                if (selectorCodigoPostal) $(selectorCodigoPostal).val("");
+            }
+        });
+
+        $(selectorColonia).change(function () {
+            if (selectorCodigoPostal) {
+                var optionSeleccionado = $(this).find('option:selected');
+                var codigoPostalAsignado = optionSeleccionado.data('cp');
+
+                if (codigoPostalAsignado) {
+                    $(selectorCodigoPostal).val(codigoPostalAsignado);
+                } else if ($(this).val() === "0" || $(this).val() === 0) {
+                    $(selectorCodigoPostal).val("");
                 }
-            });
-        } else {
-            $("#selectColonia").empty().append('<option value="0">Selecciona una colonia</option>');
-            $("#CodigoPostal").val("");
-        }
-    });
+            }
+        });
+    }
 
-    $("#selectColonia").change(function () {
-        var optionSeleccionado = $(this).find('option:selected');
-        var codigoPostalAsignado = optionSeleccionado.data('cp');
+    // Configurar cascada para selectores normales (modal agregar)
+    configurarCascadeoMunicipioColonia("#selectMunicipio", "#selectColonia", "#CodigoPostal");
 
-        if (codigoPostalAsignado) {
-            $("#CodigoPostal").val(codigoPostalAsignado);
-        } else if ($(this).val() === "0" || $(this).val() === 0) {
-            $("#CodigoPostal").val("");
-        }
-    });
+    // Configurar cascada para selectores de edición (modal editar)
+    configurarCascadeoMunicipioColonia("#editSelectMunicipio", "#editSelectColonia", null);
+}
+
+function limpiarSelectsUbicacion() {
+    $("#selectPais, #editSelectPais").val("0");
+    $("#selectEstado, #selectMunicipio, #selectColonia, #editSelectEstado, #editSelectMunicipio, #editSelectColonia")
+        .empty()
+        .append('<option value="0" selected>Selecciona una opción</option>');
 }

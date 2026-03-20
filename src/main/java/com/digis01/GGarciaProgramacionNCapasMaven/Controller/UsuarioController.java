@@ -191,14 +191,36 @@ public class UsuarioController {
     }
 
     @GetMapping("/direccion/editar/{IdDireccion}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')")
-    public String EdicionDireccion(@PathVariable("IdDireccion") int IdDireccion, Model model) {
+    @PreAuthorize("isAuthenticated()")
+    public String EdicionDireccion(@PathVariable("IdDireccion") int IdDireccion, Model model, Authentication authentication) {
         Result result = direccionDAOImplementation.DireccionGetAllById(IdDireccion);
+        if (!result.correct || result.objects == null || result.objects.isEmpty()) {
+            return "redirect:/access-denied";
+        }
         Direccion direccionEditar = (Direccion) result.objects.get(0);
+
+        // Obtener el IdUsuario que tiene esta dirección
+        Result usuarioDireccionResult = usuarioDAOImplementation.GetUsuarioByDireccionId(IdDireccion);
+        if (!usuarioDireccionResult.correct || usuarioDireccionResult.objects == null || usuarioDireccionResult.objects.isEmpty()) {
+            return "redirect:/access-denied";
+        }
+        int idUsuarioPropietario = (Integer) usuarioDireccionResult.objects.get(0);
+
+        // Verificar que el usuario autenticado es el propietario o es admin/gerente
+        Result usuarioResult = UsuarioDAOJPAImplementation.GetAllById(idUsuarioPropietario);
+        if (!usuarioResult.correct || usuarioResult.objects == null || usuarioResult.objects.isEmpty()) {
+            return "redirect:/access-denied";
+        }
+        Usuario usuarioPropietario = (Usuario) usuarioResult.objects.get(0);
+        if (!esAdministrador(authentication) && !esGerente(authentication) && !esMismoUsuario(authentication, usuarioPropietario)) {
+            return "redirect:/access-denied";
+        }
+
         int idPais = direccionEditar.getColonia().getMunicipio().getEstado().getPais().getIdPais();
         int idEstado = direccionEditar.getColonia().getMunicipio().getEstado().getIdEstado();
         int idMunicipio = direccionEditar.getColonia().getMunicipio().getIdMunicipio();
         model.addAttribute("direccionEdit", direccionEditar);
+        model.addAttribute("usuario", usuarioPropietario);
         model.addAttribute("paises", PaisDAOJPAImplementation.GetAll().objects);
         model.addAttribute("estados", EstadoDAOJPAImplementation.GetAll(idPais).objects);
         model.addAttribute("municipios", MunicipioDAOJPAImplementation.GetAll(idEstado).objects);
@@ -350,15 +372,35 @@ public class UsuarioController {
     }
 
     @PostMapping("detail/delete/direccion/{IdDireccion}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')")
-    public String EliminarDireccion(@PathVariable("IdDireccion") int IdDireccion, RedirectAttributes redirectAttributes) {
+    @PreAuthorize("isAuthenticated()")
+    public String EliminarDireccion(@PathVariable("IdDireccion") int IdDireccion, RedirectAttributes redirectAttributes, Authentication authentication) {
+        // Obtener el IdUsuario que tiene esta dirección
+        Result usuarioDireccionResult = usuarioDAOImplementation.GetUsuarioByDireccionId(IdDireccion);
+        if (!usuarioDireccionResult.correct || usuarioDireccionResult.objects == null || usuarioDireccionResult.objects.isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensajeError", "Dirección no encontrada.");
+            return "redirect:/access-denied";
+        }
+        int idUsuarioPropietario = (Integer) usuarioDireccionResult.objects.get(0);
+
+        // Verificar que el usuario autenticado es el propietario o es admin/gerente
+        Result usuarioResult = UsuarioDAOJPAImplementation.GetAllById(idUsuarioPropietario);
+        if (!usuarioResult.correct || usuarioResult.objects == null || usuarioResult.objects.isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensajeError", "Usuario no encontrado.");
+            return "redirect:/access-denied";
+        }
+        Usuario usuarioPropietario = (Usuario) usuarioResult.objects.get(0);
+        if (!esAdministrador(authentication) && !esGerente(authentication) && !esMismoUsuario(authentication, usuarioPropietario)) {
+            redirectAttributes.addFlashAttribute("mensajeError", "No tienes permisos para eliminar direcciones de este usuario.");
+            return "redirect:/access-denied";
+        }
+
         Result result = usuarioDAOImplementation.DeleteDireccionById(IdDireccion);
         if (result.correct) {
-            redirectAttributes.addFlashAttribute("mensajeExito", "La dieccion se ha eliminado ");
+            redirectAttributes.addFlashAttribute("mensajeExito", "La dirección se ha eliminado ");
         } else {
-            redirectAttributes.addFlashAttribute("mensajeError", "Huno un problema al eliminar la direccion: " + result.errorMessage);
+            redirectAttributes.addFlashAttribute("mensajeError", "Hubo un problema al eliminar la dirección: " + result.errorMessage);
         }
-        return "redirect:/usuario";
+        return "redirect:/usuario/detail/" + usuarioPropietario.getIdUsuario();
     }
 
     @PostMapping("/editarUsuario")
@@ -403,8 +445,20 @@ public class UsuarioController {
 
     /*AGREGAMOS UNA DIRECCION DESPECTO AL ID DEL USUARIO*/
     @PostMapping("/agregarDireccion")
-    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')")
-    public String AgregarDireccionUsuario(@ModelAttribute("nuevaDireccion") Direccion nuevaDireccion, @RequestParam("IdUsuario") int IdUsuario, RedirectAttributes redirectAttributes) {
+    @PreAuthorize("isAuthenticated()")
+    public String AgregarDireccionUsuario(@ModelAttribute("nuevaDireccion") Direccion nuevaDireccion, @RequestParam("IdUsuario") int IdUsuario, RedirectAttributes redirectAttributes, Authentication authentication) {
+        // Verificar que el IdUsuario corresponde al usuario autenticado o es admin/gerente
+        Result usuarioResult = UsuarioDAOJPAImplementation.GetAllById(IdUsuario);
+        if (!usuarioResult.correct || usuarioResult.objects == null || usuarioResult.objects.isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensajeError", "Usuario no encontrado.");
+            return "redirect:/access-denied";
+        }
+        Usuario usuarioPropietario = (Usuario) usuarioResult.objects.get(0);
+        if (!esAdministrador(authentication) && !esGerente(authentication) && !esMismoUsuario(authentication, usuarioPropietario)) {
+            redirectAttributes.addFlashAttribute("mensajeError", "No tienes permisos para agregar direcciones a este usuario.");
+            return "redirect:/access-denied";
+        }
+        
         Result result = direccionDAOImplementation.DireccionAdd(nuevaDireccion, IdUsuario);
         if (result.correct) {
             redirectAttributes.addFlashAttribute("mensajeExito", "Direccion agregada con exito");
@@ -416,9 +470,27 @@ public class UsuarioController {
 
     /*MODIFICAMOS UNA DIRECCION RESPECTO AL ID DEL USUARIO*/
     @PostMapping("/modificarDireccion")
-    @PreAuthorize("hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')")
-    public String ModificarDireccionUsuario() {
-        return "redirect:/usuario";
+    @PreAuthorize("isAuthenticated()")
+    public String ModificarDireccionUsuario(@ModelAttribute("direccionEdit") Direccion direccionEdit, @RequestParam("IdUsuario") int IdUsuario, RedirectAttributes redirectAttributes, Authentication authentication) {
+        // Verificar que el IdUsuario corresponde al usuario autenticado o es admin/gerente
+        Result usuarioResult = UsuarioDAOJPAImplementation.GetAllById(IdUsuario);
+        if (!usuarioResult.correct || usuarioResult.objects == null || usuarioResult.objects.isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensajeError", "Usuario no encontrado.");
+            return "redirect:/access-denied";
+        }
+        Usuario usuarioPropietario = (Usuario) usuarioResult.objects.get(0);
+        if (!esAdministrador(authentication) && !esGerente(authentication) && !esMismoUsuario(authentication, usuarioPropietario)) {
+            redirectAttributes.addFlashAttribute("mensajeError", "No tienes permisos para modificar direcciones de este usuario.");
+            return "redirect:/access-denied";
+        }
+        
+        Result result = direccionDAOImplementation.DireccionModify(direccionEdit, IdUsuario);
+        if (result.correct) {
+            redirectAttributes.addFlashAttribute("mensajeExito", "Dirección modificada con éxito");
+        } else {
+            redirectAttributes.addFlashAttribute("mensajeError", "Dirección no modificada: " + result.errorMessage);
+        }
+        return "redirect:/usuario/detail/" + IdUsuario;
     }
 
     @PostMapping("/actualizarImagen")

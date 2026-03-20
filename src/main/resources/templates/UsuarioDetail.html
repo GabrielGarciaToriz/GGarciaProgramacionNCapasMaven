@@ -99,7 +99,8 @@
                                 <h5 class="mb-0">Mis Direcciones</h5>
 
                                 <div class="d-flex gap-2">
-                                    <button sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')"
+                                    <button sec:authorize="isAuthenticated()"
+                                        th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'',''ROLE_ADMIN'',''Administrador'',''GERENTE'',''ROLE_GERENTE'',''Gerente'')') or (#authentication != null and usuario != null and #authentication.name == usuario.UserName)}"
                                         type="button" class="btn btn-sm btn-outline-success rounded-pill"
                                         data-bs-toggle="modal" data-bs-target="#ModalAgregarDireccion">
                                         <i class="bi bi-plus-lg"></i> Nueva
@@ -119,13 +120,15 @@
                                             </div>
                                             <div class="col-12 col-md-4 text-md-end text-start">
                                                 <div class="btn-group" role="group">
-                                                    <button sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')"
+                                                    <button sec:authorize="isAuthenticated()"
+                                                        th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'',''ROLE_ADMIN'',''Administrador'',''GERENTE'',''ROLE_GERENTE'',''Gerente'')') or (#authentication != null and usuario != null and #authentication.name == usuario.UserName)}"
                                                         type="button" class="btn btn-sm btn-outline-secondary"
                                                         title="Editar"
                                                         th:onclick="'abrirModalEdicionDireccion(' + ${direccion.IdDireccion} + ')'">
                                                         <i class="bi bi-pencil"></i>
                                                     </button>
-                                                    <button sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')"
+                                                    <button sec:authorize="isAuthenticated()"
+                                                        th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'',''ROLE_ADMIN'',''Administrador'',''GERENTE'',''ROLE_GERENTE'',''Gerente'')') or (#authentication != null and usuario != null and #authentication.name == usuario.UserName)}"
                                                         type="button"
                                                         class="btn btn-sm btn-outline-danger btn-eliminar-direccion"
                                                         title="Eliminar"
@@ -175,7 +178,7 @@
                                     th:errorclass="is-invalid">
                                     <option value="0">Seleccione una opción</option>
                                     <option th:each="rol : ${roles}" th:value="${rol.IdRol}"
-                                        th:text="|${rol.Nombre} ${rol.IdRol}|">
+                                        th:text="|${rol.Nombre}|">
                                     </option>
                                 </select>
                             </div>
@@ -236,7 +239,9 @@
         </div>
     </div>
 
-    <div sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')" class="modal fade" id="ModalAgregarDireccion" tabindex="-1" aria-labelledby="modalAgregarDireccionLabel"
+    <div sec:authorize="isAuthenticated()"
+        th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'',''ROLE_ADMIN'',''Administrador'',''GERENTE'',''ROLE_GERENTE'',''Gerente'')') or (#authentication != null and usuario != null and #authentication.name == usuario.UserName)}"
+        class="modal fade" id="ModalAgregarDireccion" tabindex="-1" aria-labelledby="modalAgregarDireccionLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -321,7 +326,9 @@
     </div>
 
 
-    <div sec:authorize="hasAnyAuthority('ADMIN','ROLE_ADMIN','Administrador','GERENTE','ROLE_GERENTE','Gerente')" class="modal fade" id="ModalEditarDireccionDinamico" tabindex="-1" aria-hidden="true">
+    <div sec:authorize="isAuthenticated()"
+        th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'',''ROLE_ADMIN'',''Administrador'',''GERENTE'',''ROLE_GERENTE'',''Gerente'')') or (#authentication != null and usuario != null and #authentication.name == usuario.UserName)}"
+        class="modal fade" id="ModalEditarDireccionDinamico" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" id="contenedorModalEditarDireccion">
                 <div class="modal-body text-center p-5">

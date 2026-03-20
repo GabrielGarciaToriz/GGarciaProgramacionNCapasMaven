@@ -71,41 +71,16 @@ const configurarCsrfAjax = () => {
     }
 };
 
-const initDirectorioUsuarios = () => {
-    $(".btn-eliminar-direccion-usuario").on("click", function (event) {
+const initUsuarioDetail = () => {
+    // Inicializar selectores en cascada para el modal de agregar dirección
+    inicializarSelectores();
+
+    // Configurar eliminación de direcciones
+    $(".btn-eliminar-direccion").on("click", function (event) {
         event.preventDefault();
         const url = $(this).data("url");
         console.log("Se va a ejecutar la ruta: ", url);
-        confirmarEliminacionDireccionUsuario(url);
-    });
-    $(".form-check-input[role='switch']").on("change", function () {
-        const checkbox = $(this);
-        const idUsuario = checkbox.data("usuario-id");
-        const urlPeticion = checkbox.data("url");
-        const nuevoEstatus = checkbox.is(":checked") ? 1 : 0;
-
-        $.ajax({
-            type: "POST",
-            url: urlPeticion, // Usamos la URL correcta del servidor
-            data: {
-                IdUsuario: idUsuario,
-                Estatus: nuevoEstatus
-            },
-            success: function (response) {
-                if (response.correct) {
-                    console.log("Estatus actualizado con éxito para el usuario:", idUsuario);
-                } else {
-                    console.error("Error en BD:", response.errorMessage);
-                    checkbox.prop("checked", nuevoEstatus === 0);
-                    alert("No se pudo actualizar el estatus: " + response.errorMessage);
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("Error AJAX:", xhr.status, error);
-                checkbox.prop("checked", nuevoEstatus === 0);
-                alert("Error de comunicación. Posiblemente la ruta no se encontró o hay problemas en el servidor.");
-            }
-        });
+        confirmarEliminacionDireccion(url);
     });
 };
 
@@ -156,6 +131,10 @@ $(document).ready(() => {
 
         case 'UsuarioForm':
             initFormularioUsuario();
+            break;
+
+        case 'UsuarioDetail':
+            initUsuarioDetail();
             break;
 
         case 'UsuarioCargaMasiva':
