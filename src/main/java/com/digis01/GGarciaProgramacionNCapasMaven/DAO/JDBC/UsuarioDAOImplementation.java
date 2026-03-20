@@ -73,6 +73,7 @@ public class UsuarioDAOImplementation implements IUsuario {
                         usuario.setPassword(resultSet.getString("Contraseña"));
                         usuario.setSexo(resultSet.getString("Sexo"));
                         usuario.setTelefono(resultSet.getString("Telefono"));
+                        usuario.setImagen(resultSet.getString("Imagen"));
                         usuario.setEstatus(resultSet.getInt("Estatus"));
                         usuario.Rol.setIdRol(resultSet.getInt("IdRol"));
                         usuario.Rol.setNombre(resultSet.getString("RolAsignado"));
@@ -156,6 +157,7 @@ public class UsuarioDAOImplementation implements IUsuario {
                         usuario.setPassword(resultSet.getString("Contraseña"));
                         usuario.setSexo(resultSet.getString("Sexo"));
                         usuario.setTelefono(resultSet.getString("Telefono"));
+                        usuario.setImagen(resultSet.getString("Imagen"));
                         usuario.setEstatus(resultSet.getInt("Estatus"));
                         usuario.Rol.setNombre(resultSet.getString("RolAsignado"));
                         Direccion direccion = new Direccion();
@@ -325,6 +327,7 @@ public class UsuarioDAOImplementation implements IUsuario {
                         usuarioFila.setPassword(resultSet.getString("Contraseña"));
                         usuarioFila.setSexo(resultSet.getString("Sexo"));
                         usuarioFila.setTelefono(resultSet.getString("Telefono"));
+                        usuarioFila.setImagen(getImagenDelResultSet(resultSet));
                         usuarioFila.Rol.setNombre(resultSet.getString("RolAsignado"));
                         Direccion direccion = new Direccion();
                         direccion.setIdColonia(resultSet.getInt("IdColonia"));
@@ -357,6 +360,23 @@ public class UsuarioDAOImplementation implements IUsuario {
         }
 
         return result;
+    }
+
+    private String getImagenDelResultSet(ResultSet resultSet) {
+        try {
+            String imagen = resultSet.getString("Imagen");
+            if (imagen != null) {
+                return imagen;
+            }
+        } catch (Exception ignored) {
+        }
+
+        try {
+            return resultSet.getString("imagen");
+        } catch (Exception ignored) {
+        }
+
+        return null;
     }
 
     @Override
